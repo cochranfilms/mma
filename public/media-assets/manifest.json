@@ -1,0 +1,1896 @@
+{
+  "generated": "2025-08-21T19:46:32.390Z",
+  "totalAssets": 168,
+  "categories": {
+    "media-connections": {
+      "images": [
+        {
+          "filename": "media-connections-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "yTsy3PYFPtc",
+            "alt": "a group of people standing in a room",
+            "photographer": "M ACCELERATOR",
+            "unsplashUrl": "https://unsplash.com/photos/yTsy3PYFPtc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-section-1.jpg",
+          "size": "section",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "yTsy3PYFPtc",
+            "alt": "a group of people standing in a room",
+            "photographer": "M ACCELERATOR",
+            "unsplashUrl": "https://unsplash.com/photos/yTsy3PYFPtc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-card-1.jpg",
+          "size": "card",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "yTsy3PYFPtc",
+            "alt": "a group of people standing in a room",
+            "photographer": "M ACCELERATOR",
+            "unsplashUrl": "https://unsplash.com/photos/yTsy3PYFPtc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "yTsy3PYFPtc",
+            "alt": "a group of people standing in a room",
+            "photographer": "M ACCELERATOR",
+            "unsplashUrl": "https://unsplash.com/photos/yTsy3PYFPtc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "ZDN-G1xBWHY",
+            "alt": "five person standing while talking each other",
+            "photographer": "Antenna",
+            "unsplashUrl": "https://unsplash.com/photos/ZDN-G1xBWHY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-section-2.jpg",
+          "size": "section",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "ZDN-G1xBWHY",
+            "alt": "five person standing while talking each other",
+            "photographer": "Antenna",
+            "unsplashUrl": "https://unsplash.com/photos/ZDN-G1xBWHY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-card-2.jpg",
+          "size": "card",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "ZDN-G1xBWHY",
+            "alt": "five person standing while talking each other",
+            "photographer": "Antenna",
+            "unsplashUrl": "https://unsplash.com/photos/ZDN-G1xBWHY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "ZDN-G1xBWHY",
+            "alt": "five person standing while talking each other",
+            "photographer": "Antenna",
+            "unsplashUrl": "https://unsplash.com/photos/ZDN-G1xBWHY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-hero-3.jpg",
+          "size": "hero",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "nOvIa_x_tfo",
+            "alt": "crowd of people in building lobby",
+            "photographer": "Product School",
+            "unsplashUrl": "https://unsplash.com/photos/nOvIa_x_tfo/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-section-3.jpg",
+          "size": "section",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "nOvIa_x_tfo",
+            "alt": "crowd of people in building lobby",
+            "photographer": "Product School",
+            "unsplashUrl": "https://unsplash.com/photos/nOvIa_x_tfo/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-card-3.jpg",
+          "size": "card",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "nOvIa_x_tfo",
+            "alt": "crowd of people in building lobby",
+            "photographer": "Product School",
+            "unsplashUrl": "https://unsplash.com/photos/nOvIa_x_tfo/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-3.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business networking",
+          "originalImage": {
+            "id": "nOvIa_x_tfo",
+            "alt": "crowd of people in building lobby",
+            "photographer": "Product School",
+            "unsplashUrl": "https://unsplash.com/photos/nOvIa_x_tfo/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMG5ldHdvcmtpbmd8ZW58MHwwfHx8MTc1NTgwNTU1MHww"
+          }
+        },
+        {
+          "filename": "media-connections-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WYd_PkCa1BY",
+            "alt": "Business newspaper article",
+            "photographer": "AbsolutVision",
+            "unsplashUrl": "https://unsplash.com/photos/WYd_PkCa1BY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-section-1.jpg",
+          "size": "section",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WYd_PkCa1BY",
+            "alt": "Business newspaper article",
+            "photographer": "AbsolutVision",
+            "unsplashUrl": "https://unsplash.com/photos/WYd_PkCa1BY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-card-1.jpg",
+          "size": "card",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WYd_PkCa1BY",
+            "alt": "Business newspaper article",
+            "photographer": "AbsolutVision",
+            "unsplashUrl": "https://unsplash.com/photos/WYd_PkCa1BY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WYd_PkCa1BY",
+            "alt": "Business newspaper article",
+            "photographer": "AbsolutVision",
+            "unsplashUrl": "https://unsplash.com/photos/WYd_PkCa1BY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "PkS3hCZmYts",
+            "alt": "man wearing headset",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/PkS3hCZmYts/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-section-2.jpg",
+          "size": "section",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "PkS3hCZmYts",
+            "alt": "man wearing headset",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/PkS3hCZmYts/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-card-2.jpg",
+          "size": "card",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "PkS3hCZmYts",
+            "alt": "man wearing headset",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/PkS3hCZmYts/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "PkS3hCZmYts",
+            "alt": "man wearing headset",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/PkS3hCZmYts/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-hero-3.jpg",
+          "size": "hero",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WhVTKI1MXDw",
+            "alt": "the word media spelled with white letters on a black background",
+            "photographer": "Kim Menikh",
+            "unsplashUrl": "https://unsplash.com/photos/WhVTKI1MXDw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-section-3.jpg",
+          "size": "section",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WhVTKI1MXDw",
+            "alt": "the word media spelled with white letters on a black background",
+            "photographer": "Kim Menikh",
+            "unsplashUrl": "https://unsplash.com/photos/WhVTKI1MXDw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-card-3.jpg",
+          "size": "card",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WhVTKI1MXDw",
+            "alt": "the word media spelled with white letters on a black background",
+            "photographer": "Kim Menikh",
+            "unsplashUrl": "https://unsplash.com/photos/WhVTKI1MXDw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-3.jpg",
+          "size": "thumbnail",
+          "searchTerm": "media relations",
+          "originalImage": {
+            "id": "WhVTKI1MXDw",
+            "alt": "the word media spelled with white letters on a black background",
+            "photographer": "Kim Menikh",
+            "unsplashUrl": "https://unsplash.com/photos/WhVTKI1MXDw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxtZWRpYSUyMHJlbGF0aW9uc3xlbnwwfDB8fHwxNzU1ODA1NTUyfDA"
+          }
+        },
+        {
+          "filename": "media-connections-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "Fn5YDkoU8yY",
+            "alt": "a tall white building with lots of windows",
+            "photographer": "Hosam Ghazal",
+            "unsplashUrl": "https://unsplash.com/photos/Fn5YDkoU8yY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-section-1.jpg",
+          "size": "section",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "Fn5YDkoU8yY",
+            "alt": "a tall white building with lots of windows",
+            "photographer": "Hosam Ghazal",
+            "unsplashUrl": "https://unsplash.com/photos/Fn5YDkoU8yY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-card-1.jpg",
+          "size": "card",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "Fn5YDkoU8yY",
+            "alt": "a tall white building with lots of windows",
+            "photographer": "Hosam Ghazal",
+            "unsplashUrl": "https://unsplash.com/photos/Fn5YDkoU8yY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "Fn5YDkoU8yY",
+            "alt": "a tall white building with lots of windows",
+            "photographer": "Hosam Ghazal",
+            "unsplashUrl": "https://unsplash.com/photos/Fn5YDkoU8yY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "ppFWO5DVvAQ",
+            "alt": "a tall building with a sky background",
+            "photographer": "Stephen Kong",
+            "unsplashUrl": "https://unsplash.com/photos/ppFWO5DVvAQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-section-2.jpg",
+          "size": "section",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "ppFWO5DVvAQ",
+            "alt": "a tall building with a sky background",
+            "photographer": "Stephen Kong",
+            "unsplashUrl": "https://unsplash.com/photos/ppFWO5DVvAQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-card-2.jpg",
+          "size": "card",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "ppFWO5DVvAQ",
+            "alt": "a tall building with a sky background",
+            "photographer": "Stephen Kong",
+            "unsplashUrl": "https://unsplash.com/photos/ppFWO5DVvAQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "ppFWO5DVvAQ",
+            "alt": "a tall building with a sky background",
+            "photographer": "Stephen Kong",
+            "unsplashUrl": "https://unsplash.com/photos/ppFWO5DVvAQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-hero-3.jpg",
+          "size": "hero",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "xkQb0LYnEjw",
+            "alt": "a large building with a curved walkway in front of it",
+            "photographer": "Michael Toler",
+            "unsplashUrl": "https://unsplash.com/photos/xkQb0LYnEjw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-section-3.jpg",
+          "size": "section",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "xkQb0LYnEjw",
+            "alt": "a large building with a curved walkway in front of it",
+            "photographer": "Michael Toler",
+            "unsplashUrl": "https://unsplash.com/photos/xkQb0LYnEjw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-card-3.jpg",
+          "size": "card",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "xkQb0LYnEjw",
+            "alt": "a large building with a curved walkway in front of it",
+            "photographer": "Michael Toler",
+            "unsplashUrl": "https://unsplash.com/photos/xkQb0LYnEjw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        },
+        {
+          "filename": "media-connections-thumbnail-3.jpg",
+          "size": "thumbnail",
+          "searchTerm": "partnership building",
+          "originalImage": {
+            "id": "xkQb0LYnEjw",
+            "alt": "a large building with a curved walkway in front of it",
+            "photographer": "Michael Toler",
+            "unsplashUrl": "https://unsplash.com/photos/xkQb0LYnEjw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxwYXJ0bmVyc2hpcCUyMGJ1aWxkaW5nfGVufDB8MHx8fDE3NTU4MDU1NTd8MA"
+          }
+        }
+      ],
+      "count": 36,
+      "description": "Professional networking and media relationship building"
+    },
+    "b2b-marketing": {
+      "images": [
+        {
+          "filename": "b2b-marketing-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "U33fHryBYBU",
+            "alt": "person writing on white paper",
+            "photographer": "Melanie Deziel",
+            "unsplashUrl": "https://unsplash.com/photos/U33fHryBYBU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-1.jpg",
+          "size": "section",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "U33fHryBYBU",
+            "alt": "person writing on white paper",
+            "photographer": "Melanie Deziel",
+            "unsplashUrl": "https://unsplash.com/photos/U33fHryBYBU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-1.jpg",
+          "size": "card",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "U33fHryBYBU",
+            "alt": "person writing on white paper",
+            "photographer": "Melanie Deziel",
+            "unsplashUrl": "https://unsplash.com/photos/U33fHryBYBU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "U33fHryBYBU",
+            "alt": "person writing on white paper",
+            "photographer": "Melanie Deziel",
+            "unsplashUrl": "https://unsplash.com/photos/U33fHryBYBU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "yktK2qaiVHI",
+            "alt": "white printing paper with Marketing Strategy text",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/yktK2qaiVHI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-2.jpg",
+          "size": "section",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "yktK2qaiVHI",
+            "alt": "white printing paper with Marketing Strategy text",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/yktK2qaiVHI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-2.jpg",
+          "size": "card",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "yktK2qaiVHI",
+            "alt": "white printing paper with Marketing Strategy text",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/yktK2qaiVHI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "yktK2qaiVHI",
+            "alt": "white printing paper with Marketing Strategy text",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/yktK2qaiVHI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-3.jpg",
+          "size": "hero",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "p4nRInVeumw",
+            "alt": "two men sitting on a couch talking to each other",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/p4nRInVeumw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-3.jpg",
+          "size": "section",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "p4nRInVeumw",
+            "alt": "two men sitting on a couch talking to each other",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/p4nRInVeumw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-3.jpg",
+          "size": "card",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "p4nRInVeumw",
+            "alt": "two men sitting on a couch talking to each other",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/p4nRInVeumw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-3.jpg",
+          "size": "thumbnail",
+          "searchTerm": "B2B marketing",
+          "originalImage": {
+            "id": "p4nRInVeumw",
+            "alt": "two men sitting on a couch talking to each other",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/p4nRInVeumw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxCMkIlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU1OXww"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "GFxyhSxsnek",
+            "alt": "a few hands holding a small white object",
+            "photographer": "Vardan Papikyan",
+            "unsplashUrl": "https://unsplash.com/photos/GFxyhSxsnek/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-1.jpg",
+          "size": "section",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "GFxyhSxsnek",
+            "alt": "a few hands holding a small white object",
+            "photographer": "Vardan Papikyan",
+            "unsplashUrl": "https://unsplash.com/photos/GFxyhSxsnek/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-1.jpg",
+          "size": "card",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "GFxyhSxsnek",
+            "alt": "a few hands holding a small white object",
+            "photographer": "Vardan Papikyan",
+            "unsplashUrl": "https://unsplash.com/photos/GFxyhSxsnek/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "GFxyhSxsnek",
+            "alt": "a few hands holding a small white object",
+            "photographer": "Vardan Papikyan",
+            "unsplashUrl": "https://unsplash.com/photos/GFxyhSxsnek/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-2.jpg",
+          "size": "section",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-2.jpg",
+          "size": "card",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-3.jpg",
+          "size": "hero",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "fzOITuS1DIQ",
+            "alt": "depth of field photography of man playing chess",
+            "photographer": "JESHOOTS.COM",
+            "unsplashUrl": "https://unsplash.com/photos/fzOITuS1DIQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-3.jpg",
+          "size": "section",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "fzOITuS1DIQ",
+            "alt": "depth of field photography of man playing chess",
+            "photographer": "JESHOOTS.COM",
+            "unsplashUrl": "https://unsplash.com/photos/fzOITuS1DIQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-3.jpg",
+          "size": "card",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "fzOITuS1DIQ",
+            "alt": "depth of field photography of man playing chess",
+            "photographer": "JESHOOTS.COM",
+            "unsplashUrl": "https://unsplash.com/photos/fzOITuS1DIQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-3.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business strategy",
+          "originalImage": {
+            "id": "fzOITuS1DIQ",
+            "alt": "depth of field photography of man playing chess",
+            "photographer": "JESHOOTS.COM",
+            "unsplashUrl": "https://unsplash.com/photos/fzOITuS1DIQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMHN0cmF0ZWd5fGVufDB8MHx8fDE3NTU4MDU1NjF8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "SB0WARG16HI",
+            "alt": "digital marketing artwork on brown wooden surface",
+            "photographer": "Diggity Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/SB0WARG16HI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-1.jpg",
+          "size": "section",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "SB0WARG16HI",
+            "alt": "digital marketing artwork on brown wooden surface",
+            "photographer": "Diggity Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/SB0WARG16HI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-1.jpg",
+          "size": "card",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "SB0WARG16HI",
+            "alt": "digital marketing artwork on brown wooden surface",
+            "photographer": "Diggity Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/SB0WARG16HI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "SB0WARG16HI",
+            "alt": "digital marketing artwork on brown wooden surface",
+            "photographer": "Diggity Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/SB0WARG16HI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "gMsnXqILjp4",
+            "alt": "man standing in front of people sitting beside table with laptop computers",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/gMsnXqILjp4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-2.jpg",
+          "size": "section",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "gMsnXqILjp4",
+            "alt": "man standing in front of people sitting beside table with laptop computers",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/gMsnXqILjp4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-2.jpg",
+          "size": "card",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "gMsnXqILjp4",
+            "alt": "man standing in front of people sitting beside table with laptop computers",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/gMsnXqILjp4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "gMsnXqILjp4",
+            "alt": "man standing in front of people sitting beside table with laptop computers",
+            "photographer": "Campaign Creators",
+            "unsplashUrl": "https://unsplash.com/photos/gMsnXqILjp4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-hero-3.jpg",
+          "size": "hero",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "hpjSkU2UYSU",
+            "alt": "laptop computer on glass-top table",
+            "photographer": "Carlos Muza",
+            "unsplashUrl": "https://unsplash.com/photos/hpjSkU2UYSU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-section-3.jpg",
+          "size": "section",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "hpjSkU2UYSU",
+            "alt": "laptop computer on glass-top table",
+            "photographer": "Carlos Muza",
+            "unsplashUrl": "https://unsplash.com/photos/hpjSkU2UYSU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-card-3.jpg",
+          "size": "card",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "hpjSkU2UYSU",
+            "alt": "laptop computer on glass-top table",
+            "photographer": "Carlos Muza",
+            "unsplashUrl": "https://unsplash.com/photos/hpjSkU2UYSU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        },
+        {
+          "filename": "b2b-marketing-thumbnail-3.jpg",
+          "size": "thumbnail",
+          "searchTerm": "digital marketing",
+          "originalImage": {
+            "id": "hpjSkU2UYSU",
+            "alt": "laptop computer on glass-top table",
+            "photographer": "Carlos Muza",
+            "unsplashUrl": "https://unsplash.com/photos/hpjSkU2UYSU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwzfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1NjV8MA"
+          }
+        }
+      ],
+      "count": 36,
+      "description": "B2B marketing strategies and business growth"
+    },
+    "consulting": {
+      "images": [
+        {
+          "filename": "consulting-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "3fPXt37X6UQ",
+            "alt": "people standing inside city building",
+            "photographer": "Charles Forerunner",
+            "unsplashUrl": "https://unsplash.com/photos/3fPXt37X6UQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-section-1.jpg",
+          "size": "section",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "3fPXt37X6UQ",
+            "alt": "people standing inside city building",
+            "photographer": "Charles Forerunner",
+            "unsplashUrl": "https://unsplash.com/photos/3fPXt37X6UQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-card-1.jpg",
+          "size": "card",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "3fPXt37X6UQ",
+            "alt": "people standing inside city building",
+            "photographer": "Charles Forerunner",
+            "unsplashUrl": "https://unsplash.com/photos/3fPXt37X6UQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "3fPXt37X6UQ",
+            "alt": "people standing inside city building",
+            "photographer": "Charles Forerunner",
+            "unsplashUrl": "https://unsplash.com/photos/3fPXt37X6UQ/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "5QgIuuBxKwM",
+            "alt": "black smartphone near person",
+            "photographer": "Headway",
+            "unsplashUrl": "https://unsplash.com/photos/5QgIuuBxKwM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-section-2.jpg",
+          "size": "section",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "5QgIuuBxKwM",
+            "alt": "black smartphone near person",
+            "photographer": "Headway",
+            "unsplashUrl": "https://unsplash.com/photos/5QgIuuBxKwM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-card-2.jpg",
+          "size": "card",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "5QgIuuBxKwM",
+            "alt": "black smartphone near person",
+            "photographer": "Headway",
+            "unsplashUrl": "https://unsplash.com/photos/5QgIuuBxKwM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "business consulting",
+          "originalImage": {
+            "id": "5QgIuuBxKwM",
+            "alt": "black smartphone near person",
+            "photographer": "Headway",
+            "unsplashUrl": "https://unsplash.com/photos/5QgIuuBxKwM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMGNvbnN1bHRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "vbxyFxlgpjM",
+            "alt": "five person by table watching turned on white iMac",
+            "photographer": "Jason Goodman",
+            "unsplashUrl": "https://unsplash.com/photos/vbxyFxlgpjM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-section-1.jpg",
+          "size": "section",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "vbxyFxlgpjM",
+            "alt": "five person by table watching turned on white iMac",
+            "photographer": "Jason Goodman",
+            "unsplashUrl": "https://unsplash.com/photos/vbxyFxlgpjM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-card-1.jpg",
+          "size": "card",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "vbxyFxlgpjM",
+            "alt": "five person by table watching turned on white iMac",
+            "photographer": "Jason Goodman",
+            "unsplashUrl": "https://unsplash.com/photos/vbxyFxlgpjM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "vbxyFxlgpjM",
+            "alt": "five person by table watching turned on white iMac",
+            "photographer": "Jason Goodman",
+            "unsplashUrl": "https://unsplash.com/photos/vbxyFxlgpjM/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-section-2.jpg",
+          "size": "section",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-card-2.jpg",
+          "size": "card",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "strategy meeting",
+          "originalImage": {
+            "id": "7tXA8xwe4W4",
+            "alt": "person pointing white paper on wall",
+            "photographer": "Startaê Team",
+            "unsplashUrl": "https://unsplash.com/photos/7tXA8xwe4W4/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzdHJhdGVneSUyMG1lZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU2OXww"
+          }
+        },
+        {
+          "filename": "consulting-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "5fNmWej4tAA",
+            "alt": "person holding pencil near laptop computer",
+            "photographer": "Scott Graham",
+            "unsplashUrl": "https://unsplash.com/photos/5fNmWej4tAA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        },
+        {
+          "filename": "consulting-section-1.jpg",
+          "size": "section",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "5fNmWej4tAA",
+            "alt": "person holding pencil near laptop computer",
+            "photographer": "Scott Graham",
+            "unsplashUrl": "https://unsplash.com/photos/5fNmWej4tAA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        },
+        {
+          "filename": "consulting-card-1.jpg",
+          "size": "card",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "5fNmWej4tAA",
+            "alt": "person holding pencil near laptop computer",
+            "photographer": "Scott Graham",
+            "unsplashUrl": "https://unsplash.com/photos/5fNmWej4tAA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        },
+        {
+          "filename": "consulting-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "5fNmWej4tAA",
+            "alt": "person holding pencil near laptop computer",
+            "photographer": "Scott Graham",
+            "unsplashUrl": "https://unsplash.com/photos/5fNmWej4tAA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        },
+        {
+          "filename": "consulting-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "46bom4lObsA",
+            "alt": "two women sitting at a table looking at a computer screen",
+            "photographer": "LinkedIn Sales Solutions",
+            "unsplashUrl": "https://unsplash.com/photos/46bom4lObsA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        },
+        {
+          "filename": "consulting-section-2.jpg",
+          "size": "section",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "46bom4lObsA",
+            "alt": "two women sitting at a table looking at a computer screen",
+            "photographer": "LinkedIn Sales Solutions",
+            "unsplashUrl": "https://unsplash.com/photos/46bom4lObsA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        },
+        {
+          "filename": "consulting-card-2.jpg",
+          "size": "card",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "46bom4lObsA",
+            "alt": "two women sitting at a table looking at a computer screen",
+            "photographer": "LinkedIn Sales Solutions",
+            "unsplashUrl": "https://unsplash.com/photos/46bom4lObsA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        },
+        {
+          "filename": "consulting-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "professional services",
+          "originalImage": {
+            "id": "46bom4lObsA",
+            "alt": "two women sitting at a table looking at a computer screen",
+            "photographer": "LinkedIn Sales Solutions",
+            "unsplashUrl": "https://unsplash.com/photos/46bom4lObsA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlc3xlbnwwfDB8fHwxNzU1ODA1NTcwfDA"
+          }
+        }
+      ],
+      "count": 24,
+      "description": "Professional consulting and strategic planning"
+    },
+    "web-presence": {
+      "images": [
+        {
+          "filename": "web-presence-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "RTdvy9izXvw",
+            "alt": "a laptop computer sitting on top of a wooden desk",
+            "photographer": "Carriza Maiquez",
+            "unsplashUrl": "https://unsplash.com/photos/RTdvy9izXvw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-section-1.jpg",
+          "size": "section",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "RTdvy9izXvw",
+            "alt": "a laptop computer sitting on top of a wooden desk",
+            "photographer": "Carriza Maiquez",
+            "unsplashUrl": "https://unsplash.com/photos/RTdvy9izXvw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-card-1.jpg",
+          "size": "card",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "RTdvy9izXvw",
+            "alt": "a laptop computer sitting on top of a wooden desk",
+            "photographer": "Carriza Maiquez",
+            "unsplashUrl": "https://unsplash.com/photos/RTdvy9izXvw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "RTdvy9izXvw",
+            "alt": "a laptop computer sitting on top of a wooden desk",
+            "photographer": "Carriza Maiquez",
+            "unsplashUrl": "https://unsplash.com/photos/RTdvy9izXvw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "tZc3vjPCk-Q",
+            "alt": "assorted-color abstract painting",
+            "photographer": "Hal Gatewood",
+            "unsplashUrl": "https://unsplash.com/photos/tZc3vjPCk-Q/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-section-2.jpg",
+          "size": "section",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "tZc3vjPCk-Q",
+            "alt": "assorted-color abstract painting",
+            "photographer": "Hal Gatewood",
+            "unsplashUrl": "https://unsplash.com/photos/tZc3vjPCk-Q/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-card-2.jpg",
+          "size": "card",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "tZc3vjPCk-Q",
+            "alt": "assorted-color abstract painting",
+            "photographer": "Hal Gatewood",
+            "unsplashUrl": "https://unsplash.com/photos/tZc3vjPCk-Q/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "website design",
+          "originalImage": {
+            "id": "tZc3vjPCk-Q",
+            "alt": "assorted-color abstract painting",
+            "photographer": "Hal Gatewood",
+            "unsplashUrl": "https://unsplash.com/photos/tZc3vjPCk-Q/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHx3ZWJzaXRlJTIwZGVzaWdufGVufDB8MHx8fDE3NTU4MDU1NzF8MA"
+          }
+        },
+        {
+          "filename": "web-presence-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "H4HXsojvvOU",
+            "alt": "black and white planet illustration",
+            "photographer": "Rico Horn",
+            "unsplashUrl": "https://unsplash.com/photos/H4HXsojvvOU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-section-1.jpg",
+          "size": "section",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "H4HXsojvvOU",
+            "alt": "black and white planet illustration",
+            "photographer": "Rico Horn",
+            "unsplashUrl": "https://unsplash.com/photos/H4HXsojvvOU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-card-1.jpg",
+          "size": "card",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "H4HXsojvvOU",
+            "alt": "black and white planet illustration",
+            "photographer": "Rico Horn",
+            "unsplashUrl": "https://unsplash.com/photos/H4HXsojvvOU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "H4HXsojvvOU",
+            "alt": "black and white planet illustration",
+            "photographer": "Rico Horn",
+            "unsplashUrl": "https://unsplash.com/photos/H4HXsojvvOU/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "Jhj2dljb7WA",
+            "alt": "grayscale photo of camera film",
+            "photographer": "Markus Spiske",
+            "unsplashUrl": "https://unsplash.com/photos/Jhj2dljb7WA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-section-2.jpg",
+          "size": "section",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "Jhj2dljb7WA",
+            "alt": "grayscale photo of camera film",
+            "photographer": "Markus Spiske",
+            "unsplashUrl": "https://unsplash.com/photos/Jhj2dljb7WA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-card-2.jpg",
+          "size": "card",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "Jhj2dljb7WA",
+            "alt": "grayscale photo of camera film",
+            "photographer": "Markus Spiske",
+            "unsplashUrl": "https://unsplash.com/photos/Jhj2dljb7WA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "digital presence",
+          "originalImage": {
+            "id": "Jhj2dljb7WA",
+            "alt": "grayscale photo of camera film",
+            "photographer": "Markus Spiske",
+            "unsplashUrl": "https://unsplash.com/photos/Jhj2dljb7WA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxkaWdpdGFsJTIwcHJlc2VuY2V8ZW58MHwwfHx8MTc1NTgwNTU3NXww"
+          }
+        },
+        {
+          "filename": "web-presence-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "eveI7MOcSmw",
+            "alt": "person using macbook pro on black table",
+            "photographer": "Myriam Jessier",
+            "unsplashUrl": "https://unsplash.com/photos/eveI7MOcSmw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        },
+        {
+          "filename": "web-presence-section-1.jpg",
+          "size": "section",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "eveI7MOcSmw",
+            "alt": "person using macbook pro on black table",
+            "photographer": "Myriam Jessier",
+            "unsplashUrl": "https://unsplash.com/photos/eveI7MOcSmw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        },
+        {
+          "filename": "web-presence-card-1.jpg",
+          "size": "card",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "eveI7MOcSmw",
+            "alt": "person using macbook pro on black table",
+            "photographer": "Myriam Jessier",
+            "unsplashUrl": "https://unsplash.com/photos/eveI7MOcSmw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        },
+        {
+          "filename": "web-presence-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "eveI7MOcSmw",
+            "alt": "person using macbook pro on black table",
+            "photographer": "Myriam Jessier",
+            "unsplashUrl": "https://unsplash.com/photos/eveI7MOcSmw/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        },
+        {
+          "filename": "web-presence-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        },
+        {
+          "filename": "web-presence-section-2.jpg",
+          "size": "section",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        },
+        {
+          "filename": "web-presence-card-2.jpg",
+          "size": "card",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        },
+        {
+          "filename": "web-presence-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "online marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxvbmxpbmUlMjBtYXJrZXRpbmd8ZW58MHwwfHx8MTc1NTgwNTU3N3ww"
+          }
+        }
+      ],
+      "count": 24,
+      "description": "Digital presence and web development"
+    },
+    "content-amplification": {
+      "images": [
+        {
+          "filename": "content-amplification-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-section-1.jpg",
+          "size": "section",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-card-1.jpg",
+          "size": "card",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "tLZhFRLj6nY",
+            "alt": "person using both laptop and smartphone",
+            "photographer": "Austin Distel",
+            "unsplashUrl": "https://unsplash.com/photos/tLZhFRLj6nY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "3GZNPBLImWc",
+            "alt": "person typing on laptop computer",
+            "photographer": "Kenny Eliason",
+            "unsplashUrl": "https://unsplash.com/photos/3GZNPBLImWc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-section-2.jpg",
+          "size": "section",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "3GZNPBLImWc",
+            "alt": "person typing on laptop computer",
+            "photographer": "Kenny Eliason",
+            "unsplashUrl": "https://unsplash.com/photos/3GZNPBLImWc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-card-2.jpg",
+          "size": "card",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "3GZNPBLImWc",
+            "alt": "person typing on laptop computer",
+            "photographer": "Kenny Eliason",
+            "unsplashUrl": "https://unsplash.com/photos/3GZNPBLImWc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "content marketing",
+          "originalImage": {
+            "id": "3GZNPBLImWc",
+            "alt": "person typing on laptop computer",
+            "photographer": "Kenny Eliason",
+            "unsplashUrl": "https://unsplash.com/photos/3GZNPBLImWc/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxjb250ZW50JTIwbWFya2V0aW5nfGVufDB8MHx8fDE3NTU4MDU1Nzl8MA"
+          }
+        },
+        {
+          "filename": "content-amplification-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "EQSPI11rf68",
+            "alt": "black iphone 4 on brown wooden table",
+            "photographer": "dole777",
+            "unsplashUrl": "https://unsplash.com/photos/EQSPI11rf68/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-section-1.jpg",
+          "size": "section",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "EQSPI11rf68",
+            "alt": "black iphone 4 on brown wooden table",
+            "photographer": "dole777",
+            "unsplashUrl": "https://unsplash.com/photos/EQSPI11rf68/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-card-1.jpg",
+          "size": "card",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "EQSPI11rf68",
+            "alt": "black iphone 4 on brown wooden table",
+            "photographer": "dole777",
+            "unsplashUrl": "https://unsplash.com/photos/EQSPI11rf68/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "EQSPI11rf68",
+            "alt": "black iphone 4 on brown wooden table",
+            "photographer": "dole777",
+            "unsplashUrl": "https://unsplash.com/photos/EQSPI11rf68/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "mr4JG4SYOF8",
+            "alt": "blue red and green letters illustration",
+            "photographer": "Alexander Shatov",
+            "unsplashUrl": "https://unsplash.com/photos/mr4JG4SYOF8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-section-2.jpg",
+          "size": "section",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "mr4JG4SYOF8",
+            "alt": "blue red and green letters illustration",
+            "photographer": "Alexander Shatov",
+            "unsplashUrl": "https://unsplash.com/photos/mr4JG4SYOF8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-card-2.jpg",
+          "size": "card",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "mr4JG4SYOF8",
+            "alt": "blue red and green letters illustration",
+            "photographer": "Alexander Shatov",
+            "unsplashUrl": "https://unsplash.com/photos/mr4JG4SYOF8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "social media",
+          "originalImage": {
+            "id": "mr4JG4SYOF8",
+            "alt": "blue red and green letters illustration",
+            "photographer": "Alexander Shatov",
+            "unsplashUrl": "https://unsplash.com/photos/mr4JG4SYOF8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxzb2NpYWwlMjBtZWRpYXxlbnwwfDB8fHwxNzU1ODA1NTgwfDA"
+          }
+        },
+        {
+          "filename": "content-amplification-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "KsXCsphf8U0",
+            "alt": "a black rectangular object with white text on it",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/KsXCsphf8U0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        },
+        {
+          "filename": "content-amplification-section-1.jpg",
+          "size": "section",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "KsXCsphf8U0",
+            "alt": "a black rectangular object with white text on it",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/KsXCsphf8U0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        },
+        {
+          "filename": "content-amplification-card-1.jpg",
+          "size": "card",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "KsXCsphf8U0",
+            "alt": "a black rectangular object with white text on it",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/KsXCsphf8U0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        },
+        {
+          "filename": "content-amplification-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "KsXCsphf8U0",
+            "alt": "a black rectangular object with white text on it",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/KsXCsphf8U0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        },
+        {
+          "filename": "content-amplification-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "Rsc0K8_fsJY",
+            "alt": "black and silver headphones on blue surface",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/Rsc0K8_fsJY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        },
+        {
+          "filename": "content-amplification-section-2.jpg",
+          "size": "section",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "Rsc0K8_fsJY",
+            "alt": "black and silver headphones on blue surface",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/Rsc0K8_fsJY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        },
+        {
+          "filename": "content-amplification-card-2.jpg",
+          "size": "card",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "Rsc0K8_fsJY",
+            "alt": "black and silver headphones on blue surface",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/Rsc0K8_fsJY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        },
+        {
+          "filename": "content-amplification-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "brand amplification",
+          "originalImage": {
+            "id": "Rsc0K8_fsJY",
+            "alt": "black and silver headphones on blue surface",
+            "photographer": "SJ 📸",
+            "unsplashUrl": "https://unsplash.com/photos/Rsc0K8_fsJY/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGFtcGxpZmljYXRpb258ZW58MHwwfHx8MTc1NTgwNTU4Mnww"
+          }
+        }
+      ],
+      "count": 24,
+      "description": "Content marketing and brand amplification"
+    },
+    "campaign-execution": {
+      "images": [
+        {
+          "filename": "campaign-execution-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "pe_gzj5uVz0",
+            "alt": "a man sitting on a couch and holding a pen",
+            "photographer": "ZBRA Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/pe_gzj5uVz0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-section-1.jpg",
+          "size": "section",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "pe_gzj5uVz0",
+            "alt": "a man sitting on a couch and holding a pen",
+            "photographer": "ZBRA Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/pe_gzj5uVz0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-card-1.jpg",
+          "size": "card",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "pe_gzj5uVz0",
+            "alt": "a man sitting on a couch and holding a pen",
+            "photographer": "ZBRA Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/pe_gzj5uVz0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "pe_gzj5uVz0",
+            "alt": "a man sitting on a couch and holding a pen",
+            "photographer": "ZBRA Marketing",
+            "unsplashUrl": "https://unsplash.com/photos/pe_gzj5uVz0/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "5CBCN2vlSeE",
+            "alt": "a man giving a presentation to a group of people",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/5CBCN2vlSeE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-section-2.jpg",
+          "size": "section",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "5CBCN2vlSeE",
+            "alt": "a man giving a presentation to a group of people",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/5CBCN2vlSeE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-card-2.jpg",
+          "size": "card",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "5CBCN2vlSeE",
+            "alt": "a man giving a presentation to a group of people",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/5CBCN2vlSeE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "marketing campaigns",
+          "originalImage": {
+            "id": "5CBCN2vlSeE",
+            "alt": "a man giving a presentation to a group of people",
+            "photographer": "SEO Galaxy",
+            "unsplashUrl": "https://unsplash.com/photos/5CBCN2vlSeE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxtYXJrZXRpbmclMjBjYW1wYWlnbnN8ZW58MHwwfHx8MTc1NTgwNTU4NXww"
+          }
+        },
+        {
+          "filename": "campaign-execution-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "gLU8GZpHtRA",
+            "alt": "monitor displaying girl",
+            "photographer": "Eleni Afiontzi",
+            "unsplashUrl": "https://unsplash.com/photos/gLU8GZpHtRA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-section-1.jpg",
+          "size": "section",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "gLU8GZpHtRA",
+            "alt": "monitor displaying girl",
+            "photographer": "Eleni Afiontzi",
+            "unsplashUrl": "https://unsplash.com/photos/gLU8GZpHtRA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-card-1.jpg",
+          "size": "card",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "gLU8GZpHtRA",
+            "alt": "monitor displaying girl",
+            "photographer": "Eleni Afiontzi",
+            "unsplashUrl": "https://unsplash.com/photos/gLU8GZpHtRA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "gLU8GZpHtRA",
+            "alt": "monitor displaying girl",
+            "photographer": "Eleni Afiontzi",
+            "unsplashUrl": "https://unsplash.com/photos/gLU8GZpHtRA/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "ZQZrvL7DwiI",
+            "alt": "a bunch of billboards that are on the side of a building",
+            "photographer": "Deon Fosu",
+            "unsplashUrl": "https://unsplash.com/photos/ZQZrvL7DwiI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-section-2.jpg",
+          "size": "section",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "ZQZrvL7DwiI",
+            "alt": "a bunch of billboards that are on the side of a building",
+            "photographer": "Deon Fosu",
+            "unsplashUrl": "https://unsplash.com/photos/ZQZrvL7DwiI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-card-2.jpg",
+          "size": "card",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "ZQZrvL7DwiI",
+            "alt": "a bunch of billboards that are on the side of a building",
+            "photographer": "Deon Fosu",
+            "unsplashUrl": "https://unsplash.com/photos/ZQZrvL7DwiI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "advertising",
+          "originalImage": {
+            "id": "ZQZrvL7DwiI",
+            "alt": "a bunch of billboards that are on the side of a building",
+            "photographer": "Deon Fosu",
+            "unsplashUrl": "https://unsplash.com/photos/ZQZrvL7DwiI/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxhZHZlcnRpc2luZ3xlbnwwfDB8fHwxNzU1ODA1NTg3fDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-hero-1.jpg",
+          "size": "hero",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "fSDqsdPPZNE",
+            "alt": "white and brown ice cream store",
+            "photographer": "1Click",
+            "unsplashUrl": "https://unsplash.com/photos/fSDqsdPPZNE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-section-1.jpg",
+          "size": "section",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "fSDqsdPPZNE",
+            "alt": "white and brown ice cream store",
+            "photographer": "1Click",
+            "unsplashUrl": "https://unsplash.com/photos/fSDqsdPPZNE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-card-1.jpg",
+          "size": "card",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "fSDqsdPPZNE",
+            "alt": "white and brown ice cream store",
+            "photographer": "1Click",
+            "unsplashUrl": "https://unsplash.com/photos/fSDqsdPPZNE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-thumbnail-1.jpg",
+          "size": "thumbnail",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "fSDqsdPPZNE",
+            "alt": "white and brown ice cream store",
+            "photographer": "1Click",
+            "unsplashUrl": "https://unsplash.com/photos/fSDqsdPPZNE/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-hero-2.jpg",
+          "size": "hero",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "sJtAl2b8Md8",
+            "alt": "a large coca - cola truck is parked on the side of the road",
+            "photographer": "Artist Istanbul",
+            "unsplashUrl": "https://unsplash.com/photos/sJtAl2b8Md8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-section-2.jpg",
+          "size": "section",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "sJtAl2b8Md8",
+            "alt": "a large coca - cola truck is parked on the side of the road",
+            "photographer": "Artist Istanbul",
+            "unsplashUrl": "https://unsplash.com/photos/sJtAl2b8Md8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-card-2.jpg",
+          "size": "card",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "sJtAl2b8Md8",
+            "alt": "a large coca - cola truck is parked on the side of the road",
+            "photographer": "Artist Istanbul",
+            "unsplashUrl": "https://unsplash.com/photos/sJtAl2b8Md8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        },
+        {
+          "filename": "campaign-execution-thumbnail-2.jpg",
+          "size": "thumbnail",
+          "searchTerm": "brand campaigns",
+          "originalImage": {
+            "id": "sJtAl2b8Md8",
+            "alt": "a large coca - cola truck is parked on the side of the road",
+            "photographer": "Artist Istanbul",
+            "unsplashUrl": "https://unsplash.com/photos/sJtAl2b8Md8/download?ixid=M3w3OTQ5Nzd8MHwxfHNlYXJjaHwyfHxicmFuZCUyMGNhbXBhaWduc3xlbnwwfDB8fHwxNzU1ODA1NTkwfDA"
+          }
+        }
+      ],
+      "count": 24,
+      "description": "Marketing campaign execution and management"
+    }
+  },
+  "usage": {
+    "hero": "Full-width background images for hero sections",
+    "section": "Medium images for content sections",
+    "card": "Small images for service cards and features",
+    "thumbnail": "Thumbnail images for lists and grids"
+  }
+}
