@@ -678,11 +678,8 @@
       const apiBaseMeta = document.querySelector('meta[name="api-base"]');
       const apiBaseFromMeta = apiBaseMeta && apiBaseMeta.getAttribute('content');
       const apiBaseCandidates = [
-        '', // same-origin
-        apiBaseFromMeta || '',
-        'https://marketingmousetrapagency.com',
-        'https://www.marketingmousetrapagency.com',
-        'https://mma-website.vercel.app', // fallback to default vercel domain (best-guess)
+        '', // same-origin (works when site is deployed with Next API)
+        apiBaseFromMeta || '', // optionally pin a specific API base
       ].filter(Boolean);
       async function fetchWithFallback(path, init) {
         for (const base of apiBaseCandidates) {
