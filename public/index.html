@@ -9,7 +9,6 @@
     <link rel="icon" href="Mousetrap.gif" type="image/gif">
     <link rel="canonical" href="https://marketingmousetrapagency.com/">
     <meta name="theme-color" content="#431d08">
-    <meta name="api-base" content="https://mma-website.vercel.app">
 
     <!-- Fonts: Inter + Fraunces (display swap) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -676,11 +675,13 @@
         }
       }
       // Load persisted slots from server (GitHub-backed), fallback to localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      const apiBaseFromQuery = urlParams.get('api_base') || '';
       const apiBaseMeta = document.querySelector('meta[name="api-base"]');
       const apiBaseFromMeta = apiBaseMeta && apiBaseMeta.getAttribute('content');
       const apiBaseCandidates = [
         '', // same-origin (works when site is deployed with Next API)
-        apiBaseFromMeta || '', // optionally pin a specific API base
+        apiBaseFromQuery || apiBaseFromMeta || '', // optionally pin a specific API base
       ].filter(Boolean);
       async function fetchWithFallback(path, init) {
         for (const base of apiBaseCandidates) {
