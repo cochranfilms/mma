@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type SlotsState = { month: string; remaining: number };
 
 const DEFAULT_STATE: SlotsState = { month: '2025-09', remaining: 5 };
