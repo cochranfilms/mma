@@ -9,6 +9,7 @@
     <link rel="icon" href="Mousetrap.gif" type="image/gif">
     <link rel="canonical" href="https://marketingmousetrapagency.com/">
     <meta name="theme-color" content="#431d08">
+    <meta name="api-base" content="https://mma-website.vercel.app">
 
     <!-- Fonts: Inter + Fraunces (display swap) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -571,7 +572,7 @@
           const phone = (document.getElementById('lead_phone')).value.trim();
           const website = (document.getElementById('lead_website')).value.trim();
           try {
-            const res = await fetch('/api/emailjs/send', {
+            const res = await fetchWithFallback('/api/emailjs/send', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email, first_name: name, phone, website }),
@@ -770,7 +771,7 @@
           }
           // Try server first (if configured to route to proper template)
           try {
-            const res = await fetch('/api/emailjs/send', {
+            const res = await fetchWithFallback('/api/emailjs/send', {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email, first_name, company, phone, website, system_type, automations, notes, budget, start_date, current_cms, current_crm, cta_url: 'https://landing.cochranfilms.com' })
             });
