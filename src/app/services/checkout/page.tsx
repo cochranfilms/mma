@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { servicePricingMap, formatMoneyFromCents } from '@/lib/invoice';
 
-export default function ServiceCheckoutPage() {
+function CheckoutContent() {
   const params = useSearchParams();
   const serviceId = params.get('serviceId') || '';
   const pricing = servicePricingMap[serviceId];
@@ -113,5 +113,13 @@ export default function ServiceCheckoutPage() {
         </aside>
       </div>
     </div>
+  );
+}
+
+export default function ServiceCheckoutPage() {
+  return (
+    <Suspense fallback={<div className="max-w-3xl mx-auto p-6">Loading checkout…</div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
