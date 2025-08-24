@@ -132,6 +132,7 @@
 
       .pill { display: inline-flex; align-items: center; gap: 10px; padding: 6px 10px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: rgba(185,154,69,0.16); border: 1px solid rgba(185,154,69,0.35); }
       .pill img { height: 18px; width: auto; filter: saturate(.9) contrast(1.05); }
+      .menu-btn { display: none; }
 
       main { display: grid; place-items: center; padding: 24px 20px 24px; }
       .wrap { width: 100%; max-width: 1200px; }
@@ -212,6 +213,25 @@
         .form .btn { width: 100%; justify-content: center; }
       }
 
+      /* Mobile enhancements (no desktop changes) */
+      @media (max-width: 719px) {
+        header { padding: 12px; }
+        .head-row { gap: 10px; }
+        .pill { display: none; }
+        .menu-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: var(--ink); }
+        .menu-btn .bars { width: 18px; height: 2px; background: currentColor; position: relative; display: block; }
+        .menu-btn .bars::before, .menu-btn .bars::after { content: ""; position: absolute; left: 0; width: 18px; height: 2px; background: currentColor; }
+        .menu-btn .bars::before { top: -6px; }
+        .menu-btn .bars::after { top: 6px; }
+        header nav { position: fixed; top: 64px; right: 12px; left: 12px; display: none; flex-direction: column; background: linear-gradient(180deg, rgba(16,11,9,0.95), rgba(16,11,9,0.85)); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); z-index: 20; }
+        body.nav-open header nav { display: flex; }
+        header nav a { padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+        header nav a:first-child { border-top: 0; }
+        .foot-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .btn { min-height: 44px; }
+        .field input[type=email] { min-height: 44px; }
+      }
+
       /* Reduced motion */
       @media (prefers-reduced-motion: reduce) {
         .dot { animation: none; }
@@ -225,9 +245,10 @@
       <header>
         <div class="head-row">
           <a class="brand" href="#top" aria-label="Marketing Mousetrap Agency">
-            <img src="Mousetrap.gif" alt="Marketing Mousetrap Agency logo">
+            <img src="Mousetrap.gif" alt="Marketing Mousetrap Agency logo" width="40" height="40" decoding="async" loading="lazy">
             <span class="wordmark">Marketing Mousetrap Agency</span>
           </a>
+          <button id="menuBtn" class="menu-btn" aria-label="Open menu" aria-expanded="false"><span class="bars" aria-hidden="true"></span></button>
           <nav aria-label="Primary">
             <a href="#about">About</a>
             <a href="#capabilities">Capabilities</a>
@@ -504,6 +525,26 @@
     <script>
       // Dynamic year
       document.getElementById('y').textContent = new Date().getFullYear();
+
+      // Mobile nav toggle
+      const menuBtn = document.getElementById('menuBtn');
+      const primaryNav = document.querySelector('header nav');
+      if (menuBtn && primaryNav) {
+        menuBtn.addEventListener('click', () => {
+          const open = document.body.classList.toggle('nav-open');
+          menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        primaryNav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+          document.body.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        }));
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            document.body.classList.remove('nav-open');
+            menuBtn.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
 
       // Reduced motion
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
