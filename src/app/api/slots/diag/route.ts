@@ -17,7 +17,7 @@ function corsHeaders(methods: string) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const repo = searchParams.get('repo') || process.env.GITHUB_REPO || 'cochranfilms/mma-website';
+    const repo = searchParams.get('repo') || process.env.GITHUB_REPO || 'cochranfilms/mma';
     const path = searchParams.get('path') || process.env.GITHUB_SLOTS_PATH || 'src/data/slots.json';
     const branch = searchParams.get('branch') || process.env.GITHUB_BRANCH || 'main';
     const token = process.env.GITHUB_TOKEN;

@@ -10,7 +10,7 @@ const DEFAULT_STATE: SlotsState = { month: '2025-09', remaining: 5 };
 
 async function fetchFromGitHub(): Promise<SlotsState | null> {
   const token = process.env.GITHUB_TOKEN;
-  const repo = process.env.GITHUB_REPO || 'cochranfilms/mma-website';
+  const repo = process.env.GITHUB_REPO || 'cochranfilms/mma';
   const path = process.env.GITHUB_SLOTS_PATH || 'src/data/slots.json';
   const branch = process.env.GITHUB_BRANCH || 'main';
   if (!token) return null;
