@@ -642,6 +642,7 @@
       const rqStatus = document.getElementById('rq_status');
       const INITIAL_SLOTS = 5;
       let slots = INITIAL_SLOTS;
+      let loadedFromServer = false;
       function updateSlots() {
         if (!slotsEl) return;
         if (slots < 0) slots = 0;
@@ -657,6 +658,19 @@
         }
       }
       // Load persisted slots from server (GitHub-backed), fallback to localStorage
+      const refreshFromServer = async () => {
+        try {
+          const resp = await fetch('/api/slots/get', { cache: 'no-store' });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (typeof data?.remaining === 'number' && data.remaining !== slots) {
+              slots = data.remaining;
+              updateSlots();
+            }
+          }
+        } catch (_) {}
+      };
+
       (async () => {
         try {
           const resp = await fetch('/api/slots/get', { cache: 'no-store' });
@@ -665,16 +679,19 @@
             if (typeof data?.remaining === 'number') {
               slots = data.remaining;
               updateSlots();
+              loadedFromServer = true;
             }
           }
         } catch (_) {}
         // Fallback to local value if server unavailable
-        if (slots === INITIAL_SLOTS) {
+        if (!loadedFromServer) {
           const local = Number(localStorage.getItem('mma_slots_left') || INITIAL_SLOTS);
           slots = local;
           updateSlots();
         }
       })();
+      // Background refresh so other visitors see changes without reload
+      setInterval(refreshFromServer, 15000);
       if (openRequest && requestModal) {
         openRequest.addEventListener('click', () => { try { requestModal.showModal(); } catch(_) {} });
       }
@@ -710,6 +727,8 @@
               slots -= 1; updateSlots(); if (rqStatus) rqStatus.textContent = 'Request received.'; if (requestModal) requestModal.close();
               // Persist decrement server-side (best-effort)
               try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
+              // Confirm sync shortly after
+              setTimeout(refreshFromServer, 1000);
               try { document.getElementById('successModal').showModal(); } catch(_) {}
               return;
             }
@@ -737,6 +756,8 @@
             slots -= 1; updateSlots(); if (rqStatus) rqStatus.textContent = 'Request received.'; if (requestModal) requestModal.close();
             // Persist decrement server-side (best-effort)
             try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
+            // Confirm sync shortly after
+            setTimeout(refreshFromServer, 1000);
             try { document.getElementById('successModal').showModal(); } catch(_) {}
           } catch(err) {
             if (rqStatus) rqStatus.textContent = 'Couldn\'t send. Please email us directly.';
