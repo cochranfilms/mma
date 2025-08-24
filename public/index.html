@@ -641,7 +641,7 @@
       const rqCancel = document.getElementById('rqCancel');
       const rqStatus = document.getElementById('rq_status');
       const INITIAL_SLOTS = 5;
-      let slots = Number(localStorage.getItem('mma_slots_left') || INITIAL_SLOTS);
+      let slots = INITIAL_SLOTS;
       function updateSlots() {
         if (!slotsEl) return;
         if (slots < 0) slots = 0;
@@ -656,7 +656,25 @@
           }
         }
       }
-      updateSlots();
+      // Load persisted slots from server (GitHub-backed), fallback to localStorage
+      (async () => {
+        try {
+          const resp = await fetch('/api/slots/get', { cache: 'no-store' });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (typeof data?.remaining === 'number') {
+              slots = data.remaining;
+              updateSlots();
+            }
+          }
+        } catch (_) {}
+        // Fallback to local value if server unavailable
+        if (slots === INITIAL_SLOTS) {
+          const local = Number(localStorage.getItem('mma_slots_left') || INITIAL_SLOTS);
+          slots = local;
+          updateSlots();
+        }
+      })();
       if (openRequest && requestModal) {
         openRequest.addEventListener('click', () => { try { requestModal.showModal(); } catch(_) {} });
       }
@@ -690,6 +708,8 @@
             });
             if (res.ok) {
               slots -= 1; updateSlots(); if (rqStatus) rqStatus.textContent = 'Request received.'; if (requestModal) requestModal.close();
+              // Persist decrement server-side (best-effort)
+              try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
               try { document.getElementById('successModal').showModal(); } catch(_) {}
               return;
             }
@@ -715,6 +735,8 @@
             const r = await fetch('https://api.emailjs.com/api/v1.0/email/send', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
             if (!r.ok) throw new Error('EmailJS send failed');
             slots -= 1; updateSlots(); if (rqStatus) rqStatus.textContent = 'Request received.'; if (requestModal) requestModal.close();
+            // Persist decrement server-side (best-effort)
+            try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
             try { document.getElementById('successModal').showModal(); } catch(_) {}
           } catch(err) {
             if (rqStatus) rqStatus.textContent = 'Couldn\'t send. Please email us directly.';
