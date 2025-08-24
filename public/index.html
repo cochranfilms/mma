@@ -433,7 +433,24 @@
           <p style="margin:0; color:#2b211b">Thanks! You're on the list. We'll be in touch with your early access invite and updates.</p>
           <a href="https://landing.cochranfilms.com" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none; background:#C7AE6A; color:#1a140d; font-weight:700; padding:12px 16px; width:fit-content">See what's coming</a>
           <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:6px">
-            <button type="submit" class="btn-ghost" style="padding:12px 16px; border:1px solid rgba(0,0,0,0.08)">Close</button>
+            <button type="submit" class="btn-ghost" style="padding:12px 16px; border:1px solid #000; color:#000">Close</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- System Request Success Modal -->
+    <dialog id="requestSuccessModal" style="border:1px solid rgba(0,0,0,0.08); background:#ffffff; color:#2b211b; padding:0; width:min(560px, 96vw)">
+      <form method="dialog" style="margin:0;">
+        <div style="height:4px; background:#C7AE6A"></div>
+        <div style="padding:24px; border-bottom:1px solid #e9e2d6;">
+          <h3 style="margin:0; font-family:Fraunces,Georgia,serif; color:#1f160f; font-size:22px">Thanks — request received</h3>
+          <p style="margin:6px 0 0; color:#4a3a2f">We can’t wait to automate your ROI with user‑friendly systems, powered by Cochran Films’ full‑stack solutions.</p>
+        </div>
+        <div style="padding:20px; display:grid; gap:14px">
+          <a href="https://landing.cochranfilms.com" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none; background:#C7AE6A; color:#1a140d; font-weight:700; padding:12px 16px; width:fit-content">Preview what’s coming</a>
+          <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:6px">
+            <button type="submit" class="btn-ghost" style="padding:12px 16px; border:1px solid #000; color:#000">Close</button>
           </div>
         </div>
       </form>
@@ -729,7 +746,7 @@
               try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
               // Confirm sync shortly after
               setTimeout(refreshFromServer, 1000);
-              try { document.getElementById('successModal').showModal(); } catch(_) {}
+              try { document.getElementById('requestSuccessModal').showModal(); } catch(_) {}
               return;
             }
           } catch(_) {}
@@ -758,7 +775,7 @@
             try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
             // Confirm sync shortly after
             setTimeout(refreshFromServer, 1000);
-            try { document.getElementById('successModal').showModal(); } catch(_) {}
+            try { document.getElementById('requestSuccessModal').showModal(); } catch(_) {}
           } catch(err) {
             if (rqStatus) rqStatus.textContent = 'Couldn\'t send. Please email us directly.';
           }
