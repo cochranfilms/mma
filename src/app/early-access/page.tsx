@@ -15,15 +15,51 @@ export default function EarlyAccessPage() {
             e.preventDefault();
             const form = e.currentTarget as HTMLFormElement;
             const data = Object.fromEntries(new FormData(form).entries());
-            const res = await fetch('/api/emailjs/send', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data),
-            });
-            if (res.ok) {
+            try {
+              const res = await fetch('/api/emailjs/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+              });
+              if (res.ok) {
+                alert('Thanks! You\'re on the list.');
+                form.reset();
+                return;
+              }
+            } catch (_) {}
+
+            // Fallback to EmailJS client-side REST if server route is unavailable
+            try {
+              const SERVICE_ID = 'service_t11yvru';
+              const TEMPLATE_ID_ADMIN = 'template_rjp7hxy';
+              const TEMPLATE_ID_CLIENT = 'template_lzio9kd';
+              const USER_ID = 'p4pF3OWvh-DXtae4c';
+              const baseParams: Record<string, string | number | boolean | null | undefined> = {
+                email: String(data.email || ''),
+                first_name: String(data.first_name || ''),
+                company: String(data.company || ''),
+                goals: String(data.goals || ''),
+                cta_url: 'https://www.marketingmousetrapagency.com/early-access',
+              };
+              const sendEmailJs = async (templateId: string) => {
+                const payload = {
+                  service_id: SERVICE_ID,
+                  template_id: templateId,
+                  user_id: USER_ID,
+                  template_params: baseParams,
+                };
+                const r = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload),
+                });
+                if (!r.ok) throw new Error('EmailJS send failed');
+              };
+              await sendEmailJs(TEMPLATE_ID_ADMIN);
+              await sendEmailJs(TEMPLATE_ID_CLIENT);
               alert('Thanks! You\'re on the list.');
               form.reset();
-            } else {
+            } catch (err) {
               alert('Something went wrong. Please email us directly.');
             }
           }}
