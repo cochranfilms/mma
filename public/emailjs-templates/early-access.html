@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>MMA — New early access request</title>
+    <style>
+      /* Squares only */
+      * { border-radius: 0 !important; }
+      body { margin:0; background:#100b09; color:#f5efe7; font-family: Inter, Arial, sans-serif; }
+      .wrap { width:100%; max-width:640px; margin:0 auto; }
+      .bar { height:4px; background:#C7AE6A; }
+      .section { padding:40px 24px; border:1px solid rgba(255,255,255,0.14); background: #140f0c; }
+      h1,h2 { margin:0 0 8px; color:#fffefa; font-weight:800; font-family: Georgia, 'Times New Roman', serif; }
+      p { margin:0 0 12px; color:#d7c9b6; line-height:1.55; }
+      .btn { display:inline-block; background:#C7AE6A; color:#0e0b06 !important; text-decoration:none; font-weight:700; padding:12px 16px; }
+      a { color:#d5c28f; }
+      .muted { color:#cbbca8; font-size:13px; }
+      .divider { height:1px; background:rgba(255,255,255,0.14); margin:16px 0; }
+      .grid { display:grid; gap:12px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      @media (min-width: 520px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+      .kv { display:grid; grid-template-columns: 140px 1fr; gap:8px 12px; align-items:center; }
+      .kv b { color:#fffefa; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="bar"></div>
+      <div class="section">
+        <h1>New early access request</h1>
+        <p>A visitor requested early access on marketingmousetrapagency.com. Details captured from the popup form are below.</p>
+
+        <div class="divider"></div>
+
+        <h2>Lead details</h2>
+        <div class="kv" style="margin-top:8px">
+          <b>Name</b><span>{{first_name}}</span>
+          <b>Email</b><span>{{email}}</span>
+          <b>Phone</b><span>{{phone}}</span>
+          <b>Website</b><span>{{website}}</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid grid-2">
+          <p><a class="btn" href="mailto:{{email}}?subject=Early%20access%20follow-up" target="_blank" rel="noopener">Reply to lead</a></p>
+          <p><a class="btn" href="{{website}}" target="_blank" rel="noopener">Open website</a></p>
+        </div>
+
+        <p class="muted">If the phone field is present, you can also call: {{phone}}</p>
+      </div>
+
+      <div class="section" style="margin-top:10px">
+        <p class="muted">Internal notification from Marketing Mousetrap Agency systems.</p>
+        <p class="muted">In partnership with Cochran Films.</p>
+      </div>
+    </div>
+  </body>
+  </html>
+
+

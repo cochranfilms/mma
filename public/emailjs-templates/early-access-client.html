@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>MMA — You’re on the early access list</title>
+    <style>
+      * { border-radius: 0 !important; }
+      body { margin:0; background:#100b09; color:#f5efe7; font-family: Inter, Arial, sans-serif; }
+      .wrap { width:100%; max-width:640px; margin:0 auto; }
+      .bar { height:4px; background:#C7AE6A; }
+      .section { padding:40px 24px; border:1px solid rgba(255,255,255,0.14); background:#140f0c; }
+      h1,h2 { margin:0 0 8px; color:#fffefa; font-weight:800; font-family: Georgia, 'Times New Roman', serif; }
+      p { margin:0 0 12px; color:#d7c9b6; line-height:1.55; }
+      .btn { display:inline-block; background:#C7AE6A; color:#0e0b06 !important; text-decoration:none; font-weight:700; padding:12px 16px; }
+      a { color:#d5c28f; }
+      .muted { color:#cbbca8; font-size:13px; }
+      .divider { height:1px; background:rgba(255,255,255,0.14); margin:16px 0; }
+      .grid { display:grid; gap:12px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      @media (min-width: 520px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="bar"></div>
+      <div class="section">
+        <h1>Welcome to the Mousetrap</h1>
+        <p>Thanks {{first_name}} for requesting early access with <strong>{{email}}</strong>. You’re officially on the list.</p>
+
+        <div class="divider"></div>
+
+        <h2>What happens next</h2>
+        <div class="grid grid-2">
+          <div>
+            <p><strong>Early access window</strong><br>We’ll email you your invite and onboarding link.</p>
+          </div>
+          <div>
+            <p><strong>Value-first updates</strong><br>Short dispatches with tools, playbooks, and automation recipes.</p>
+          </div>
+          <div>
+            <p><strong>Pilot opportunities</strong><br>Occasional invites to co‑develop and measure KPIs.</p>
+          </div>
+          <div>
+            <p><strong>One-click unsubscribe</strong><br>Always in control. No spam — just useful systems.</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <p><a class="btn" href="{{cta_url}}" target="_blank" rel="noopener">Tell us your goals (60s)</a></p>
+        <p class="muted">Sharing your goals helps us tailor your spot in the beta.</p>
+
+        <div class="divider"></div>
+
+        <p class="muted">In partnership with Cochran Films — cinematic storytelling stitched into sophisticated systems.</p>
+      </div>
+
+      <div class="section" style="margin-top:10px">
+        <p class="muted">If this email looks broken, <a href="{{cta_url}}" target="_blank" rel="noopener">view it in your browser</a>.</p>
+        <p class="muted">You’re receiving this because you requested early access at marketingmousetrapagency.com.</p>
+      </div>
+    </div>
+  </body>
+  </html>
+
+

@@ -1,0 +1,81 @@
+import { NextRequest } from 'next/server';
+
+type EmailJsPayload = {
+  service_id: string;
+  template_id: string;
+  user_id?: string; // public key
+  accessToken?: string; // private access token (optional alternative)
+  template_params: Record<string, string | number | boolean | null | undefined>;
+};
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json().catch(() => ({}));
+    const {
+      email,
+      first_name,
+      last_name,
+      company,
+      role,
+      goals,
+      phone,
+      website,
+      cta_url,
+    } = body || {};
+
+    if (!email || typeof email !== 'string') {
+      return new Response(JSON.stringify({ error: 'Missing email' }), { status: 400 });
+    }
+
+    const SERVICE_ID = process.env.EMAILJS_SERVICE_ID || 'service_t11yvru';
+    const TEMPLATE_ID_ADMIN = process.env.EMAILJS_TEMPLATE_ID_ADMIN || 'template_rjp7hxy';
+    const TEMPLATE_ID_CLIENT = process.env.EMAILJS_TEMPLATE_ID_CLIENT || 'template_lzio9kd';
+    const USER_ID = process.env.EMAILJS_PUBLIC_KEY || 'p4pF3OWvh-DXtae4c'; // aka public key
+    const ACCESS_TOKEN = process.env.EMAILJS_PRIVATE_KEY; // optional
+
+    if (!SERVICE_ID || (!TEMPLATE_ID_ADMIN && !TEMPLATE_ID_CLIENT) || (!USER_ID && !ACCESS_TOKEN)) {
+      return new Response(JSON.stringify({ error: 'EmailJS env not configured' }), { status: 500 });
+    }
+
+    const baseParams = {
+      email,
+      first_name,
+      last_name,
+      company,
+      role,
+      goals,
+      phone,
+      website,
+      cta_url: cta_url || 'https://www.marketingmousetrapagency.com/early-access',
+    } as Record<string, string | number | boolean | null | undefined>;
+
+    const sendOne = async (templateId: string) => {
+      const payload: EmailJsPayload = {
+        service_id: SERVICE_ID,
+        template_id: templateId,
+        template_params: baseParams,
+      };
+      if (USER_ID) payload.user_id = USER_ID;
+      if (ACCESS_TOKEN) payload.accessToken = ACCESS_TOKEN;
+      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Email send failed');
+      }
+    };
+
+    // Send admin notification first, then client confirmation
+    if (TEMPLATE_ID_ADMIN) await sendOne(TEMPLATE_ID_ADMIN);
+    if (TEMPLATE_ID_CLIENT) await sendOne(TEMPLATE_ID_CLIENT);
+
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  } catch (error: unknown) {
+    return new Response(JSON.stringify({ error: 'Unexpected error' }), { status: 500 });
+  }
+}
+
+
