@@ -13,8 +13,9 @@ const footerNavigation = {
     { name: 'About', href: '/about' },
     { name: 'Case Studies', href: '/work' },
     { name: 'Contact', href: '/contact' },
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Privacy', href: '/privacy' },
+    { name: 'Accessibility', href: '/accessibility' },
+    { name: 'Terms', href: '/terms' },
   ],
   resources: [
     { name: 'Blog', href: '/blog' },
