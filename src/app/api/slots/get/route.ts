@@ -38,10 +38,36 @@ async function fetchFromGitHub(): Promise<SlotsState | null> {
 export async function GET() {
   try {
     const gh = await fetchFromGitHub();
-    return NextResponse.json(gh ?? DEFAULT_STATE, { status: 200 });
+    return NextResponse.json(gh ?? DEFAULT_STATE, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
   } catch (err) {
-    return NextResponse.json(DEFAULT_STATE, { status: 200 });
+    return NextResponse.json(DEFAULT_STATE, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
   }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }
 
 

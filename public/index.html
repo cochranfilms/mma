@@ -675,9 +675,24 @@
         }
       }
       // Load persisted slots from server (GitHub-backed), fallback to localStorage
+      const apiBaseCandidates = [
+        '', // same-origin
+        'https://marketingmousetrap.com',
+        'https://www.marketingmousetrap.com',
+      ];
+      async function fetchWithFallback(path, init) {
+        for (const base of apiBaseCandidates) {
+          try {
+            const resp = await fetch(`${base}${path}`, init);
+            if (resp.ok) return resp;
+          } catch(_) {}
+        }
+        throw new Error('All API bases failed');
+      }
+
       const refreshFromServer = async () => {
         try {
-          const resp = await fetch('/api/slots/get', { cache: 'no-store' });
+          const resp = await fetchWithFallback('/api/slots/get', { cache: 'no-store' });
           if (resp.ok) {
             const data = await resp.json();
             if (typeof data?.remaining === 'number' && data.remaining !== slots) {
@@ -690,7 +705,7 @@
 
       (async () => {
         try {
-          const resp = await fetch('/api/slots/get', { cache: 'no-store' });
+          const resp = await fetchWithFallback('/api/slots/get', { cache: 'no-store' });
           if (resp.ok) {
             const data = await resp.json();
             if (typeof data?.remaining === 'number') {
@@ -743,7 +758,7 @@
             if (res.ok) {
               slots -= 1; updateSlots(); if (rqStatus) rqStatus.textContent = 'Request received.'; if (requestModal) requestModal.close();
               // Persist decrement server-side (best-effort)
-              try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
+              try { await fetchWithFallback('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
               // Confirm sync shortly after
               setTimeout(refreshFromServer, 1000);
               try { document.getElementById('requestSuccessModal').showModal(); } catch(_) {}
@@ -772,7 +787,7 @@
             if (!r.ok) throw new Error('EmailJS send failed');
             slots -= 1; updateSlots(); if (rqStatus) rqStatus.textContent = 'Request received.'; if (requestModal) requestModal.close();
             // Persist decrement server-side (best-effort)
-            try { await fetch('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
+            try { await fetchWithFallback('/api/slots/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'decrement' }) }); } catch(_) {}
             // Confirm sync shortly after
             setTimeout(refreshFromServer, 1000);
             try { document.getElementById('requestSuccessModal').showModal(); } catch(_) {}
