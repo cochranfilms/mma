@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>MMA — New system request</title>
+    <style>
+      * { border-radius: 0 !important; }
+      body { margin:0; background:#FFFDF7; color:#2b211b; font-family: Inter, Arial, sans-serif; }
+      .wrap { width:100%; max-width:720px; margin:0 auto; }
+      .bar { height:4px; background:#C7AE6A; }
+      .section { padding:40px 24px; border:1px solid rgba(0,0,0,0.08); background:#ffffff; }
+      h1,h2 { margin:0 0 8px; color:#1f160f; font-weight:800; font-family: Georgia, 'Times New Roman', serif; }
+      p { margin:0 0 12px; color:#4a3a2f; line-height:1.6; }
+      .btn { display:inline-block; background:#C7AE6A; color:#1a140d !important; text-decoration:none; font-weight:700; padding:12px 16px; }
+      a { color:#70300E; }
+      .muted { color:#6f5a4a; font-size:13px; }
+      .divider { height:1px; background:#e9e2d6; margin:16px 0; }
+      .kv { display:grid; grid-template-columns: 180px 1fr; gap:8px 12px; align-items:start; }
+      .kv b { color:#1f160f; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="bar"></div>
+      <div class="section">
+        <h1>New system request</h1>
+        <p>A prospective client submitted a request on marketingmousetrapagency.com. Details below.</p>
+
+        <div class="divider"></div>
+
+        <h2>Requester</h2>
+        <div class="kv" style="margin-top:8px">
+          <b>Name</b><span>{{first_name}}</span>
+          <b>Email</b><span>{{email}}</span>
+          <b>Company</b><span>{{company}}</span>
+          <b>Phone</b><span>{{phone}}</span>
+          <b>Website</b><span>{{website}}</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>Request</h2>
+        <div class="kv" style="margin-top:8px">
+          <b>System type</b><span>{{system_type}}</span>
+          <b>Automations</b><span>{{automations_details}}</span>
+          <b>Notes</b><span>{{notes}}</span>
+          <b>Budget</b><span>{{budget}}</span>
+          <b>Target start date</b><span>{{start_date}}</span>
+          <b>Current CMS</b><span>{{current_cms}}</span>
+          <b>Current CRM</b><span>{{current_crm}}</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <p><a class="btn" href="mailto:{{email}}?subject=System%20request%20follow-up" target="_blank" rel="noopener">Reply to requester</a></p>
+      </div>
+
+      <div class="section" style="margin-top:10px">
+        <p class="muted">Internal notification from Marketing Mousetrap Agency systems.</p>
+        <p class="muted">In partnership with Cochran Films.</p>
+      </div>
+    </div>
+  </body>
+  </html>
+
+
