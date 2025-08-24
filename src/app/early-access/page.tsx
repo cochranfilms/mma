@@ -1,3 +1,5 @@
+"use client";
+
 export default function EarlyAccessPage() {
   return (
     <main className="min-h-screen bg-[rgb(16,11,9)] text-[#f5efe7]">
