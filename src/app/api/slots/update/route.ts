@@ -13,6 +13,7 @@ async function getFileMeta(token: string, repo: string, path: string, branch: st
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
       'User-Agent': 'mma-website/slots-update',
     },
     cache: 'no-store',
@@ -24,7 +25,7 @@ async function getFileMeta(token: string, repo: string, path: string, branch: st
 export async function POST(request: Request) {
   try {
     const token = process.env.GITHUB_TOKEN;
-    const repo = process.env.GITHUB_REPO || 'cochranfilms/mma';
+    const repo = process.env.GITHUB_REPO || 'cochranfilms/mma-website';
     const path = process.env.GITHUB_SLOTS_PATH || 'src/data/slots.json';
     const branch = process.env.GITHUB_BRANCH || 'main';
     if (!token) {
@@ -64,6 +65,7 @@ export async function POST(request: Request) {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
         'User-Agent': 'mma-website/slots-update',
         'Content-Type': 'application/json',
       },

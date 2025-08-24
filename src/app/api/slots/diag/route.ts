@@ -17,13 +17,14 @@ function corsHeaders(methods: string) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const repo = searchParams.get('repo') || process.env.GITHUB_REPO || 'cochranfilms/mma';
+    const repo = searchParams.get('repo') || process.env.GITHUB_REPO || 'cochranfilms/mma-website';
     const path = searchParams.get('path') || process.env.GITHUB_SLOTS_PATH || 'src/data/slots.json';
     const branch = searchParams.get('branch') || process.env.GITHUB_BRANCH || 'main';
     const token = process.env.GITHUB_TOKEN;
 
     const headers: Record<string, string> = {
       Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
       'User-Agent': 'mma-website/slots-diagnostics',
     };
     if (token) headers.Authorization = `Bearer ${token}`;

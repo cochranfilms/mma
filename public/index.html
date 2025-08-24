@@ -728,7 +728,7 @@
           updateSlots();
           // As a last resort try reading straight from GitHub public API
           try {
-            const repo = 'cochranfilms/mma';
+            const repo = 'cochranfilms/mma-website';
             const path = 'src/data/slots.json';
             const url = `https://api.github.com/repos/${repo}/contents/${encodeURIComponent(path)}?ref=main`;
             const r = await fetch(url, { cache: 'no-store' });
