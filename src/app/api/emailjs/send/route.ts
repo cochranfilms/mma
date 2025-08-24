@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 
 type EmailJsPayload = {
   service_id: string;
@@ -8,13 +8,9 @@ type EmailJsPayload = {
   template_params: Record<string, string | number | boolean | null | undefined>;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
+export async function POST(request: Request) {
   try {
+    const body = await request.json().catch(() => ({}));
     const {
       email,
       first_name,
@@ -25,10 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       phone,
       website,
       cta_url,
-    } = (req.body || {}) as Record<string, any>;
+    } = (body || {}) as Record<string, any>;
 
     if (!email || typeof email !== 'string') {
-      return res.status(400).json({ error: 'Missing email' });
+      return NextResponse.json({ error: 'Missing email' }, { status: 400 });
     }
 
     const SERVICE_ID = process.env.EMAILJS_SERVICE_ID || 'service_t11yvru';
@@ -38,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const ACCESS_TOKEN = process.env.EMAILJS_PRIVATE_KEY; // optional
 
     if (!SERVICE_ID || (!TEMPLATE_ID_ADMIN && !TEMPLATE_ID_CLIENT) || (!USER_ID && !ACCESS_TOKEN)) {
-      return res.status(500).json({ error: 'EmailJS env not configured' });
+      return NextResponse.json({ error: 'EmailJS env not configured' }, { status: 500 });
     }
 
     const baseParams = {
@@ -65,6 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        cache: 'no-store',
       });
       if (!resp.ok) {
         const text = await resp.text();
@@ -75,9 +72,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (TEMPLATE_ID_ADMIN) await sendOne(TEMPLATE_ID_ADMIN);
     if (TEMPLATE_ID_CLIENT) await sendOne(TEMPLATE_ID_CLIENT);
 
-    return res.status(200).json({ ok: true });
+    return NextResponse.json({ ok: true }, { status: 200 });
   } catch (err) {
-    return res.status(500).json({ error: 'Unexpected error' });
+    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
   }
 }
 
