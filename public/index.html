@@ -505,6 +505,12 @@
               phone,
               website,
               cta_url: 'https://www.marketingmousetrapagency.com/early-access',
+              // Add common recipient aliases to satisfy EmailJS template settings
+              to_email: email,
+              to_name: name || email,
+              reply_to: email,
+              user_email: email,
+              user_name: name || email,
             };
             const sendEmailJs = async (templateId) => {
               const payload = {

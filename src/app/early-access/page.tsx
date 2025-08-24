@@ -40,6 +40,11 @@ export default function EarlyAccessPage() {
                 company: String(data.company || ''),
                 goals: String(data.goals || ''),
                 cta_url: 'https://www.marketingmousetrapagency.com/early-access',
+                to_email: String(data.email || ''),
+                to_name: String(data.first_name || data.email || ''),
+                reply_to: String(data.email || ''),
+                user_email: String(data.email || ''),
+                user_name: String(data.first_name || data.email || ''),
               };
               const sendEmailJs = async (templateId: string) => {
                 const payload = {
