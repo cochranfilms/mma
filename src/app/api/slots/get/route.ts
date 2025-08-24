@@ -1,3 +1,4 @@
+import { kvGetSlots } from '../../../../lib/kv';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -38,7 +39,9 @@ async function fetchFromGitHub(): Promise<SlotsState | null> {
 
 export async function GET() {
   try {
-    const gh = await fetchFromGitHub();
+    // Prefer KV if configured and has a value
+    const kv = await kvGetSlots();
+    const gh = kv ?? (await fetchFromGitHub());
     return NextResponse.json(gh ?? DEFAULT_STATE, {
       status: 200,
       headers: {

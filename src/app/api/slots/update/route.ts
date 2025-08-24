@@ -1,3 +1,4 @@
+import { kvGetSlots, kvSetSlots, isKvConfigured } from '../../../../lib/kv';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -37,11 +38,11 @@ export async function POST(request: Request) {
     const setTo: number | undefined = typeof body?.value === 'number' ? body.value : undefined;
     const month: string = body?.month || DEFAULT_STATE.month;
 
-    // Read current
-    let current: SlotsState = DEFAULT_STATE;
+    // Read current (prefer KV if configured)
+    let current: SlotsState = (await kvGetSlots()) ?? DEFAULT_STATE;
     const meta = await getFileMeta(token, repo, path, branch);
     let sha: string | undefined = meta?.sha;
-    if (meta?.content) {
+    if (!current && meta?.content) {
       try {
         const decoded = Buffer.from(meta.content, 'base64').toString('utf-8');
         const parsed = JSON.parse(decoded);
@@ -56,6 +57,11 @@ export async function POST(request: Request) {
     if (action === 'decrement') remaining = Math.max(0, remaining - 1);
     if (action === 'set' && typeof setTo === 'number') remaining = Math.max(0, setTo);
     const next: SlotsState = { month, remaining };
+
+    // Write to KV first (if enabled), then GitHub as source-of-truth backup
+    if (isKvConfigured()) {
+      try { await kvSetSlots(next); } catch {}
+    }
 
     // Write back to GitHub
     const putUrl = `https://api.github.com/repos/${repo}/contents/${encodeURIComponent(path)}`;

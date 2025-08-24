@@ -19,6 +19,7 @@
     "logo:preview": "npm run dev -- --port 200"
   },
   "dependencies": {
+    "@vercel/kv": "^2.0.0",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "@hookform/resolvers": "^3.3.4",

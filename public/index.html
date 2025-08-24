@@ -726,20 +726,23 @@
           const local = Number(localStorage.getItem('mma_slots_left') || INITIAL_SLOTS);
           slots = local;
           updateSlots();
-          // As a last resort try reading straight from GitHub public API
+          // As a last resort try reading straight from GitHub public API (try both repos)
           try {
-            const repo = 'cochranfilms/mma-website';
+            const repos = ['cochranfilms/mma-website', 'cochranfilms/mma'];
             const path = 'src/data/slots.json';
-            const url = `https://api.github.com/repos/${repo}/contents/${encodeURIComponent(path)}?ref=main`;
-            const r = await fetch(url, { cache: 'no-store' });
-            if (r.ok) {
-              const j = await r.json();
-              if (j && j.content) {
-                const decoded = atob(j.content);
-                const parsed = JSON.parse(decoded);
-                if (typeof parsed?.remaining === 'number') {
-                  slots = parsed.remaining;
-                  updateSlots();
+            for (const repo of repos) {
+              const url = `https://api.github.com/repos/${repo}/contents/${encodeURIComponent(path)}?ref=main`;
+              const r = await fetch(url, { cache: 'no-store' });
+              if (r.ok) {
+                const j = await r.json();
+                if (j && j.content) {
+                  const decoded = atob(j.content);
+                  const parsed = JSON.parse(decoded);
+                  if (typeof parsed?.remaining === 'number') {
+                    slots = parsed.remaining;
+                    updateSlots();
+                    break;
+                  }
                 }
               }
             }
