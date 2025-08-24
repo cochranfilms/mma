@@ -34,7 +34,17 @@ export async function POST(request: Request) {
     const ACCESS_TOKEN = process.env.EMAILJS_PRIVATE_KEY; // optional
 
     if (!SERVICE_ID || (!TEMPLATE_ID_ADMIN && !TEMPLATE_ID_CLIENT) || (!USER_ID && !ACCESS_TOKEN)) {
-      return NextResponse.json({ error: 'EmailJS env not configured' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'EmailJS env not configured' },
+        {
+          status: 500,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST,OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
     const baseParams = {
@@ -72,10 +82,42 @@ export async function POST(request: Request) {
     if (TEMPLATE_ID_ADMIN) await sendOne(TEMPLATE_ID_ADMIN);
     if (TEMPLATE_ID_CLIENT) await sendOne(TEMPLATE_ID_CLIENT);
 
-    return NextResponse.json({ ok: true }, { status: 200 });
+    return NextResponse.json(
+      { ok: true },
+      {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (err) {
-    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Unexpected error' },
+      {
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }
 
 
