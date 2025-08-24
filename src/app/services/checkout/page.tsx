@@ -6,7 +6,7 @@ import { servicePricingMap, formatMoneyFromCents } from '@/lib/invoice';
 
 function CheckoutContent() {
   const params = useSearchParams();
-  const serviceId = params.get('serviceId') || '';
+  const serviceId = params?.get('serviceId') ?? '';
   const pricing = servicePricingMap[serviceId];
 
   const [customerName, setCustomerName] = useState('');
