@@ -120,7 +120,7 @@
 
       .container { display: grid; grid-template-rows: auto 1fr auto; min-height: 100%; }
 
-      header { padding: 20px; position: sticky; top: 0; backdrop-filter: saturate(180%) blur(10px); background: linear-gradient(180deg, rgba(16,11,9,0.85), rgba(16,11,9,0.55)); border-bottom: 1px solid rgba(255,255,255,0.08); z-index: 10; }
+      header { padding: 12px 20px; position: sticky; top: 0; backdrop-filter: saturate(180%) blur(10px); background: linear-gradient(180deg, rgba(16,11,9,0.85), rgba(16,11,9,0.55)); border-bottom: 1px solid rgba(255,255,255,0.08); z-index: 10; }
       .head-row { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 
       .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
@@ -133,6 +133,10 @@
       .pill { display: inline-flex; align-items: center; gap: 10px; padding: 6px 10px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: rgba(185,154,69,0.16); border: 1px solid rgba(185,154,69,0.35); }
       .pill img { height: 18px; width: auto; filter: saturate(.9) contrast(1.05); }
       .menu-btn { display: none; }
+
+      /* Top hero logo */
+      .top-logo { display: grid; place-items: center; padding: 18px 0 6px; }
+      .top-logo img { width: clamp(140px, 26vw, 260px); height: auto; object-fit: contain; box-shadow: 0 18px 60px rgba(67,29,8,0.45); }
 
       main { display: grid; place-items: center; padding: 24px 20px 24px; }
       .wrap { width: 100%; max-width: 1200px; }
@@ -215,7 +219,7 @@
 
       /* Mobile enhancements (no desktop changes) */
       @media (max-width: 719px) {
-        header { padding: 12px; }
+        header { padding: 8px 12px; }
         .head-row { gap: 10px; }
         .pill { display: none; }
         .menu-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: var(--ink); }
@@ -230,6 +234,7 @@
         .foot-row { flex-direction: column; align-items: flex-start; gap: 8px; }
         .btn { min-height: 44px; }
         .field input[type=email] { min-height: 44px; }
+        .top-logo img { width: 180px; }
       }
 
       /* Reduced motion */
@@ -242,12 +247,13 @@
   <body>
     <div class="grain" aria-hidden="true"></div>
     <div class="container">
+      <!-- Large top logo -->
+      <div class="top-logo">
+        <img src="Mousetrap.gif" alt="Marketing Mousetrap Agency" width="260" height="260" decoding="async">
+      </div>
       <header>
         <div class="head-row">
-          <a class="brand" href="#top" aria-label="Marketing Mousetrap Agency">
-            <img src="Mousetrap.gif" alt="Marketing Mousetrap Agency logo" width="40" height="40" decoding="async" loading="lazy">
-            <span class="wordmark">Marketing Mousetrap Agency</span>
-          </a>
+          <!-- Removed brand text and small logo per request -->
           <button id="menuBtn" class="menu-btn" aria-label="Open menu" aria-expanded="false"><span class="bars" aria-hidden="true"></span></button>
           <nav aria-label="Primary">
             <a href="#about">About</a>
