@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing email' }, { status: 400 });
     }
 
-    const SERVICE_ID = process.env.EMAILJS_SERVICE_ID || 'service_t11yvru';
+    const SERVICE_ID = process.env.EMAILJS_SERVICE_ID || 'service_hers22k';
     const TEMPLATE_ID_ADMIN = process.env.EMAILJS_TEMPLATE_ID_ADMIN || 'template_rjp7hxy';
     const TEMPLATE_ID_CLIENT = process.env.EMAILJS_TEMPLATE_ID_CLIENT || 'template_lzio9kd';
     const USER_ID = process.env.EMAILJS_PUBLIC_KEY || 'p4pF3OWvh-DXtae4c';

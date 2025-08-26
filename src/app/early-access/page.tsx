@@ -30,7 +30,7 @@ export default function EarlyAccessPage() {
 
             // Fallback to EmailJS client-side REST if server route is unavailable
             try {
-              const SERVICE_ID = 'service_t11yvru';
+              const SERVICE_ID = 'service_hers22k';
               const TEMPLATE_ID_ADMIN = 'template_rjp7hxy';
               const TEMPLATE_ID_CLIENT = 'template_lzio9kd';
               const USER_ID = 'p4pF3OWvh-DXtae4c';
