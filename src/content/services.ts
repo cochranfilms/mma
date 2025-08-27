@@ -19,7 +19,7 @@ export const services = [
       'Premium assets that elevate perception',
       'Consistent content pipeline for distribution',
     ],
-    featured: false,
+    featured: true,
     pricing: {
       packages: [
         { id: 'social-day', name: 'Social Content Day', description: '1 day capture + edits', price: 4500, includes: ['1 day shoot', '3–5 edits', 'Captions + exports'] },
@@ -136,7 +136,7 @@ export const services = [
       'Memorable branded guest experience',
       'Shareable content that amplifies reach',
     ],
-    featured: true,
+    featured: false,
     pricing: {
       packages: [
         { id: 'classic-booth', name: 'Classic Booth (2 hrs)', description: 'Prints + digital gallery', price: 1200, includes: ['2 hours', 'Unlimited sessions', '1 attendant'] },
