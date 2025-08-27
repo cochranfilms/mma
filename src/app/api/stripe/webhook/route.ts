@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleStripeWebhook } from '@/lib/stripe-connect';
-import { createWaveInvoiceStub } from '@/lib/wave';
+import { createWaveInvoice } from '@/lib/wave';
 
 export const runtime = 'nodejs';
 
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     // After successful transfer, sync to Wave as bookkeeping (stub)
     if ('paymentIntentId' in result) {
       const { amountTotal, currency, paymentIntentId } = result as any;
-      await createWaveInvoiceStub({
+      await createWaveInvoice({
         account: 'primary',
         payload: {
           customer: { email: 'stripe@checkout', name: 'Stripe Customer' },

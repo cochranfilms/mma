@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createWaveInvoiceStub } from '@/lib/wave';
+import { createWaveInvoice } from '@/lib/wave';
 
 // This webhook will be configured in Wave (or intermediary) to notify payment status
 export async function POST(req: NextRequest) {
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
       // Create a secondary invoice to mirror the 40% in the secondary account (bookkeeping)
       // NOTE: This does NOT move funds; it is a record to be settled in the secondary account
-      await createWaveInvoiceStub({
+      await createWaveInvoice({
         account: 'secondary',
         payload: {
           customer: { email: data.customer?.email, name: data.customer?.name },
