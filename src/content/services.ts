@@ -68,6 +68,104 @@ export const services = [
     }
   },
   {
+    id: 'live-production',
+    icon: 'camera',
+    title: 'Live Production',
+    subtitle: 'Multi-cam live streams and event coverage',
+    description:
+      'End-to-end live production including switching, audio, graphics, and streaming to your platforms with professional redundancy.',
+    deliverables: [
+      'Multi-cam switching and capture',
+      'Audio mixing + IFB/comm systems',
+      'Live graphics + lower thirds',
+      'Streaming setup and monitoring',
+      'Recording and post-event exports',
+    ],
+    startingPrice: 3500,
+    category: 'video',
+    outcomes: [
+      'Broadcast-quality live experience',
+      'Reliable delivery across platforms',
+    ],
+    featured: true,
+    pricing: {
+      packages: [
+        { id: 'single-cam', name: 'Single‑Cam Stream', description: 'Compact live kit', price: 3500, includes: ['1 camera', 'Audio mix', 'Graphics + RTMP'] },
+        { id: 'multicam', name: 'Multi‑Cam Stream', description: '2–3 cameras + crew', price: 6500, includes: ['3 cameras', 'Switcher/TD', 'Audio/Comms'] },
+        { id: 'hybrid-event', name: 'Hybrid Event', description: 'On‑site AV + stream', price: 9000, includes: ['Stage AV', 'Multi-cam', 'Platform support'] }
+      ],
+      addOns: [
+        { id: 'remote-guests', name: 'Remote Guests', description: 'Remote caller integration', price: 600 },
+        { id: 'record-isos', name: 'ISO Records', description: 'Isolated camera records', price: 400 },
+        { id: 'graphics-pack', name: 'Graphics Pack', description: 'Custom motion graphics', price: 800 }
+      ],
+      fullyCustomizable: true
+    },
+    learnMore: {
+      whatYouGet: [
+        'Run‑of‑show, cues, and technical plan',
+        'Switching, audio, graphics, and redundancy',
+        'Platform testing and monitoring',
+        'Post-event recording delivery'
+      ],
+      howWeDeliver: [
+        { title: 'Pre‑Pro', description: 'Site check, network test, tech rundown.' },
+        { title: 'Live', description: 'Crewed show with comms and cueing.' },
+        { title: 'Post', description: 'Upload, captions, and cutdowns if needed.' }
+      ],
+      tech: ['ATEM/Tricaster', 'Shure/Rode', 'NDI/SDI', 'vMix', 'YouTube/RTMP']
+    }
+  },
+  {
+    id: 'on-site-prints',
+    icon: 'target',
+    title: 'On‑Site Prints',
+    subtitle: 'Instant prints and photo experiences',
+    description:
+      'Event photo booths and on‑site printing with branded templates, instant sharing, and staff to manage the experience.',
+    deliverables: [
+      'Pro camera + lighting setup',
+      'Live gallery + QR sharing',
+      'Branded print templates',
+      'Unlimited sessions during booking window',
+      'On‑site attendant(s)'
+    ],
+    startingPrice: 1200,
+    category: 'events',
+    outcomes: [
+      'Memorable branded guest experience',
+      'Shareable content that amplifies reach',
+    ],
+    featured: true,
+    pricing: {
+      packages: [
+        { id: 'classic-booth', name: 'Classic Booth (2 hrs)', description: 'Prints + digital gallery', price: 1200, includes: ['2 hours', 'Unlimited sessions', '1 attendant'] },
+        { id: 'premium-booth', name: 'Premium Booth (4 hrs)', description: 'Backdrop + props + prints', price: 1800, includes: ['4 hours', 'Backdrop/props', '2 attendants'] },
+        { id: 'step-and-repeat', name: 'Step & Repeat', description: 'Red‑carpet style entrance', price: 2200, includes: ['Custom template', 'Lighting', 'Gallery + prints'] }
+      ],
+      addOns: [
+        { id: 'custom-wrap', name: 'Custom Booth Wrap', description: 'Full brand wrap', price: 500 },
+        { id: 'gif-boomerang', name: 'GIF/Boomerang', description: 'Animated captures', price: 250 },
+        { id: 'extra-hour', name: 'Additional Hour', description: 'Extend coverage per hour', price: 200 }
+      ],
+      fullyCustomizable: true
+    },
+    learnMore: {
+      whatYouGet: [
+        'Camera, lighting, printer, and media',
+        'Branded 2x6 or 4x6 templates',
+        'Instant gallery with QR + AirDrop',
+        'Professional attendant(s) to run the station'
+      ],
+      howWeDeliver: [
+        { title: 'Prep', description: 'Template design and logistics.' },
+        { title: 'Event', description: 'Setup, operation, and guest support.' },
+        { title: 'Wrap', description: 'Gallery delivery and asset handoff.' }
+      ],
+      tech: ['Canon/Sony', 'DNP printers', 'Tether tools', 'Studio lighting']
+    }
+  },
+  {
     id: 'web-development',
     icon: 'globe',
     title: 'Web Development',
@@ -197,7 +295,7 @@ export const services = [
       'Clear, differentiated market position',
       'Systemized brand assets for scale',
     ],
-    featured: false,
+    featured: true,
     pricing: {
       packages: [
         { id: 'startup-identity', name: 'Startup Identity', description: 'Foundational identity + kit', price: 7500, includes: ['Positioning', 'Logo suite', 'Basic guidelines'] },

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { getServiceImage } from '@/lib/media';
 import Link from 'next/link';
 import { services } from '@/content/services';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
@@ -90,18 +91,7 @@ export default function ServicesOverview() {
           {featuredServices.map((service, index) => {
             const IconComponent = iconMap[service.icon] || iconMap.megaphone;
             
-            // Map service categories to image categories
-            const imageCategoryMap: Record<string, string> = {
-              'media-relations': 'media-connections',
-              'web-presence': 'web-presence',
-              'content-amplification': 'content-amplification',
-              'campaign-execution': 'campaign-execution',
-              'b2b-marketing': 'b2b-marketing',
-              'consulting': 'consulting'
-            };
-            
-            const imageCategory = imageCategoryMap[service.id] || 'b2b-marketing';
-            const imageNumber = (index % 3) + 1;
+            const imageSrc = getServiceImage(service.id, index, 'card');
             
             return (
               <motion.div
@@ -116,7 +106,7 @@ export default function ServicesOverview() {
                   {/* Service Card Image */}
                   <div className="mb-6 overflow-hidden rounded-xl">
                     <Image
-                      src={`/media-assets/images/${imageCategory}-card-${imageNumber}.jpg`}
+                      src={imageSrc}
                       alt={`${service.title} - Professional service`}
                       width={400}
                       height={300}
