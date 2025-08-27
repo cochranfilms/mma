@@ -19,7 +19,7 @@ export const services = [
       'Premium assets that elevate perception',
       'Consistent content pipeline for distribution',
     ],
-    featured: true,
+    featured: false,
     pricing: {
       packages: [
         { id: 'social-day', name: 'Social Content Day', description: '1 day capture + edits', price: 4500, includes: ['1 day shoot', '3–5 edits', 'Captions + exports'] },
