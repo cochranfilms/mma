@@ -13,9 +13,9 @@ const serviceImageMap: Record<string, Partial<Record<ImageSize, string[]>>> = {
   },
   'web-development': {
     card: [
-      'web-presence-card-1.jpg',
-      'web-presence-card-2.jpg',
-      'b2b-marketing-card-2.jpg',
+      '/CF-Landing-Website.png',
+      '/CF-Landing-Website.png',
+      '/CF-Landing-Website.png',
     ],
   },
   photography: {
@@ -35,8 +35,8 @@ const serviceImageMap: Record<string, Partial<Record<ImageSize, string[]>>> = {
   'live-production': {
     card: [
       '/Live.jpg',
-      'media-connections-card-1.jpg',
-      'campaign-execution-card-1.jpg',
+      '/Live.jpg',
+      '/Live.jpg',
     ],
   },
   'on-site-prints': {
@@ -63,7 +63,11 @@ export function getServiceImage(
   const images = serviceImageMap[serviceId]?.[size];
   if (images && images.length > 0) {
     const safeIndex = Math.abs(index) % images.length;
-    return `/media-assets/images/${images[safeIndex]}`;
+    const selected = images[safeIndex];
+    if (selected.startsWith('/') || selected.startsWith('http')) {
+      return selected;
+    }
+    return `/media-assets/images/${selected}`;
   }
   // Sensible fallback if mapping missing
   const fallbackCategory = 'b2b-marketing';
