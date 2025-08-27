@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRightIcon, CalendarDaysIcon, PhoneIcon } from '@heroicons/react/24/outline';
 
 export default function CTASection() {
@@ -153,19 +154,28 @@ export default function CTASection() {
             <p className="text-gray-400 text-sm mb-4">
               Join companies that have transformed their B2B marketing with MMA
             </p>
-            <div className="flex justify-center items-center space-x-8 opacity-60">
-              <div className="w-20 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded flex items-center justify-center border border-gray-600">
-                <span className="text-xs text-gray-400">Client Logo</span>
-              </div>
-              <div className="w-20 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded flex items-center justify-center border border-gray-600">
-                <span className="text-xs text-gray-400">Client Logo</span>
-              </div>
-              <div className="w-20 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded flex items-center justify-center border border-gray-600">
-                <span className="text-xs text-gray-400">Client Logo</span>
-              </div>
-              <div className="w-20 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded flex items-center justify-center border border-gray-600">
-                <span className="text-xs text-gray-400">Client Logo</span>
-              </div>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-10 opacity-90">
+              {[ 
+                { src: '/CPI_Logo.png', alt: 'Certified Property Inspectors logo' },
+                { src: '/ProfielPicture_CCAblack.png', alt: 'Course Creator Academy logo' },
+                { src: '/CevinKIDSlogo.avif', alt: 'Cevin KIDS logo' },
+              ].map((logo: { src: string; alt: string }, index: number) => (
+                <motion.div
+                  key={logo.src}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={240}
+                    height={80}
+                    className="h-12 md:h-14 lg:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
+                  />
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
