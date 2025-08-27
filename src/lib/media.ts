@@ -6,7 +6,7 @@ type ImageSize = 'card' | 'hero' | 'section' | 'thumbnail';
 const serviceImageMap: Record<string, Partial<Record<ImageSize, string[]>>> = {
   'video-production': {
     card: [
-      'media-connections-card-1.jpg',
+      '/Andre.jpg',
       'campaign-execution-card-2.jpg',
       'content-amplification-card-2.jpg',
     ],
@@ -34,7 +34,7 @@ const serviceImageMap: Record<string, Partial<Record<ImageSize, string[]>>> = {
   },
   'live-production': {
     card: [
-      'media-connections-card-3.jpg',
+      '/live.jpg',
       'media-connections-card-1.jpg',
       'campaign-execution-card-1.jpg',
     ],
