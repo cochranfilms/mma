@@ -146,6 +146,8 @@ export async function createWaveInvoice(params: {
     customer: { email: string; name: string };
     currency?: string;
     items: Array<{ description?: string; quantity: number; unitPrice: number; name?: string }>;
+    memo?: string;
+    metadata?: Record<string, any>;
   };
 }): Promise<CreateInvoiceResult> {
   const cfg = getWaveConfig();
