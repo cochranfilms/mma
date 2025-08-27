@@ -24,7 +24,8 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
+  // Only run on root and explicit /index.html requests
+  matcher: ['/', '/index.html'],
 };
 
 
