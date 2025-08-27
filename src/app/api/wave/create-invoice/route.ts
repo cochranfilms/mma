@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { buildInvoiceDraft, toWavePayload } from '@/lib/invoice';
 import { createWaveInvoice, getWaveConfig } from '@/lib/wave';
 
+export const runtime = 'nodejs';
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -45,12 +47,14 @@ export async function POST(req: NextRequest) {
     // Attempt live Wave creation; payload already contains items/amounts
     const created = await createWaveInvoice({ account: 'primary', payload: {
       customer: payload.customer,
-      currency: payload.currency,
+      currency: payload.currency || 'USD',
       items: (payload.items || []).map(i => ({ name: i.description, quantity: i.quantity, unitPrice: i.unitPrice })),
+      memo: payload.memo,
+      metadata: payload.metadata,
     }});
 
     if (!created.success) {
-      return NextResponse.json({ success: false, error: created.error || 'Failed to create invoice' }, { status: 500 });
+      return NextResponse.json({ success: false, error: created.error || 'Failed to create invoice', details: created.errorDetails, mode: created.mode }, { status: 500 });
     }
 
     // Respond with checkout URL and echo split metadata for client UI
