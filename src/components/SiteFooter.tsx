@@ -39,7 +39,7 @@ export default function SiteFooter() {
               <span className="font-bold text-xl">Marketing Mousetrap</span>
             </div>
             <p className="text-accent-300 text-sm leading-relaxed mb-6">
-              B2B media connections that compound your brand's reach. We upgrade your web presence, content, and partnerships—then turn it into pipeline.
+            Ai systems that help build, scale, and free entrepreneurs and businesses from outdated methods & platform constraints!
             </p>
             <div className="space-y-2 text-sm">
               <p className="text-accent-300">
