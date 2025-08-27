@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 // Base SEO configuration
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://marketingmousetrap.com';
-const siteUrl = rawSiteUrl.startsWith('http://') || rawSiteUrl.startsWith('https://')
+export const siteUrl = rawSiteUrl.startsWith('http://') || rawSiteUrl.startsWith('https://')
   ? rawSiteUrl
   : `https://${rawSiteUrl}`;
 
@@ -73,6 +73,13 @@ export const baseSEO = {
     yandex: process.env.YANDEX_VERIFICATION,
     yahoo: process.env.YAHOO_VERIFICATION,
   },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    viewportFit: 'cover' as const,
+  },
+  themeColor: '#010043',
 };
 
 // Page-specific SEO configurations
@@ -212,5 +219,67 @@ export function generatePageMetadata(page: string, customData?: Partial<Metadata
       ...baseSEO.twitter,
       ...customData?.twitter,
     },
+  };
+}
+
+// Schema builders
+export function buildBreadcrumbSchema(items: { name: string; url: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function buildServiceSchema(service: {
+  id: string;
+  title: string;
+  description: string;
+  category?: string;
+  startingPrice?: number;
+}, absoluteUrl: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.description,
+    serviceType: service.category || 'Marketing Service',
+    areaServed: {
+      '@type': 'Country',
+      name: 'United States',
+    },
+    url: absoluteUrl,
+    offers: service.startingPrice
+      ? {
+          '@type': 'Offer',
+          price: service.startingPrice,
+          priceCurrency: 'USD',
+          url: absoluteUrl,
+          availability: 'https://schema.org/InStock',
+        }
+      : undefined,
+    provider: {
+      '@type': 'Organization',
+      name: 'Marketing Mousetrap Agency',
+      url: siteUrl,
+    },
+  };
+}
+
+export function buildServicesItemList(allServices: Array<{ id: string; title: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: allServices.map((svc, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `${siteUrl}/services/${svc.id}`,
+      name: svc.title,
+    })),
   };
 }

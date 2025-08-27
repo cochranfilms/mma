@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CheckCircle, ArrowRight, Clock, Users, Target, TrendingUp } from 'lucide-react';
+import { services } from '@/content/services';
 
 interface QuizQuestion {
   id: string;
@@ -129,44 +130,29 @@ const quizQuestions: QuizQuestion[] = [
   }
 ];
 
-const serviceData = {
-  'media-relations': {
-    title: 'Media Relations & B2B Connections',
-    subtitle: 'Strategic media partnerships that amplify your brand',
-    description: 'Perfect for businesses looking to increase industry visibility and build meaningful media relationships.',
-    icon: 'megaphone'
-  },
-  'web-presence': {
-    title: 'Web Presence Upgrades',
-    subtitle: 'Modern websites that convert visitors into customers',
-    description: 'Ideal for companies needing to improve their digital presence and conversion rates.',
-    icon: 'globe'
-  },
-  'photo-printing': {
-    title: 'Photo & On-Site Printing & Activations',
-    subtitle: 'Memorable brand experiences that create lasting impressions',
-    description: 'Perfect for businesses wanting to create impactful physical brand experiences.',
-    icon: 'camera'
-  },
-  'content-campaigns': {
-    title: 'Content & Campaigns',
-    subtitle: 'Strategic content that builds authority and drives action',
-    description: 'Great for companies looking to build thought leadership and engage their audience.',
-    icon: 'pen-tool'
-  },
-  'partnership-development': {
-    title: 'Strategic Partnership Development',
-    subtitle: 'High-value collaborations that expand your reach',
-    description: 'Ideal for businesses seeking strategic partnerships and expanded market reach.',
-    icon: 'handshake'
-  },
-  'brand-strategy': {
-    title: 'Brand Strategy & Positioning',
-    subtitle: 'Clear positioning that differentiates and resonates',
-    description: 'Perfect for companies needing clear brand positioning and consistent messaging.',
-    icon: 'target'
-  }
+// Map legacy quiz keys to actual service IDs from services.ts
+const legacyToActualServiceId: Record<string, string> = {
+  'web-presence': 'web-development',
+  'photo-printing': 'photography',
+  'brand-strategy': 'brand-development',
+  'content-campaigns': 'video-production',
+  'media-relations': 'brand-development',
+  'partnership-development': 'white-label'
 };
+
+// Build service data from our actual services catalog
+const serviceData: Record<string, { title: string; subtitle: string; description: string; icon: string }> =
+  Object.fromEntries(
+    services.map((s: any) => [
+      s.id,
+      {
+        title: s.title,
+        subtitle: s.subtitle,
+        description: s.description,
+        icon: s.icon
+      }
+    ])
+  );
 
 export default function ServiceMatchingQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -181,7 +167,7 @@ export default function ServiceMatchingQuiz() {
   const calculateResults = () => {
     const serviceScores: Record<string, number> = {};
     
-    // Initialize scores
+    // Initialize scores for all actual services
     Object.keys(serviceData).forEach(serviceId => {
       serviceScores[serviceId] = 0;
     });
@@ -194,8 +180,11 @@ export default function ServiceMatchingQuiz() {
       if (question) {
         const selectedOption = question.options.find(opt => opt.value === answer);
         if (selectedOption) {
-          selectedOption.services.forEach(serviceId => {
-            serviceScores[serviceId] += 1;
+          selectedOption.services.forEach(legacyId => {
+            const actualId = legacyToActualServiceId[legacyId] || legacyId;
+            if (actualId in serviceScores) {
+              serviceScores[actualId] += 1;
+            }
           });
         }
       }
@@ -263,9 +252,9 @@ export default function ServiceMatchingQuiz() {
                 </div>
               </div>
               <p className="text-gray-600 mb-4">{result.description}</p>
-              <button className="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+              <a href={`/services/${result.serviceId}`} className="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
                 Learn More
-              </button>
+              </a>
             </div>
           ))}
         </div>

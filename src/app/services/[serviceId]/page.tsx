@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { generatePageMetadata } from '@/lib/seo';
+import { generatePageMetadata, siteUrl, buildServiceSchema, buildBreadcrumbSchema } from '@/lib/seo';
 import { services } from '@/content/services';
 import dynamic from 'next/dynamic';
 
@@ -8,8 +8,23 @@ type Params = { params: { serviceId: string } };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const svc = services.find(s => s.id === params.serviceId);
-  const title = svc ? `${svc.title} – Services` : 'Service – Details';
-  return generatePageMetadata(title);
+  if (!svc) return generatePageMetadata('services');
+
+  const canonical = `/services/${svc.id}`;
+  return generatePageMetadata('services', {
+    title: `${svc.title} | Services` as any,
+    description: svc.description,
+    alternates: { canonical },
+    openGraph: {
+      url: canonical,
+      title: `${svc.title} | Marketing Mousetrap Agency`,
+      description: svc.description,
+    },
+    twitter: {
+      title: `${svc.title} | Marketing Mousetrap Agency`,
+      description: svc.description,
+    },
+  });
 }
 
 export default function ServiceDetailsPage({ params }: Params) {
@@ -37,6 +52,37 @@ export default function ServiceDetailsPage({ params }: Params) {
           <div className="mt-4 text-2xl font-semibold">Starting at ${service.startingPrice?.toLocaleString()}</div>
         </div>
       </section>
+
+      {/* JSON-LD: Service + Breadcrumbs */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildServiceSchema(
+              {
+                id: service.id,
+                title: service.title,
+                description: service.description,
+                category: service.category,
+                startingPrice: service.startingPrice,
+              },
+              `${siteUrl}/services/${service.id}`
+            )
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbSchema([
+              { name: 'Home', url: siteUrl },
+              { name: 'Services', url: `${siteUrl}/services` },
+              { name: service.title, url: `${siteUrl}/services/${service.id}` },
+            ])
+          ),
+        }}
+      />
 
       <section className="py-14 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-10">
