@@ -34,7 +34,7 @@ const serviceImageMap: Record<string, Partial<Record<ImageSize, string[]>>> = {
   },
   'live-production': {
     card: [
-      '/live.jpg',
+      '/Live.jpg',
       'media-connections-card-1.jpg',
       'campaign-execution-card-1.jpg',
     ],
