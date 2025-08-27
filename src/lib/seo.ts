@@ -1,6 +1,11 @@
 import { Metadata } from 'next';
 
 // Base SEO configuration
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://marketingmousetrap.com';
+const siteUrl = rawSiteUrl.startsWith('http://') || rawSiteUrl.startsWith('https://')
+  ? rawSiteUrl
+  : `https://${rawSiteUrl}`;
+
 export const baseSEO = {
   title: {
     default: 'Marketing Mousetrap Agency | B2B Media Relations & Connections',
@@ -25,7 +30,7 @@ export const baseSEO = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://marketingmousetrap.com'),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: '/',
   },
@@ -120,8 +125,8 @@ export const organizationSchema = {
   '@type': 'Organization',
   name: 'Marketing Mousetrap Agency',
   alternateName: 'MMA',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://marketingmousetrap.com',
-  logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://marketingmousetrap.com'}/images/logo.svg`,
+  url: siteUrl,
+  logo: `${siteUrl}/images/logo.svg`,
   description: 'B2B media relations and connections firm that helps businesses upgrade their media presence, web presence, content, and partnerships.',
   address: {
     '@type': 'PostalAddress',
@@ -178,13 +183,13 @@ export const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Marketing Mousetrap Agency',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://marketingmousetrap.com',
+  url: siteUrl,
   description: 'B2B media relations and connections firm',
   potentialAction: {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://marketingmousetrap.com'}/search?q={search_term_string}`,
+      urlTemplate: `${siteUrl}/search?q={search_term_string}`,
     },
     'query-input': 'required name=search_term_string',
   },
