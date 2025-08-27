@@ -6,6 +6,12 @@ import Link from 'next/link';
 import { ArrowRightIcon, PlayIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 export default function Hero() {
+  const headline = "B2B MEDIA CONNECTIONS THAT COMPOUND YOUR BRAND'S REACH";
+  const words = headline.split(' ');
+  const lines: string[] = [];
+  for (let i = 0; i < words.length; i += 3) {
+    lines.push(words.slice(i, i + 3).join(' '));
+  }
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-black min-h-screen flex items-center">
         
@@ -55,7 +61,7 @@ export default function Hero() {
 
       <div className="container-custom relative z-20">
         <div className="py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32">
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6">
+          <div className="max-w-6xl mx-auto text-center px-4 sm:px-6">
             {/* Main Headline */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -63,18 +69,23 @@ export default function Hero() {
               transition={{ duration: 0.6 }}
               className="mb-6"
             >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 leading-tight uppercase">
-                <div className="whitespace-nowrap bg-gradient-to-r from-[#F7D046] via-[#FFE9A3] to-[#E0AB10] bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(224,171,16,0.35)]">B2B&nbsp;MEDIA&nbsp;CONNECTIONS</div>
-                <div className="bg-gradient-to-r from-[#F7D046] via-[#FFE9A3] to-[#E0AB10] bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(224,171,16,0.35)]">THAT COMPOUND YOUR</div>
-                <span className="relative bg-gradient-to-r from-[#F7D046] via-[#FFE9A3] to-[#E0AB10] bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(224,171,16,0.35)]">
-                  BRAND'S REACH
-                  <motion.div
-                    className="absolute -bottom-2 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.8, duration: 0.6 }}
-                  />
-                </span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 leading-[1.15] uppercase px-2">
+                {lines.map((line, index) => (
+                  <span
+                    key={index}
+                    className="relative block whitespace-nowrap bg-gradient-to-r from-[#F7D046] via-[#FFE9A3] to-[#E0AB10] bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(224,171,16,0.35)]"
+                  >
+                    {line}
+                    {index === lines.length - 1 && (
+                      <motion.div
+                        className="absolute -bottom-2 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ delay: 0.8, duration: 0.6 }}
+                      />
+                    )}
+                  </span>
+                ))}
               </h1>
               
               {/* Sparkle Icon */}
