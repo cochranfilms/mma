@@ -130,12 +130,12 @@ export default function Hero() {
               </p>
               
               {/* Trust Logos */}
-              <div className="flex justify-center items-center space-x-8">
+              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-10">
                 {[
                   { src: '/CPI_Logo.png', alt: 'Certified Property Inspectors logo' },
                   { src: '/ProfielPicture_CCAblack.png', alt: 'Course Creator Academy logo' },
                   { src: '/CevinKIDSlogo.avif', alt: 'Cevin KIDS logo' },
-                ].map((logo, index) => (
+                ].map((logo: { src: string; alt: string }, index: number) => (
                   <motion.div
                     key={logo.src}
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -143,15 +143,13 @@ export default function Hero() {
                     transition={{ delay: 0.7 + index * 0.1, duration: 0.4 }}
                     className="group"
                   >
-                    <div className="w-28 h-14 bg-white rounded-xl flex items-center justify-center border border-gray-200 group-hover:border-blue-300 transition-all duration-200 group-hover:shadow-lg shadow-md overflow-hidden">
-                      <Image
-                        src={logo.src}
-                        alt={logo.alt}
-                        width={112}
-                        height={56}
-                        className="max-h-10 w-auto object-contain"
-                      />
-                    </div>
+                    <Image
+                      src={logo.src}
+                      alt={logo.alt}
+                      width={240}
+                      height={80}
+                      className="h-12 md:h-14 lg:h-16 w-auto object-contain"
+                    />
                   </motion.div>
                 ))}
               </div>
