@@ -6,6 +6,16 @@ import { Calculator, DollarSign, TrendingUp, Clock, Users, Target, CheckCircle, 
 
 interface AddOn { id: string; name: string; description?: string; price: number; }
 
+interface ServiceOption {
+  id: string;
+  name: string;
+  description: string;
+  basePrice: number;
+  icon: React.ComponentType<{ className?: string }>;
+  features: string[];
+  addOns: AddOn[];
+}
+
 interface BusinessSize {
   id: string;
   name: string;
@@ -24,13 +34,15 @@ interface QuoteBreakdown {
   savings: number;
 }
 
-const serviceOptions = services
+const serviceOptions: ServiceOption[] = services
   .filter((s: any) => s.pricing)
   .map((s: any) => ({
     id: s.id,
     name: s.title,
     description: s.subtitle,
     basePrice: s.startingPrice,
+    icon: Target,
+    features: Array.isArray(s.deliverables) ? s.deliverables : [],
     addOns: (s.pricing?.addOns || []).map((a: any) => ({ id: a.id, name: a.name, description: a.description, price: a.price })),
   }));
 
@@ -91,7 +103,7 @@ export default function InstantQuoteCalculator() {
 
     const basePrice = service.basePrice;
     const addOnsTotal = Object.entries(selectedAddOns).reduce((total, [addOnId, quantity]) => {
-      const addOn = service.addOns.find(a => a.id === addOnId);
+      const addOn = service.addOns.find((a: AddOn) => a.id === addOnId);
       return total + (addOn ? addOn.price * quantity : 0);
     }, 0);
 
@@ -105,7 +117,7 @@ export default function InstantQuoteCalculator() {
     setQuote({
       basePrice,
       addOns: Object.entries(selectedAddOns).map(([addOnId, quantity]) => {
-        const addOn = service.addOns.find(a => a.id === addOnId);
+        const addOn = service.addOns.find((a: AddOn) => a.id === addOnId);
         return {
           addOn: addOn!,
           quantity,

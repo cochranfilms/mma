@@ -41,57 +41,6 @@ export const services = [
       ],
       fullyCustomizable: true
     },
-    pricing: {
-      packages: [
-        {
-          id: 'starter-site',
-          name: 'Starter Site',
-          description: 'Up to 5 pages, design system, CMS, analytics',
-          price: 10000,
-          bestFor: 'Startups and small teams',
-          includes: ['Up to 5 pages', 'Design system', 'Headless CMS', 'Analytics + SEO base']
-        },
-        {
-          id: 'growth-site',
-          name: 'Growth Site',
-          description: '10–15 pages, advanced SEO, performance budget',
-          price: 18000,
-          bestFor: 'Growing SMBs',
-          includes: ['10–15 pages', 'Advanced SEO', 'Performance budget', 'Event tracking']
-        },
-        {
-          id: 'ecommerce',
-          name: 'E‑commerce',
-          description: 'Headless commerce (Shopify/Medusa), product templates',
-          price: 28000,
-          bestFor: 'DTC and catalog sites',
-          includes: ['Catalog + PDP templates', 'Cart + checkout', 'Tax/shipping setup']
-        },
-        {
-          id: 'enterprise',
-          name: 'Enterprise Platform',
-          description: 'Complex IA, integrations, SSO, compliance',
-          price: 60000,
-          bestFor: 'Mid-market/enterprise',
-          includes: ['Complex IA', 'Integrations + SSO', 'Compliance + observability']
-        }
-      ],
-      addOns: [
-        { id: 'extra-template', name: 'Additional Page Template', description: 'New page type or section template', price: 800, unit: 'each' },
-        { id: 'blog-setup', name: 'Blog / Multi‑Author Setup', description: 'Editorial workflow + roles', price: 1500 },
-        { id: 'advanced-seo', name: 'Advanced SEO', description: 'Technical SEO + schema + redirects', price: 3000 },
-        { id: 'a11y-aa', name: 'Accessibility Audit (WCAG 2.2 AA)', description: 'Audit + remediation plan', price: 2500 },
-        { id: 'perf-lab', name: 'Performance Optimization Lab', description: 'Core Web Vitals tuning', price: 2000 },
-        { id: 'ai-chatbot', name: 'AI Chatbot (RAG)', description: 'OpenAI + vector search knowledge base', price: 4500 },
-        { id: 'analytics-sst', name: 'Analytics + Server‑Side Tracking', description: 'GTM/Segment + consent modes', price: 2000 },
-        { id: 'cms-migration', name: 'CMS Migration', description: 'Migrate content from legacy CMS', price: 3500 },
-        { id: 'i18n', name: 'Localization (per language)', description: 'i18n setup and language rollout', price: 2500, unit: 'per-language' },
-        { id: 'hosting-cicd', name: 'Hosting + CI/CD Setup', description: 'Vercel project + pipelines', price: 1000 },
-        { id: 'priority-sla', name: 'Priority Support SLA', description: 'Faster response and fixes', price: 1500 },
-        { id: 'maintenance', name: 'Maintenance Retainer (Quarter)', description: 'Updates, security, support', price: 3600 }
-      ],
-      fullyCustomizable: true
-    },
     learnMore: {
       whatYouGet: [
         'Creative development: script, storyboard, shot plan',
