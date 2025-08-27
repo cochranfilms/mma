@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildInvoiceDraft, toWavePayload } from '@/lib/invoice';
-import { createWaveInvoiceStub } from '@/lib/wave';
+import { createWaveInvoice, getWaveConfig } from '@/lib/wave';
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,8 +42,12 @@ export async function POST(req: NextRequest) {
 
     const payload = toWavePayload(draft);
 
-    // For now, create the customer-facing invoice in the primary account
-    const created = await createWaveInvoiceStub({ account: 'primary', payload });
+    // Attempt live Wave creation; payload already contains items/amounts
+    const created = await createWaveInvoice({ account: 'primary', payload: {
+      customer: payload.customer,
+      currency: payload.currency,
+      items: (payload.items || []).map(i => ({ name: i.description, quantity: i.quantity, unitPrice: i.unitPrice })),
+    }});
 
     if (!created.success) {
       return NextResponse.json({ success: false, error: created.error || 'Failed to create invoice' }, { status: 500 });
@@ -54,6 +58,7 @@ export async function POST(req: NextRequest) {
       success: true,
       invoiceId: created.invoiceId,
       checkoutUrl: created.checkoutUrl,
+      mode: created.mode,
       split: draft.split,
       totalCents: draft.totalCents,
       currency: draft.currency,

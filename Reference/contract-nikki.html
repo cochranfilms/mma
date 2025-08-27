@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Agreement — Nicky Sanders Content Strategy</title>
+  
+  <!-- PDF Generation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <!-- EmailJS for sending confirmation emails -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <style>
+    /* Import base styles from proposal-nikki.html */
+    :root {
+      --brand-dark: #010043;
+      --brand-gold: #e0ab10;
+      --bg-0: #07071a;
+      --bg-1: #0b0b23;
+      --glass: 16px;
+      --text: #ffffff;
+      --muted: #cbd0ff;
+      --ok: #3ddc84;
+      --danger: #ff5470;
+      --shadow: 0 10px 40px rgba(0,0,0,.35);
+      --ring: 0 0 0 2px rgba(224,171,16,.35);
+      --maxw: 1200px;
+      --radius: 16px;
+      --cardA: rgba(255,216,106,.35);
+      --cardB: rgba(224,171,16,.35);
+      --glowA: rgba(255,216,106,.30);
+      --glowB: rgba(224,171,16,.22);
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 70% -10%, rgba(255,120,200,.09), transparent 50%),
+        radial-gradient(900px 600px at 0% 100%, rgba(1,0,67,.6), transparent 60%),
+        linear-gradient(180deg, var(--bg-0), var(--bg-1));
+      background-attachment: fixed, fixed, fixed;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Top brand bar */
+    .contract-top { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(160%) blur(10px); background: linear-gradient(180deg, rgba(7,7,26,.78), rgba(7,7,26,.45)); border-bottom: 1px solid rgba(255,255,255,.08); }
+    .top-inner { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; height: 56px; width: min(100%, 1200px); margin: 0 auto; padding: 0 16px; }
+    .top-brand { display: flex; align-items: center; gap: 10px; }
+    .top-brand img { width: 28px; height: 28px; border-radius: 6px; box-shadow: 0 4px 14px rgba(224,171,16,.3); }
+    .top-brand strong { letter-spacing: .2px; }
+
+    /* Hero banner */
+    .hero-banner { position: relative; overflow: hidden; padding: 72px 0 46px; }
+    .hero-banner::before { content: ""; position: absolute; inset: -20% -10%; background:
+        radial-gradient(1200px 700px at 18% -10%, rgba(255,120,200,.22), transparent 60%),
+        radial-gradient(1200px 700px at 90% 120%, rgba(224,171,16,.20), transparent 60%),
+        conic-gradient(from 220deg at 60% 40%, rgba(255,255,255,.08), rgba(255,255,255,0) 25%, rgba(255,255,255,.08) 50%, rgba(255,255,255,0) 75%, rgba(255,255,255,.08));
+      filter: saturate(140%) blur(8px); opacity: .9; pointer-events: none; }
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(70% 70% at 50% 30%, #000 60%, transparent 100%); opacity: .18; pointer-events: none; }
+    .hero-inner { width: min(100%, 1200px); margin: 0 auto; padding: 0 24px; text-align: center; }
+    .hero-title { margin: 0 0 10px; font-size: clamp(28px, 5vw, 52px); font-weight: 800; background: linear-gradient(90deg, #fff, #ffd86a, #9ecbff); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 10px 40px rgba(224,171,16,.16); }
+    .hero-sub { margin: 0; color: var(--muted); font-size: 16px; }
+    .chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .chip { display: inline-flex; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); font-size: 12px; }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    /* Contract card */
+    .contract-card {
+      border-radius: var(--radius);
+      background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.08'/></svg>") repeat,
+        linear-gradient(135deg, var(--cardA), var(--cardB));
+      background-size: 160px 160px, auto;
+      background-blend-mode: overlay, normal;
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px) saturate(130%);
+      padding: 30px;
+      margin-bottom: 24px;
+    }
+
+    /* Logo container */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .logo-container::after {
+      content: "";
+      position: absolute; inset: -10px; border-radius: 50%;
+      background: radial-gradient(60% 60% at 50% 50%, rgba(255,255,255,.18), transparent 60%);
+      filter: blur(18px); opacity: .6; z-index: -1;
+    }
+
+    .logo-container img {
+      width: 160px; height: 160px; object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.85);
+      box-shadow: 0 16px 60px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.12);
+      background: #000;
+    }
+
+    /* Typography */
+    h1, h2 {
+      color: #fff;
+      margin: 0 0 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      text-align: center;
+      background: linear-gradient(90deg, #fff, #ffd86a, #9ecbff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 40px;
+    }
+
+    /* Package cards */
+    .package-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .package-card {
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 24px;
+    }
+
+    .package-card h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+
+    .package-card .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--brand-gold);
+      margin-bottom: 16px;
+    }
+
+    .package-card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .package-card li {
+      margin-bottom: 8px;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+    }
+
+    /* Signature section */
+    .signature-section {
+      border-top: 2px solid rgba(255,255,255,.08);
+      margin-top: 40px;
+      padding-top: 24px;
+    }
+
+    /* Signature placeholders */
+    .signature-section input::placeholder,
+    .signature-section textarea::placeholder { color: #fff; opacity: .9; }
+    .signature-section input::-webkit-input-placeholder,
+    .signature-section textarea::-webkit-input-placeholder { color: #fff; opacity: .9; }
+
+    .signature-note {
+      background: rgba(255,255,255,.06);
+      border-left: 4px solid var(--brand-gold);
+      padding: 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    /* Thank you screen */
+    .thank-you-screen {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .thank-you-screen.show {
+      display: block;
+    }
+
+    .thank-you-screen .icon {
+      font-size: 48px;
+      margin-bottom: 24px;
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .cta-primary {
+      background: linear-gradient(135deg, var(--brand-gold), #ffd86a);
+      color: #111;
+      border: none;
+      border-radius: 999px;
+      height: 48px;
+      padding: 0 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; text-decoration: none; line-height: 1;
+    }
+
+    .cta-ghost {
+      background: rgba(255,255,255,.9);
+      color: #111;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      height: 48px;
+      padding: 0 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; text-decoration: none; line-height: 1;
+    }
+
+    /* Email status */
+    .email-status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .email-status.success {
+      background: var(--ok);
+      color: #111;
+      display: block;
+    }
+
+    .email-status.error {
+      background: var(--danger);
+      color: #fff;
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      
+      .package-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn-row {
+        flex-direction: column;
+      }
+      
+      .cta-primary,
+      .cta-ghost {
+        width: 100%;
+      }
+    }
+    
+    /* Mobile hardening: prevent horizontal scroll and scale media */
+    @media (max-width: 640px) {
+      html, body { overflow-x: hidden; }
+      .top-inner { padding: 0 12px; }
+      .hero-inner { padding: 0 16px; }
+      .container { padding: 0 16px; }
+      img, video, iframe { max-width: 100%; height: auto; }
+      .logo-container img { width: 120px; height: 120px; }
+      .hero-title { font-size: 26px; }
+      .hero-sub { font-size: 14px; }
+      .chips { gap: 8px; }
+      .chip { padding: 6px 10px; font-size: 11px; }
+      .contract-card { padding: 18px; }
+      .btn-row { gap: 10px; }
+      .cta-primary, .cta-ghost { height: 46px; padding: 0 18px; }
+    }
+
+    /* Payment modal */
+    .payment-modal { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(2px); display:none; align-items:center; justify-content:center; z-index: 50; }
+    .payment-modal.show { display:flex; }
+    .payment-dialog { width: min(1000px, 96%); height: min(780px, 92vh); background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border: 1px solid rgba(255,255,255,.12); border-radius: 16px; box-shadow: var(--shadow); display:flex; flex-direction: column; overflow: hidden; }
+    .payment-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 12px 16px; background: rgba(1,0,67,.85); color: #fff; }
+    .payment-frame { flex:1; width: 100%; border: 0; background: #fff; }
+    .close-x { background: #fff; color: #111; border: none; border-radius: 8px; padding: 6px 10px; cursor:pointer; font-weight:600; }
+    .payment-fallback { padding: 10px 16px; background: rgba(255,255,255,.06); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header class="contract-top" aria-label="Brand">
+    <div class="top-inner">
+      <div class="top-brand"><img src="DTTB-Logo-Final-Black.png" alt="DTTB"/><strong>Nicky Sanders — Service Agreement</strong></div>
+      <div></div>
+      <nav style="display:flex; gap:8px; align-items:center">
+        <a class="cta-ghost" href="index.html">Back to Site</a>
+        <a class="cta-ghost" href="proposal-nikki.html">Back to Proposal</a>
+      </nav>
+    </div>
+  </header>
+  <section class="hero-banner" aria-label="Contract Overview">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <h1 class="hero-title">Let’s build a unified, AI‑powered content system</h1>
+      <p class="hero-sub">This agreement outlines scope, options, and next steps for launching your consolidated hub and booking flows.</p>
+      <div class="chips">
+        <span class="chip">AI‑First Design</span>
+        <span class="chip">Unified Booking</span>
+        <span class="chip">Calendar Automations</span>
+        <span class="chip">Creator‑Ready Ops</span>
+      </div>
+    </div>
+  </section>
+  <div class="container">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="DTTB-Logo-Final-Black.png" alt="Nicky Sanders — Deeper Than The Brand">
+    </div>
+
+    <!-- Contract Form -->
+    <div id="contractForm">
+      <div class="contract-card">
+        <h1>Service Agreement</h1>
+        <p>This Service Agreement is made between <strong>Marketing Mousetrap Agency</strong> and <strong>Nicky Sanders</strong>.</p>
+
+        <h2>Project Overview</h2>
+        <p>This proposal covers web systems, content integration, automation, and ongoing support. The goal is to unify Nicky's current scattered ecosystem into one seamless platform.</p>
+
+        <h2>Current Challenges</h2>
+        <ul>
+          <li>Multiple separate Google Forms (podcasts + speaking)</li>
+          <li>Links spread across various platforms (IG, LinkedIn Learning, etc.)</li>
+          <li>Community newsletter and course demos in different places</li>
+          <li>Lack of a single branded intake and scheduling experience</li>
+        </ul>
+
+        <h2>Package Options</h2>
+        <div class="package-grid">
+          <!-- Core System Package -->
+          <div class="package-card">
+            <h3>Core System Package</h3>
+            <div class="price">$5,000</div>
+            <ul>
+              <li>Website redesign (AI-first brand style)</li>
+              <li>Centralized booking form</li>
+              <li>Automated calendar integration</li>
+              <li>Newsletter sign-up automation</li>
+              <li>Portfolio/media hub</li>
+              <li>Basic SEO + analytics</li>
+            </ul>
+          </div>
+
+          <!-- Growth Accelerator Package -->
+          <div class="package-card">
+            <h3>Growth Accelerator Package</h3>
+            <div class="price">$7,500</div>
+            <ul>
+              <li>Everything in Core Package</li>
+              <li>Learning Hub integration</li>
+              <li>Resource downloads system</li>
+              <li>Community area (gated)</li>
+              <li>Content pipeline automation</li>
+              <li>Quarterly strategy calls</li>
+            </ul>
+          </div>
+
+          <!-- Full Ecosystem Package -->
+          <div class="package-card">
+            <h3>Full Ecosystem Package</h3>
+            <div class="price">$10,000</div>
+            <ul>
+              <li>Everything in Growth Package</li>
+              <li>Custom dashboard</li>
+              <li>Automated invoicing</li>
+              <li>Booking workflows</li>
+              <li>Private client portal</li>
+              <li>Advanced analytics</li>
+              <li>6 months support included</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Payment Terms</h2>
+        <ul>
+          <li><strong>50% upfront</strong> upon contract signing</li>
+          <li><strong>50% at launch</strong> (project completion)</li>
+          <li>Optional: <strong>$750/month</strong> retainer for continuous support</li>
+        </ul>
+
+        <div class="signature-section">
+          <h2>Digital Signature</h2>
+          <div class="signature-note">
+            <strong>Note:</strong> Please type your full name exactly as it appears on official documents. This will serve as your digital signature and is legally binding. The effective date shown on final PDF will be the day of signing.
+          </div>
+          <form id="signatureForm">
+            <div class="form-group">
+              <label for="clientName">Full Name</label>
+              <input type="text" id="clientName" required maxlength="80" pattern="[A-Za-z .,'-]{2,80}">
+            </div>
+            <div class="form-group">
+              <label for="clientEmail">Email Address</label>
+              <input type="email" id="clientEmail" required inputmode="email" maxlength="254" pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$">
+            </div>
+            <div class="form-group">
+              <label for="selectedPackage">Selected Package</label>
+              <select id="selectedPackage" required>
+                <option value="">Choose a package...</option>
+                <option value="core">Core System Package ($5,000)</option>
+                <option value="growth">Growth Accelerator Package ($7,500)</option>
+                <option value="full">Full Ecosystem Package ($10,000)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="signature">Digital Signature</label>
+              <input type="text" id="signature" required placeholder="Type your full name as signature" maxlength="120">
+            </div>
+            <!-- Honeypot field to deter bots -->
+            <div class="form-group" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">
+              <label for="companyWebsite">Company Website</label>
+              <input type="text" id="companyWebsite" name="companyWebsite" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="cta-primary">Sign & Submit</button>
+              <a href="proposal-nikki.html" class="cta-ghost">Back to Proposal</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thank You + Invoice Screen -->
+    <div id="thankYouScreen" class="thank-you-screen">
+      <div class="contract-card">
+        <div class="icon">✨</div>
+        <h2>Thank You for Signing!</h2>
+        <p>Your contract has been successfully signed and submitted.</p>
+        <div id="emailStatus" class="email-status"></div>
+      </div>
+
+      <!-- Branded Invoice UI -->
+      <div class="contract-card" id="invoiceCard">
+        <h2 style="margin-bottom:12px">Invoice</h2>
+        <div id="invoiceMeta" style="color:var(--muted); font-size:14px; margin-bottom:16px"></div>
+        <div id="invoiceItems" style="text-align:left"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px solid rgba(255,255,255,.14)">
+          <strong id="invoiceTotal" style="font-size:18px"></strong>
+          <div class="btn-row" style="margin:0">
+            <button id="payNowBtn" class="cta-primary">Pay Securely</button>
+            <button id="downloadContractBtn" class="cta-ghost">Download Contract PDF</button>
+          </div>
+        </div>
+        <div id="invoiceStatus" class="email-status" style="margin-top:14px"></div>
+      </div>
+
+      <!-- Payment Modal -->
+      <div id="paymentModal" class="payment-modal" aria-hidden="true">
+        <div class="payment-dialog" role="dialog" aria-modal="true" aria-label="Secure Payment">
+          <div class="payment-head">
+            <strong>Secure Checkout</strong>
+            <button id="closePaymentModal" class="close-x" aria-label="Close">✕</button>
+          </div>
+          <iframe id="paymentFrame" title="Secure Payment" class="payment-frame"></iframe>
+          <div id="paymentEmbedFallback" class="payment-fallback">If the checkout doesn't appear, <a id="paymentExternalLink" href="#" target="_blank" rel="noreferrer">open payment in a new tab</a>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // EmailJS configuration (mirror reference structure)
+    const EMAILJS_CONFIG = {
+      publicKey: 'p4pF3OWvh-DXtae4c',
+      serviceId: 'service_hers22k',
+      templateId: 'template_bkwpjks',
+      adminTemplateId: 'template_giq2qb9'
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof emailjs !== 'undefined') {
+        // EmailJS v4 prefers an object argument
+        emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+        console.log('✅ EmailJS initialized');
+      } else {
+        console.warn('⚠️ EmailJS library not loaded');
+      }
+    });
+
+    // Helper: fetch image and return data URL
+    async function getImageDataUrl(src) {
+      try {
+        const res = await fetch(src, { cache: 'no-store' });
+        if (!res.ok) return null;
+        const blob = await res.blob();
+        return await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // Store contract and invoice meta data
+    let contractData = {};
+    let invoiceMeta = { invoiceId: null, paymentUrl: null, contractDownloadUrl: '' };
+
+    // Format date
+    function formatDate(date) {
+      return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }).format(date);
+    }
+
+    // Handle form submission
+    document.getElementById('signatureForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Get form data
+      const clientName = document.getElementById('clientName').value.trim();
+      const clientEmail = document.getElementById('clientEmail').value.trim();
+      const selectedPackage = document.getElementById('selectedPackage').value;
+      const signature = document.getElementById('signature').value.trim();
+      
+      console.log('🔍 RAW form values:');
+      console.log('  Raw clientName:', document.getElementById('clientName').value);
+      console.log('  Raw clientEmail:', document.getElementById('clientEmail').value);
+      console.log('  Trimmed clientEmail:', clientEmail);
+      
+      if (!clientName || !clientEmail || !selectedPackage || !signature) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      
+      // Honeypot and anti-abuse checks
+      const honeypot = document.getElementById('companyWebsite');
+      if (honeypot && honeypot.value) {
+        console.warn('Bot submission blocked via honeypot');
+        showEmailStatus('⚠️ Submission blocked. Please try again.', 'error');
+        return;
+      }
+      
+      // Normalize and validate email, lightly sanitize name/signature
+      const normalizedEmail = clientEmail.toLowerCase();
+      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+      if (!emailRegex.test(normalizedEmail)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      const cleanedName = clientName.replace(/[<>]/g, '').slice(0, 80);
+      const cleanedSignature = signature.replace(/[<>]/g, '').slice(0, 120);
+      
+      // Store contract data
+      contractData = {
+        clientName: cleanedName,
+        clientEmail: normalizedEmail,
+        selectedPackage,
+        signature: cleanedSignature,
+        signatureDate: formatDate(new Date()),
+        contractDate: formatDate(new Date()),
+        effectiveDate: formatDate(new Date()),
+        contractId: 'NS-' + Date.now()
+      };
+      
+      console.log('📝 Form data captured:');
+      console.log('  clientName:', clientName);
+      console.log('  clientEmail:', clientEmail);
+      console.log('  selectedPackage:', selectedPackage);
+      console.log('📋 Contract data stored:', contractData);
+      
+      // Remove display date in the form header (not set until signing)
+      const ed = document.getElementById('effectiveDateDisplay'); if (ed) ed.textContent = contractData.effectiveDate;
+      
+      // Hide form and show thank you screen
+      document.getElementById('contractForm').style.display = 'none';
+      document.getElementById('thankYouScreen').classList.add('show');
+      document.getElementById('thankYouScreen').scrollIntoView({ behavior: 'smooth' });
+
+      // Render branded invoice UI for the selected package
+      renderInvoiceUI(contractData);
+      
+      // Create Wave invoice first so emails can include invoice details
+      try {
+        console.log('🔄 Creating WaveApps invoice...');
+        const result = await createInvoiceOnServer(contractData);
+        console.log('📊 WaveApps response:', result);
+        if (result) {
+          console.log('📋 Invoice result detail:', {
+            mode: result.mode,
+            invoiceId: result.invoiceId,
+            paymentUrl: result.paymentUrl
+          });
+        }
+
+        if (result) {
+          invoiceMeta.invoiceId = result.invoiceId || 'Manual-' + Date.now();
+          invoiceMeta.paymentUrl = result.paymentUrl || '';
+          invoiceMeta.mode = result.mode || 'fallback';
+          console.log('✅ Invoice meta updated:', invoiceMeta);
+          if (result.error || result.errorDetails) {
+            console.warn('⚠️ Wave error details:', result.error, result.errorDetails);
+          }
+        } else {
+          // Fallback when WaveApps fails
+          invoiceMeta.invoiceId = 'Manual-' + Date.now();
+          invoiceMeta.paymentUrl = '';
+          invoiceMeta.mode = 'fallback';
+          console.log('⚠️ Using fallback invoice meta:', invoiceMeta);
+        }
+
+        const payBtn = document.getElementById('payNowBtn');
+        const isLive = invoiceMeta && invoiceMeta.mode === 'live' && invoiceMeta.paymentUrl && !/payment-demo/.test(invoiceMeta.paymentUrl);
+        if (isLive) {
+          payBtn.disabled = false;
+          // Open directly in a new tab (Wave blocks embedding)
+          payBtn.onclick = () => window.open(invoiceMeta.paymentUrl, '_blank', 'noopener');
+          setInvoiceStatus('✅ Invoice is ready. Pay securely below.', 'success');
+        } else {
+          payBtn.disabled = true;
+          setInvoiceStatus('ℹ️ Payment link pending. We will email your secure checkout shortly.', 'success');
+        }
+      } catch (err) {
+        console.error('❌ Invoice creation error:', err);
+        setInvoiceStatus('⚠️ Invoice setup error. We will follow up with a payment link via email.', 'error');
+      }
+
+      // Upload signed contract PDF (store URL for emails)
+      try {
+        invoiceMeta.contractDownloadUrl = await uploadSignedContractToGitHub(contractData);
+        console.log('✅ Contract uploaded:', invoiceMeta.contractDownloadUrl);
+      } catch (e) {
+        console.error('❌ Contract upload failed:', e);
+        setInvoiceStatus('⚠️ Contract upload failed. We will email you the contract separately.', 'error');
+      }
+
+      // Send confirmation emails (now with invoice details if available)
+      sendConfirmationEmail(contractData, invoiceMeta);
+    });
+
+    // Send confirmation email (client + admin), modeled after reference
+    async function sendConfirmationEmail(contractData, invoiceMeta = {}) {
+      try {
+        if (typeof emailjs === 'undefined') {
+          throw new Error('EmailJS not available');
+        }
+        const pkg = getPackageDetails(contractData.selectedPackage);
+        const deposit = pkg ? Math.round(pkg.price * 0.5) : null;
+        const baseParams = {
+          from_name: 'Marketing Mousetrap Agency',
+          reply_to: 'sales@marketingmousetrapagency.com'
+        };
+        // Client email
+        const clientParams = {
+          ...baseParams,
+          to_email: contractData.clientEmail,
+          to_name: contractData.clientName,
+          client_name: contractData.clientName,
+          client_email: contractData.clientEmail,
+          contract_id: contractData.contractId,
+          contract_date: contractData.contractDate,
+          effective_date: contractData.effectiveDate,
+          selected_package: pkg ? pkg.name : contractData.selectedPackage,
+          invoice_total_due: deposit ? `$${deposit.toLocaleString()}` : 'TBD',
+          payment_link: invoiceMeta.paymentUrl || '',
+          invoice_id: invoiceMeta.invoiceId || 'Pending',
+          download_link: invoiceMeta.contractDownloadUrl || '',
+          subject: `Contract Confirmation — ${contractData.contractId}`
+        };
+        console.log('📧 Sending CLIENT email to:', clientParams.client_email);
+        console.log('📧 Client email params:', clientParams);
+        
+        try {
+          const clientResponse = await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, clientParams);
+          console.log('✅ Client email sent successfully to:', clientParams.client_email);
+          console.log('📧 EmailJS client response:', clientResponse);
+        } catch (clientError) {
+          console.error('❌ Client email failed:', clientError);
+          console.error('❌ Client error details:', clientError.text, clientError.status);
+          throw clientError; // Re-throw to trigger main catch block
+        }
+
+        // Admin email
+        const adminParams = {
+          ...baseParams,
+          to_email: 'sales@marketingmousetrapagency.com',
+          to_name: 'MMA Admin',
+          client_name: contractData.clientName,
+          client_email: contractData.clientEmail,
+          contract_id: contractData.contractId,
+          contract_date: contractData.contractDate,
+          effective_date: contractData.effectiveDate,
+          selected_package: pkg ? pkg.name : contractData.selectedPackage,
+          invoice_total_due: deposit ? `$${deposit.toLocaleString()}` : 'TBD',
+          payment_link: invoiceMeta.paymentUrl || '',
+          invoice_id: invoiceMeta.invoiceId || 'Pending',
+          download_link: invoiceMeta.contractDownloadUrl || '',
+          subject: `New Contract Signed — ${contractData.contractId}`
+        };
+        console.log('📧 Sending ADMIN email to:', adminParams.to_email);
+        console.log('📧 Admin email params:', adminParams);
+        
+        try {
+          const adminResponse = await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.adminTemplateId, adminParams);
+          console.log('✅ Admin email sent successfully to:', adminParams.to_email);
+          console.log('📧 EmailJS admin response:', adminResponse);
+        } catch (adminError) {
+          console.error('❌ Admin email failed:', adminError);
+          console.error('❌ Admin error details:', adminError.text, adminError.status);
+          throw adminError; // Re-throw to trigger main catch block
+        }
+
+        showEmailStatus('✅ Confirmation emails sent successfully!', 'success');
+      } catch (error) {
+        console.log('Email error:', error);
+        const detail = (error && (error.text || error.message || error.status)) ? `${error.status ? `Status ${error.status}: ` : ''}${error.text || error.message}` : 'Unknown error';
+        showEmailStatus('⚠️ Email error: ' + detail, 'error');
+      }
+    }
+
+    // Show email status
+    function showEmailStatus(message, type) {
+      const status = document.getElementById('emailStatus');
+      status.textContent = message;
+      status.className = `email-status ${type}`;
+    }
+
+    // Invoice helpers
+    function setInvoiceStatus(message, type) {
+      const el = document.getElementById('invoiceStatus');
+      el.textContent = message;
+      el.className = `email-status ${type}`;
+    }
+
+    function getPackageDetails(selectedPackage) {
+      // Base prices per package
+      const map = {
+        core: {
+          name: 'Core System Package',
+          price: 5000,
+          features: [
+            'Website redesign (AI-first brand style)',
+            'Centralized booking form',
+            'Automated calendar integration',
+            'Newsletter sign-up automation',
+            'Portfolio/media hub',
+            'Basic SEO + analytics'
+          ]
+        },
+        growth: {
+          name: 'Growth Accelerator Package',
+          price: 7500,
+          features: [
+            'Everything in Core Package',
+            'Learning Hub integration',
+            'Resource downloads system',
+            'Community area (gated)',
+            'Content pipeline automation',
+            'Quarterly strategy calls',
+          ]
+        },
+        full: {
+          name: 'Full Ecosystem Package',
+          price: 10000,
+          features: [
+            'Everything in Growth Package',
+            'Custom dashboard',
+            'Automated invoicing',
+            'Booking workflows',
+            'Private client portal',
+            'Advanced analytics',
+            '6 months support included'
+          ]
+        }
+      };
+      return map[selectedPackage] || null;
+    }
+
+    function renderInvoiceUI(cd) {
+      const pkg = getPackageDetails(cd.selectedPackage);
+      const meta = document.getElementById('invoiceMeta');
+      const items = document.getElementById('invoiceItems');
+      const total = document.getElementById('invoiceTotal');
+      const payBtn = document.getElementById('payNowBtn');
+
+      if (!pkg) {
+        items.innerHTML = '<p style="color:var(--muted)">Unknown package selected.</p>';
+        total.textContent = '';
+        payBtn.disabled = true;
+        return;
+      }
+
+      // 50% upfront per payment terms
+      const deposit = Math.round(pkg.price * 0.5);
+      const featureList = (pkg.features || []).map(f => `<li style=\"margin:6px 0; display:flex; align-items:center; gap:8px\"><span style=\"color:var(--brand-gold);\">✔</span><span>${f}</span></li>`).join('');
+
+      meta.textContent = `${cd.clientName} • ${cd.clientEmail} • ${cd.effectiveDate}`;
+      items.innerHTML = `
+        <div style=\"display:grid; gap:14px\">
+          <div>
+            <div style=\"font-weight:700; margin-bottom:6px\">${pkg.name}</div>
+            <ul style=\"margin:0; padding-left:0; list-style:none; color:var(--muted);\">${featureList}</ul>
+          </div>
+          <div style=\"display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid rgba(255,255,255,.14)\">
+            <div>Initial Deposit (50%)</div>
+            <div><strong>$${deposit.toLocaleString()}</strong></div>
+          </div>
+          <div style=\"display:flex; justify-content:space-between; color:var(--muted)\">
+            <div>Remaining Balance (due at launch)</div>
+            <div>$${(pkg.price - deposit).toLocaleString()}</div>
+          </div>
+        </div>
+      `;
+      total.textContent = `Total Due Now: $${deposit.toLocaleString()}`;
+      payBtn.disabled = true; // enabled after backend returns paymentUrl
+    }
+
+    async function createInvoiceOnServer(cd) {
+      console.log('📡 Calling /api/create-invoice with:', { contractData: cd, invoice: { packageKey: cd.selectedPackage } });
+      
+      const res = await fetch('/api/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contractData: cd,
+          invoice: { packageKey: cd.selectedPackage }
+        })
+      });
+      
+      console.log('📡 Invoice API response status:', res.status);
+      
+      let payload;
+      try {
+        payload = await res.json();
+        console.log('📡 Invoice API response body:', payload);
+      } catch (e) {
+        console.error('❌ Failed to parse invoice API response:', e);
+        payload = null;
+      }
+      
+      if (!res.ok) {
+        const msg = (payload && (payload.error || payload.message)) ? payload.error || payload.message : `Create invoice failed with status ${res.status}`;
+        throw new Error(msg);
+      }
+      
+      // Surface server message if present
+      if (payload && payload.error) {
+        setInvoiceStatus('⚠️ ' + payload.error, 'error');
+      }
+      
+      return payload;
+    }
+
+    // Build signed contract PDF (MMA + Client signatures) and return base64
+    async function generateContractPDFBase64(cd) {
+      const { jsPDF } = window.jspdf;
+      if (!jsPDF) throw new Error('jsPDF not loaded');
+      const doc = new jsPDF();
+
+      // Header with brand bar and logo
+      doc.setFillColor(224, 171, 16);
+      doc.rect(0, 0, 210, 25, 'F');
+      const logoDataUrlUpload = await getImageDataUrl('Logo.png');
+      if (logoDataUrlUpload) {
+        try { doc.addImage(logoDataUrlUpload, 'PNG', 6, 3, 20, 20); } catch (e) {}
+      }
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(18);
+      doc.text('MARKETING MOUSETRAP AGENCY', 105, 12, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.text('SERVICE AGREEMENT', 105, 20, { align: 'center' });
+
+      // Metadata
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Contract ID: ${cd.contractId}`, 20, 35);
+      doc.text(`Effective Date: ${cd.effectiveDate}`, 20, 40);
+
+      // Client info + package feature list
+      doc.setFillColor(224, 171, 16);
+      doc.rect(20, 50, 170, 8, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text('CLIENT INFORMATION', 105, 56, { align: 'center' });
+
+      doc.setFillColor(248, 249, 250);
+      doc.rect(20, 65, 170, 50, 'F');
+      doc.setDrawColor(224, 171, 16);
+      doc.setLineWidth(0.5);
+      doc.rect(20, 65, 170, 50, 'S');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Client: ${cd.clientName}`, 25, 75);
+      doc.text(`Email: ${cd.clientEmail}`, 25, 81);
+      const pkgInfo = getPackageDetails(cd.selectedPackage);
+      doc.text(`Package: ${pkgInfo?.name || cd.selectedPackage}`, 25, 87);
+      // Feature list (package description)
+      if (pkgInfo && pkgInfo.features && pkgInfo.features.length) {
+        doc.setFontSize(8);
+        const max = 6; // keep it compact on page 1
+        const startY = 93;
+        const features = pkgInfo.features.slice(0, max);
+        features.forEach((f, idx) => {
+          doc.text(`• ${f}`, 25, startY + idx * 5);
+        });
+      }
+
+      // Signatures
+      const signatureY = 120;
+      doc.setFillColor(224, 171, 16);
+      doc.rect(20, signatureY - 5, 170, 8, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text('CONTRACT SIGNATURES', 105, signatureY + 2, { align: 'center' });
+
+      // MMA signature
+      doc.setFontSize(8);
+      doc.text('MARKETING MOUSETRAP AGENCY (COMPANY)', 20, signatureY + 15);
+      doc.setFillColor(248, 249, 250);
+      doc.rect(20, signatureY + 20, 75, 25, 'F');
+      doc.setDrawColor(224, 171, 16);
+      doc.setLineWidth(0.5);
+      doc.rect(20, signatureY + 20, 75, 25, 'S');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(6);
+      doc.text('Authorized Signature:', 25, signatureY + 26);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'italic');
+      doc.text('MMA', 25, signatureY + 32);
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.3);
+      doc.line(25, signatureY + 34, 85, signatureY + 34);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(6);
+      doc.text('Title: Authorized Signatory', 25, signatureY + 38);
+      doc.text('Date: ' + cd.contractDate, 25, signatureY + 42);
+
+      // Client signature
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.text('CLIENT SIGNATURE', 105, signatureY + 15);
+      doc.setFillColor(248, 249, 250);
+      doc.rect(105, signatureY + 20, 75, 25, 'F');
+      doc.setDrawColor(224, 171, 16);
+      doc.setLineWidth(0.5);
+      doc.rect(105, signatureY + 20, 75, 25, 'S');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(6);
+      doc.text('Representative:', 115, signatureY + 26);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'italic');
+      doc.text(cd.clientName, 115, signatureY + 32);
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.3);
+      doc.line(115, signatureY + 34, 175, signatureY + 34);
+      doc.setFontSize(6);
+      doc.text('Signature: ' + cd.signature, 115, signatureY + 38);
+      doc.text('Date: ' + cd.signatureDate, 115, signatureY + 42);
+
+      const dataUri = doc.output('datauristring');
+      const base64 = dataUri.split('base64,')[1] || '';
+      if (!base64) throw new Error('Failed to produce base64');
+      return base64;
+    }
+
+    // Generate and download PDF (with signatures)
+    document.getElementById('downloadContractBtn').addEventListener('click', async function() {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Header with logo
+        doc.setFillColor(224, 171, 16);
+        doc.rect(0, 0, 210, 25, 'F');
+        const logoDataUrlDownload = await getImageDataUrl('Logo.png');
+        if (logoDataUrlDownload) {
+          try { doc.addImage(logoDataUrlDownload, 'PNG', 6, 3, 20, 20); } catch (e) {}
+        }
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.text('MARKETING MOUSETRAP AGENCY', 105, 12, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        doc.text('SERVICE AGREEMENT', 105, 20, { align: 'center' });
+        
+        // Meta
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Contract ID: ${contractData.contractId}`, 20, 35);
+        doc.text(`Effective Date: ${contractData.effectiveDate}`, 20, 40);
+        
+        // Client info + package features
+        doc.setFillColor(224, 171, 16);
+        doc.rect(20, 50, 170, 8, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text('CLIENT INFORMATION', 105, 56, { align: 'center' });
+        doc.setFillColor(248, 249, 250);
+        doc.rect(20, 65, 170, 50, 'F');
+        doc.setDrawColor(224, 171, 16);
+        doc.setLineWidth(0.5);
+        doc.rect(20, 65, 170, 50, 'S');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Client: ${contractData.clientName}`, 25, 75);
+        doc.text(`Email: ${contractData.clientEmail}`, 25, 81);
+        const pkgInfoDownload = getPackageDetails(contractData.selectedPackage);
+        doc.text(`Package: ${pkgInfoDownload?.name || contractData.selectedPackage}`, 25, 87);
+        if (pkgInfoDownload && pkgInfoDownload.features && pkgInfoDownload.features.length) {
+          doc.setFontSize(8);
+          const max = 6;
+          const startY = 93;
+          const features = pkgInfoDownload.features.slice(0, max);
+          features.forEach((f, idx) => {
+            doc.text(`• ${f}`, 25, startY + idx * 5);
+          });
+        }
+        
+        // Signatures
+        const signatureY = 120;
+        doc.setFillColor(224, 171, 16);
+        doc.rect(20, signatureY - 5, 170, 8, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text('CONTRACT SIGNATURES', 105, signatureY + 2, { align: 'center' });
+        
+        // MMA signature
+        doc.setFontSize(8);
+        doc.text('MARKETING MOUSETRAP AGENCY (COMPANY)', 20, signatureY + 15);
+        doc.setFillColor(248, 249, 250);
+        doc.rect(20, signatureY + 20, 75, 25, 'F');
+        doc.setDrawColor(224, 171, 16);
+        doc.setLineWidth(0.5);
+        doc.rect(20, signatureY + 20, 75, 25, 'S');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(6);
+        doc.text('Authorized Signature:', 25, signatureY + 26);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'italic');
+        doc.text('MMA', 25, signatureY + 32);
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.3);
+        doc.line(25, signatureY + 34, 85, signatureY + 34);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(6);
+        doc.text('Title: Authorized Signatory', 25, signatureY + 38);
+        doc.text('Date: ' + contractData.contractDate, 25, signatureY + 42);
+        
+        // Client signature
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.text('CLIENT SIGNATURE', 105, signatureY + 15);
+        doc.setFillColor(248, 249, 250);
+        doc.rect(105, signatureY + 20, 75, 25, 'F');
+        doc.setDrawColor(224, 171, 16);
+        doc.setLineWidth(0.5);
+        doc.rect(105, signatureY + 20, 75, 25, 'S');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(6);
+        doc.text('Representative:', 115, signatureY + 26);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'italic');
+        doc.text(contractData.clientName, 115, signatureY + 32);
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.3);
+        doc.line(115, signatureY + 34, 175, signatureY + 34);
+        doc.setFontSize(6);
+        doc.text('Signature: ' + contractData.signature, 115, signatureY + 38);
+        doc.text('Date: ' + contractData.signatureDate, 115, signatureY + 42);
+        
+        // Save PDF
+        const fileName = `NickySanders_Contract_${contractData.contractId}.pdf`;
+        doc.save(fileName);
+        
+      } catch (error) {
+        console.error('❌ PDF error:', error);
+        alert('Error generating PDF. Please try again.');
+      }
+    });
+
+    // Removed custom invoice PDF generation (Wave invoice used instead)
+
+    // Upload signed contract PDF to GitHub via API
+    async function uploadSignedContractToGitHub(cd) {
+      console.log('🔄 Generating contract PDF for upload...');
+      const base64 = await generateContractPDFBase64(cd);
+      console.log('✅ PDF generated, size:', base64.length, 'chars');
+      
+      const safeName = cd.clientName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+      const filename = `MMA_Contract_${safeName}_${cd.contractId}.pdf`;
+      console.log('🔄 Uploading to GitHub as:', filename);
+      
+      const res = await fetch('/api/upload-contract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, content: base64, contractData: cd })
+      });
+      
+      console.log('📡 Upload response status:', res.status);
+      
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error('❌ Upload failed with error:', err);
+        throw new Error(err.error || `Upload failed with status ${res.status}`);
+      }
+      
+      const data = await res.json();
+      console.log('✅ Upload successful, download URL:', data.downloadUrl);
+      return data.downloadUrl || '';
+    }
+
+    // Payment modal helpers
+    function openPaymentModal(url) {
+      const modal = document.getElementById('paymentModal');
+      const frame = document.getElementById('paymentFrame');
+      const link = document.getElementById('paymentExternalLink');
+      frame.src = url;
+      link.href = url;
+      modal.classList.add('show');
+    }
+    document.getElementById('closePaymentModal').addEventListener('click', function() {
+      const modal = document.getElementById('paymentModal');
+      const frame = document.getElementById('paymentFrame');
+      frame.removeAttribute('src');
+      modal.classList.remove('show');
+    });
+  </script>
+</body>
+</html>
