@@ -15,9 +15,15 @@ export async function POST(req: NextRequest) {
       memo,
       primaryWaveEmail,
       secondaryWaveEmail,
+      items,
     } = body || {};
 
-    if (!customerName || !customerEmail || !serviceId || !primaryWaveEmail || !secondaryWaveEmail) {
+    const envPrimary = process.env.WAVE_INVOICE_PRIMARY_EMAIL || '';
+    const envSecondary = process.env.WAVE_INVOICE_SECONDARY_EMAIL || '';
+    const primaryEmail = primaryWaveEmail || envPrimary;
+    const secondaryEmail = secondaryWaveEmail || envSecondary;
+
+    if (!customerName || !customerEmail || !serviceId || !primaryEmail || !secondaryEmail) {
       return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -29,8 +35,9 @@ export async function POST(req: NextRequest) {
       quantity,
       currency,
       memo,
-      primaryWaveEmail,
-      secondaryWaveEmail,
+      primaryWaveEmail: primaryEmail,
+      secondaryWaveEmail: secondaryEmail,
+      items,
     });
 
     const payload = toWavePayload(draft);

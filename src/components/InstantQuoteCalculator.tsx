@@ -1,25 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { services } from '@/content/services';
 import { Calculator, DollarSign, TrendingUp, Clock, Users, Target, CheckCircle, ArrowRight } from 'lucide-react';
 
-interface ServiceOption {
-  id: string;
-  name: string;
-  description: string;
-  basePrice: number;
-  icon: React.ComponentType<{ className?: string }>;
-  features: string[];
-  addOns: AddOn[];
-}
-
-interface AddOn {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: 'essential' | 'premium' | 'enterprise';
-}
+interface AddOn { id: string; name: string; description?: string; price: number; }
 
 interface BusinessSize {
   id: string;
@@ -39,64 +24,15 @@ interface QuoteBreakdown {
   savings: number;
 }
 
-const serviceOptions: ServiceOption[] = [
-  {
-    id: 'b2b-marketing',
-    name: 'B2B Marketing Strategy',
-    description: 'Comprehensive B2B marketing strategy and execution',
-    basePrice: 2500,
-    icon: Target,
-    features: ['Market Research', 'Competitor Analysis', 'Content Strategy', 'Lead Generation'],
-    addOns: [
-      { id: 'seo', name: 'SEO Optimization', description: 'Search engine optimization services', price: 500, category: 'essential' },
-      { id: 'ppc', name: 'PPC Management', description: 'Pay-per-click advertising management', price: 800, category: 'essential' },
-      { id: 'content', name: 'Content Creation', description: 'Professional content writing', price: 300, category: 'premium' },
-      { id: 'analytics', name: 'Advanced Analytics', description: 'Comprehensive reporting and insights', price: 400, category: 'premium' }
-    ]
-  },
-  {
-    id: 'campaign-execution',
-    name: 'Campaign Execution',
-    description: 'End-to-end campaign management and optimization',
-    basePrice: 1800,
-    icon: TrendingUp,
-    features: ['Campaign Design', 'Multi-channel Execution', 'Performance Tracking', 'Optimization'],
-    addOns: [
-      { id: 'automation', name: 'Marketing Automation', description: 'Email and workflow automation', price: 600, category: 'essential' },
-      { id: 'social', name: 'Social Media Management', description: 'Social media strategy and posting', price: 400, category: 'essential' },
-      { id: 'influencer', name: 'Influencer Partnerships', description: 'Influencer outreach and management', price: 1000, category: 'premium' },
-      { id: 'retargeting', name: 'Retargeting Campaigns', description: 'Advanced retargeting strategies', price: 700, category: 'premium' }
-    ]
-  },
-  {
-    id: 'consulting',
-    name: 'Strategic Consulting',
-    description: 'Business strategy and growth consulting',
-    basePrice: 3000,
-    icon: Users,
-    features: ['Business Analysis', 'Growth Strategy', 'Process Optimization', 'Performance Metrics'],
-    addOns: [
-      { id: 'workshop', name: 'Team Workshops', description: 'In-person or virtual team training', price: 1200, category: 'essential' },
-      { id: 'implementation', name: 'Implementation Support', description: 'Hands-on implementation guidance', price: 800, category: 'essential' },
-      { id: 'coaching', name: 'Executive Coaching', description: 'One-on-one leadership coaching', price: 1500, category: 'premium' },
-      { id: 'audit', name: 'Business Audit', description: 'Comprehensive business performance audit', price: 2000, category: 'enterprise' }
-    ]
-  },
-  {
-    id: 'content-amplification',
-    name: 'Content Amplification',
-    description: 'Content distribution and amplification strategies',
-    basePrice: 1200,
-    icon: TrendingUp,
-    features: ['Content Distribution', 'Social Amplification', 'Influencer Outreach', 'Performance Analytics'],
-    addOns: [
-      { id: 'distribution', name: 'Premium Distribution', description: 'High-value distribution channels', price: 400, category: 'essential' },
-      { id: 'influencer', name: 'Influencer Network', description: 'Access to premium influencer network', price: 800, category: 'premium' },
-      { id: 'syndication', name: 'Content Syndication', description: 'Multi-platform content syndication', price: 600, category: 'premium' },
-      { id: 'viral', name: 'Viral Marketing', description: 'Viral content strategies and execution', price: 1500, category: 'enterprise' }
-    ]
-  }
-];
+const serviceOptions = services
+  .filter((s: any) => s.pricing)
+  .map((s: any) => ({
+    id: s.id,
+    name: s.title,
+    description: s.subtitle,
+    basePrice: s.startingPrice,
+    addOns: (s.pricing?.addOns || []).map((a: any) => ({ id: a.id, name: a.name, description: a.description, price: a.price })),
+  }));
 
 const businessSizes: BusinessSize[] = [
   {
@@ -130,7 +66,7 @@ const businessSizes: BusinessSize[] = [
 ];
 
 export default function InstantQuoteCalculator() {
-  const [selectedService, setSelectedService] = useState<string>('b2b-marketing');
+  const [selectedService, setSelectedService] = useState<string>(serviceOptions[0]?.id || 'web-development');
   const [selectedBusinessSize, setSelectedBusinessSize] = useState<string>('small');
   const [selectedAddOns, setSelectedAddOns] = useState<{ [key: string]: number }>({});
   const [urgency, setUrgency] = useState<'standard' | 'rush' | 'emergency'>('standard');
@@ -226,7 +162,7 @@ export default function InstantQuoteCalculator() {
                 <div className="flex-1">
                   <h4 className="font-semibold text-gray-900 mb-2">{service.name}</h4>
                   <p className="text-sm text-gray-600 mb-3">{service.description}</p>
-                  <div className="text-lg font-bold text-blue-600">Starting at ${service.basePrice.toLocaleString()}</div>
+                  <div className="text-lg font-bold text-blue-600">Starting at ${service.basePrice?.toLocaleString()}</div>
                   <ul className="mt-2 space-y-1">
                     {service.features.slice(0, 2).map((feature, index) => (
                       <li key={index} className="text-xs text-gray-500 flex items-center gap-1">
@@ -307,11 +243,6 @@ export default function InstantQuoteCalculator() {
         <div className="grid md:grid-cols-2 gap-4">
           {service.addOns.map((addOn) => {
             const quantity = selectedAddOns[addOn.id] || 0;
-            const categoryColor = {
-              essential: 'bg-blue-100 text-blue-800',
-              premium: 'bg-purple-100 text-purple-800',
-              enterprise: 'bg-orange-100 text-orange-800'
-            }[addOn.category];
             
             return (
               <div key={addOn.id} className="border border-gray-200 rounded-xl p-6">
@@ -319,9 +250,6 @@ export default function InstantQuoteCalculator() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h4 className="font-semibold text-gray-900">{addOn.name}</h4>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${categoryColor}`}>
-                        {addOn.category}
-                      </span>
                     </div>
                     <p className="text-sm text-gray-600 mb-2">{addOn.description}</p>
                     <div className="text-lg font-semibold text-blue-600">${addOn.price.toLocaleString()}</div>

@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/",
+        has: [
+          {
+            type: "header",
+            key: "host",
+            value: "(^|\.)marketingmousetrapagency\.com$",
+          },
+        ],
         destination: "/index.html",
         permanent: false,
       },

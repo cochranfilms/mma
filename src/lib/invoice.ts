@@ -50,7 +50,7 @@ export function formatMoneyFromCents(cents: number, currency: string = 'USD'): s
 }
 
 export type InvoiceLineItem = {
-  serviceId: string;
+  serviceId?: string;
   name: string;
   description?: string;
   quantity: number;
@@ -85,6 +85,7 @@ export function buildInvoiceDraft(params: {
   memo?: string;
   primaryWaveEmail: string;
   secondaryWaveEmail: string;
+  items?: Array<{ name: string; description?: string; quantity: number; unitPriceCents: number }>;
 }): InvoiceDraft {
   const {
     customerName,
@@ -98,20 +99,31 @@ export function buildInvoiceDraft(params: {
     secondaryWaveEmail,
   } = params;
 
-  const pricing = servicePricingMap[serviceId];
-  if (!pricing) {
-    throw new Error(`Unknown service id: ${serviceId}`);
+  let lineItems: InvoiceLineItem[] = [];
+  if (params.items && params.items.length > 0) {
+    lineItems = params.items.map((i) => ({
+      name: i.name,
+      description: i.description,
+      quantity: Math.max(1, Number(i.quantity) || 1),
+      unitPriceCents: Math.max(0, Number(i.unitPriceCents) || 0),
+    }));
+  } else {
+    const pricing = servicePricingMap[serviceId];
+    if (!pricing) {
+      throw new Error(`Unknown service id: ${serviceId}`);
+    }
+    lineItems = [
+      {
+        serviceId,
+        name: pricing.name,
+        description: pricing.description,
+        quantity,
+        unitPriceCents: pricing.unitPriceCents,
+      },
+    ];
   }
 
-  const item: InvoiceLineItem = {
-    serviceId,
-    name: pricing.name,
-    description: pricing.description,
-    quantity,
-    unitPriceCents: pricing.unitPriceCents,
-  };
-
-  const totalCents = item.unitPriceCents * item.quantity;
+  const totalCents = lineItems.reduce((sum, i) => sum + i.unitPriceCents * i.quantity, 0);
 
   return {
     customer: {
@@ -121,7 +133,7 @@ export function buildInvoiceDraft(params: {
     },
     currency,
     memo,
-    items: [item],
+    items: lineItems,
     totalCents,
     split: {
       primaryEmail: primaryWaveEmail,

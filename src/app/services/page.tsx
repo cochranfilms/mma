@@ -64,6 +64,11 @@ export default function ServicesPage() {
                   <p className="text-gray-600 mb-6">{service.description}</p>
                   
                   <div className="mb-6">
+                    <span className="text-gray-900 font-semibold">Starting at </span>
+                    <span className="text-2xl font-bold text-gray-900">${service.startingPrice?.toLocaleString()}</span>
+                  </div>
+
+                  <div className="mb-6">
                     <h4 className="font-semibold text-gray-900 mb-2">What you'll get:</h4>
                     <ul className="space-y-2">
                       {service.deliverables.slice(0, 4).map((deliverable, index) => (
@@ -76,11 +81,11 @@ export default function ServicesPage() {
                   </div>
                   
                   <div className="grid grid-cols-2 gap-3">
-                    <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
+                    <a href={`/services/${service.id}`} className="w-full text-center bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center">
                       Learn More
                       <ArrowRight className="w-4 h-4 ml-2" />
-                    </button>
-                    <a href={`/services/checkout?serviceId=${service.id}`} className="w-full text-center bg-[#010043] text-white py-3 px-6 rounded-lg font-medium hover:opacity-95 transition-colors">
+                    </a>
+                    <a href={`/services/${service.id}#pricing`} className="w-full text-center bg-[#010043] text-white py-3 px-6 rounded-lg font-medium hover:opacity-95 transition-colors">
                       Buy Now
                     </a>
                   </div>
@@ -116,15 +121,16 @@ export default function ServicesPage() {
                   </div>
                   
                   <p className="text-gray-600 text-sm mb-4">{service.description}</p>
+                  <div className="text-gray-900 font-semibold mb-3">Starting at ${service.startingPrice?.toLocaleString()}</div>
                   
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-blue-600 font-medium capitalize">{service.category}</span>
                     <div className="flex items-center gap-3">
-                      <button className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center">
-                        Details
+                      <a href={`/services/${service.id}`} className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center">
+                        Learn More
                         <ArrowRight className="w-3 h-3 ml-1" />
-                      </button>
-                      <a href={`/services/checkout?serviceId=${service.id}`} className="text-sm font-semibold text-[#010043] underline">
+                      </a>
+                      <a href={`/services/${service.id}#pricing`} className="text-sm font-semibold text-[#010043] underline">
                         Buy Now
                       </a>
                     </div>
