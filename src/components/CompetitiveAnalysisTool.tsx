@@ -397,25 +397,25 @@ export default function CompetitiveAnalysisTool() {
             placeholder="Your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400"
           />
           <input
             type="email"
             placeholder="you@company.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400"
           />
         </div>
         {/* Service Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-slate-200 mb-3">
             Select a Service to Analyze
           </label>
           <select
             value={selectedService}
             onChange={(e) => setSelectedService(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             {Object.entries(serviceContexts).map(([key, service]) => (
               <option key={key} value={key}>
@@ -426,18 +426,18 @@ export default function CompetitiveAnalysisTool() {
         </div>
 
         {/* Service Context Preview */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <h4 className="font-medium text-gray-900 mb-3">Service Analysis Focus</h4>
+        <div className="bg-white/5 border border-white/10 rounded-lg p-4">
+          <h4 className="font-medium text-white mb-3">Service Analysis Focus</h4>
           <div className="space-y-2">
             <div>
-              <span className="text-sm text-gray-500">Service:</span>
-              <div className="font-medium">{serviceContexts[selectedService as keyof typeof serviceContexts].name}</div>
+              <span className="text-sm text-slate-300">Service:</span>
+              <div className="font-medium text-white">{serviceContexts[selectedService as keyof typeof serviceContexts].name}</div>
             </div>
             <div>
-              <span className="text-sm text-gray-500">Key Priorities:</span>
-              <div className="font-medium">
+              <span className="text-sm text-slate-300">Key Priorities:</span>
+              <div className="font-medium text-white">
                 {serviceContexts[selectedService as keyof typeof serviceContexts].priorities.map((priority, index) => (
-                  <span key={priority} className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-2 mb-1">
+                  <span key={priority} className="inline-block bg-white/10 text-blue-200 text-xs px-2 py-1 rounded mr-2 mb-1">
                     {priority.replace('-', ' ')}
                   </span>
                 ))}
@@ -448,7 +448,7 @@ export default function CompetitiveAnalysisTool() {
 
         {/* What We Compare */}
         <div>
-          <h4 className="font-medium text-gray-900 mb-3">What We Compare</h4>
+          <h4 className="font-medium text-white mb-3">What We Compare</h4>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
               { icon: DollarSign, label: 'Pricing', desc: 'Cost vs. Value' },
@@ -457,10 +457,10 @@ export default function CompetitiveAnalysisTool() {
               { icon: Users, label: 'Expertise', desc: 'Specialized Knowledge' },
               { icon: CheckCircle, label: 'Support', desc: 'Ongoing Assistance' }
             ].map((item) => (
-              <div key={item.label} className="text-center p-3 bg-blue-50 rounded-lg">
-                <item.icon className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                <div className="text-sm font-medium text-gray-900">{item.label}</div>
-                <div className="text-xs text-gray-500">{item.desc}</div>
+              <div key={item.label} className="text-center p-3 border border-white/10 bg-white/5 rounded-lg">
+                <item.icon className="w-5 h-5 text-blue-300 mx-auto mb-2" />
+                <div className="text-sm font-medium text-white">{item.label}</div>
+                <div className="text-xs text-slate-300">{item.desc}</div>
               </div>
             ))}
           </div>
@@ -468,7 +468,7 @@ export default function CompetitiveAnalysisTool() {
 
         {/* Competitor Types */}
         <div>
-          <h4 className="font-medium text-gray-900 mb-3">Competitor Types Analyzed</h4>
+          <h4 className="font-medium text-white mb-3">Competitor Types Analyzed</h4>
           <div className="grid grid-cols-2 gap-3">
             {[
               { type: 'Big Marketing Agency', pros: 'Resources, Experience', cons: 'High Cost, Slow Speed' },
@@ -476,9 +476,9 @@ export default function CompetitiveAnalysisTool() {
               { type: 'In-House Team', pros: 'Full Control, Dedicated', cons: 'High Cost, Limited Expertise' },
               { type: 'Boutique Agency', pros: 'Quality, Personal Service', cons: 'Medium Cost, Limited Scale' }
             ].map((competitor, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                <div className="font-medium text-gray-900 text-sm mb-2">{competitor.type}</div>
-                <div className="text-xs text-gray-600">
+              <div key={index} className="p-3 border border-white/10 bg-white/5 rounded-lg">
+                <div className="font-medium text-white text-sm mb-2">{competitor.type}</div>
+                <div className="text-xs text-slate-300">
                   <div className="text-green-600">✓ {competitor.pros}</div>
                   <div className="text-red-600">✗ {competitor.cons}</div>
                 </div>

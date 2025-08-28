@@ -150,8 +150,8 @@ export default function InstantQuoteCalculator() {
   const renderServiceSelection = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Service</h3>
-        <p className="text-gray-600">Select the MMA service that best fits your needs</p>
+        <h3 className="text-2xl font-bold text-white mb-2">Choose Your Service</h3>
+        <p className="text-slate-300">Select the MMA service that best fits your needs</p>
       </div>
       <div className="grid md:grid-cols-2 gap-4">
         <input
@@ -159,14 +159,14 @@ export default function InstantQuoteCalculator() {
           placeholder="Your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg"
+          className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400"
         />
         <input
           type="email"
           placeholder="you@company.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg"
+          className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400"
         />
       </div>
       
@@ -179,31 +179,31 @@ export default function InstantQuoteCalculator() {
             <button
               key={service.id}
               onClick={() => setSelectedService(service.id)}
-              className={`p-6 border-2 rounded-xl transition-all duration-300 text-left ${
+              className={`p-6 rounded-xl transition-all duration-300 text-left border backdrop-blur ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50 shadow-lg'
-                  : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                  ? 'border-blue-500 bg-white/10 shadow-[0_0_30px_rgba(59,130,246,0.25)]'
+                  : 'border-white/10 hover:bg-white/10'
               }`}
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <IconComponent className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-white/10 rounded-lg">
+                  <IconComponent className="w-6 h-6 text-blue-300" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900 mb-2">{service.name}</h4>
-                  <p className="text-sm text-gray-600 mb-3">{service.description}</p>
-                  <div className="text-lg font-bold text-blue-600">Starting at ${service.basePrice?.toLocaleString()}</div>
+                  <h4 className="font-semibold text-white mb-2">{service.name}</h4>
+                  <p className="text-sm text-slate-300 mb-3">{service.description}</p>
+                  <div className="text-lg font-bold text-blue-300">Starting at ${service.basePrice?.toLocaleString()}</div>
                   <ul className="mt-2 space-y-1">
                     {service.features.slice(0, 2).map((feature, index) => (
-                      <li key={index} className="text-xs text-gray-500 flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3 text-green-500" />
+                      <li key={index} className="text-xs text-slate-300 flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3 text-green-400" />
                         {feature}
                       </li>
                     ))}
                   </ul>
                 </div>
                 {isSelected && (
-                  <CheckCircle className="w-6 h-6 text-blue-600" />
+                  <CheckCircle className="w-6 h-6 text-blue-400" />
                 )}
               </div>
             </button>
@@ -216,8 +216,8 @@ export default function InstantQuoteCalculator() {
   const renderBusinessSizeSelection = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Business Size</h3>
-        <p className="text-gray-600">Select your company size for accurate pricing</p>
+        <h3 className="text-2xl font-bold text-white mb-2">Business Size</h3>
+        <p className="text-slate-300">Select your company size for accurate pricing</p>
       </div>
       
       <div className="grid md:grid-cols-2 gap-4">
@@ -229,27 +229,27 @@ export default function InstantQuoteCalculator() {
             <button
               key={size.id}
               onClick={() => setSelectedBusinessSize(size.id)}
-              className={`p-6 border-2 rounded-xl transition-all duration-300 text-left ${
+              className={`p-6 rounded-xl transition-all duration-300 text-left border backdrop-blur ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50 shadow-lg'
-                  : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                  ? 'border-blue-500 bg-white/10 shadow-[0_0_30px_rgba(59,130,246,0.25)]'
+                  : 'border-white/10 hover:bg-white/10'
               }`}
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <IconComponent className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-white/10 rounded-lg">
+                  <IconComponent className="w-6 h-6 text-green-400" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900 mb-1">{size.name}</h4>
-                  <p className="text-sm text-gray-600 mb-2">{size.description}</p>
-                  <div className="text-sm text-gray-500">
+                  <h4 className="font-semibold text-white mb-1">{size.name}</h4>
+                  <p className="text-sm text-slate-300 mb-2">{size.description}</p>
+                  <div className="text-sm text-slate-300">
                     {size.multiplier === 1.0 ? 'Standard pricing' : 
                      size.multiplier < 1.0 ? `${Math.round((1 - size.multiplier) * 100)}% discount` :
                      `${Math.round((size.multiplier - 1) * 100)}% premium`}
                   </div>
                 </div>
                 {isSelected && (
-                  <CheckCircle className="w-6 h-6 text-blue-600" />
+                  <CheckCircle className="w-6 h-6 text-blue-400" />
                 )}
               </div>
             </button>
@@ -266,8 +266,8 @@ export default function InstantQuoteCalculator() {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Add-On Services</h3>
-          <p className="text-gray-600">Enhance your package with additional services</p>
+          <h3 className="text-2xl font-bold text-white mb-2">Add-On Services</h3>
+          <p className="text-slate-300">Enhance your package with additional services</p>
         </div>
         
         <div className="grid md:grid-cols-2 gap-4">
@@ -275,33 +275,33 @@ export default function InstantQuoteCalculator() {
             const quantity = selectedAddOns[addOn.id] || 0;
             
             return (
-              <div key={addOn.id} className="border border-gray-200 rounded-xl p-6">
+              <div key={addOn.id} className="border border-white/10 bg-white/5 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-gray-900">{addOn.name}</h4>
+                      <h4 className="font-semibold text-white">{addOn.name}</h4>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{addOn.description}</p>
-                    <div className="text-lg font-semibold text-blue-600">${addOn.price.toLocaleString()}</div>
+                    <p className="text-sm text-slate-300 mb-2">{addOn.description}</p>
+                    <div className="text-lg font-semibold text-blue-300">${addOn.price.toLocaleString()}</div>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => handleAddOnChange(addOn.id, Math.max(0, quantity - 1))}
-                    className="w-8 h-8 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="w-8 h-8 border border-white/20 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-white"
                   >
                     -
                   </button>
-                  <span className="w-12 text-center font-medium">{quantity}</span>
+                  <span className="w-12 text-center font-medium text-white">{quantity}</span>
                   <button
                     onClick={() => handleAddOnChange(addOn.id, quantity + 1)}
-                    className="w-8 h-8 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="w-8 h-8 border border-white/20 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-white"
                   >
                     +
                   </button>
                   {quantity > 0 && (
-                    <span className="text-sm text-gray-500 ml-2">
+                    <span className="text-sm text-slate-300 ml-2">
                       Total: ${(addOn.price * quantity).toLocaleString()}
                     </span>
                   )}
@@ -317,8 +317,8 @@ export default function InstantQuoteCalculator() {
   const renderUrgencySelection = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Project Timeline</h3>
-        <p className="text-gray-600">Select your preferred timeline</p>
+        <h3 className="text-2xl font-bold text-white mb-2">Project Timeline</h3>
+        <p className="text-slate-300">Select your preferred timeline</p>
       </div>
       
       <div className="grid md:grid-cols-3 gap-4">
@@ -333,14 +333,14 @@ export default function InstantQuoteCalculator() {
             <button
               key={option.id}
               onClick={() => setUrgency(option.id as any)}
-              className={`p-6 border-2 rounded-xl transition-all duration-300 text-center ${
+              className={`p-6 rounded-xl transition-all duration-300 text-center border backdrop-blur ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50 shadow-lg'
-                  : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                  ? 'border-blue-500 bg-white/10 shadow-[0_0_30px_rgba(59,130,246,0.25)]'
+                  : 'border-white/10 hover:bg-white/10'
               }`}
             >
-              <h4 className="font-semibold text-gray-900 mb-2">{option.name}</h4>
-              <p className="text-sm text-gray-600 mb-3">{option.description}</p>
+              <h4 className="font-semibold text-white mb-2">{option.name}</h4>
+              <p className="text-sm text-slate-300 mb-3">{option.description}</p>
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${option.color}`}>
                 {option.multiplier === 1.0 ? 'No additional cost' : 
                  `${Math.round((option.multiplier - 1) * 100)}% rush fee`}
