@@ -71,7 +71,7 @@ export default function CommunicationToolsPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             {features.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
@@ -181,7 +181,7 @@ export default function CommunicationToolsPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl p-8 md:p-12 shadow-lg bg-gradient-to-br from-yellow-900/20 to-orange-900/20 border border-yellow-400/20">
+          <div className="rounded-2xl p-8 md:p-12 shadow-lg bg-gradient-to-br from-yellow-900/20 to-orange-900/20 border border-yellow-400/20 max-w-6xl mx-auto">
             <CalendarBooking />
           </div>
         </div>
@@ -199,7 +199,7 @@ export default function CommunicationToolsPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl p-8 md:p-12 bg-gradient-to-br from-red-900/20 to-orange-900/20 border border-red-400/20">
+          <div className="rounded-2xl p-8 md:p-12 bg-gradient-to-br from-red-900/20 to-orange-900/20 border border-red-400/20 max-w-6xl mx-auto">
             <VideoConsultation />
           </div>
         </div>

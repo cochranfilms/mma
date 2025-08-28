@@ -165,7 +165,7 @@ export default function CalendarBooking() {
             <button
               key={service.id}
               onClick={() => handleServiceSelect(service.id)}
-              className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all duration-300 text-left group"
+              className="p-6 border-2 border-blue-100 bg-white rounded-xl hover:border-blue-400 hover:shadow-xl transition-all duration-300 text-left group"
             >
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
@@ -203,7 +203,7 @@ export default function CalendarBooking() {
           <button
             key={date}
             onClick={() => handleDateSelect(date)}
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition-all duration-300 text-center"
+            className="p-4 border-2 border-blue-100 bg-white rounded-lg hover:border-blue-400 hover:shadow-md transition-all duration-300 text-center"
           >
             <div className="text-sm font-medium text-gray-900">
               {formatDate(date).split(' ')[0]}
@@ -232,7 +232,7 @@ export default function CalendarBooking() {
           <button
             key={slot.id}
             onClick={() => handleTimeSelect(slot.time)}
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition-all duration-300 text-center"
+            className="p-4 border-2 border-blue-100 bg-white rounded-lg hover:border-blue-400 hover:shadow-md transition-all duration-300 text-center"
           >
             <div className="text-lg font-semibold text-gray-900">{slot.time}</div>
             <div className="text-sm text-gray-500">Available</div>
@@ -253,7 +253,7 @@ export default function CalendarBooking() {
           <p className="text-gray-600">Review your selection before proceeding</p>
         </div>
         
-        <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+        <div className="bg-blue-50 rounded-xl p-6 space-y-4 border border-blue-100">
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Service:</span>
             <span className="font-semibold text-gray-900">{service.name}</span>
@@ -286,7 +286,7 @@ export default function CalendarBooking() {
           <button
             onClick={handleBooking}
             disabled={isLoading}
-            className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center"
           >
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -313,10 +313,10 @@ export default function CalendarBooking() {
         <div key={stepName} className="flex items-center">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
             step === stepName
-              ? 'bg-blue-600 text-white'
+              ? 'bg-blue-600 text-white shadow-lg'
               : step === 'confirmation' || ['service', 'date', 'time'].indexOf(step) > index
-              ? 'bg-green-500 text-white'
-              : 'bg-gray-200 text-gray-500'
+              ? 'bg-emerald-500 text-white shadow'
+              : 'bg-blue-100 text-blue-700'
           }`}>
             {step === 'confirmation' || ['service', 'date', 'time'].indexOf(step) > index ? (
               <CheckCircle className="w-4 h-4" />
@@ -326,7 +326,7 @@ export default function CalendarBooking() {
           </div>
           {index < 3 && (
             <div className={`w-16 h-1 mx-2 ${
-              ['service', 'date', 'time'].indexOf(step) > index ? 'bg-green-500' : 'bg-gray-200'
+              ['service', 'date', 'time'].indexOf(step) > index ? 'bg-emerald-500' : 'bg-blue-100'
             }`}></div>
           )}
         </div>
@@ -335,7 +335,14 @@ export default function CalendarBooking() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl mx-auto bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-blue-100 p-6 md:p-10">
+      <div className="flex items-center justify-between mb-6">
+        <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+          <Calendar className="w-4 h-4 mr-2" />
+          <span className="text-sm font-semibold">Book Your Consultation</span>
+        </div>
+        <div className="text-sm text-gray-500">Secure • Fast • No obligation</div>
+      </div>
       {renderStepIndicator()}
       
       {step === 'service' && renderServiceSelection()}

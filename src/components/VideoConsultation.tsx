@@ -191,8 +191,8 @@ export default function VideoConsultation() {
   const renderPlatformSelection = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Video Platform</h3>
-        <p className="text-gray-600">Select your preferred video conferencing platform</p>
+        <h3 className="text-3xl md:text-4xl font-extrabold mb-2 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">Choose Your Video Platform</h3>
+        <p className="text-blue-100/80">Select your preferred video conferencing platform</p>
       </div>
       
       <div className="grid md:grid-cols-3 gap-4">
@@ -206,8 +206,8 @@ export default function VideoConsultation() {
               onClick={() => setSelectedPlatform(platform.id)}
               className={`p-6 border-2 rounded-xl transition-all duration-300 text-left ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50 shadow-lg'
-                  : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                  ? 'border-blue-500 bg-blue-50 shadow-lg ring-1 ring-blue-200'
+                  : 'border-blue-100 bg-white hover:border-blue-300 hover:shadow-md'
               }`}
             >
               <div className="flex items-start gap-4">
@@ -219,7 +219,7 @@ export default function VideoConsultation() {
                   <p className="text-sm text-gray-600 mb-3">{platform.description}</p>
                   <ul className="space-y-1">
                     {platform.features.map((feature, index) => (
-                      <li key={index} className="text-xs text-gray-500 flex items-center gap-1">
+                      <li key={index} className="text-xs text-gray-600 flex items-center gap-1">
                         <CheckCircle className="w-3 h-3 text-green-500" />
                         {feature}
                       </li>
@@ -239,7 +239,7 @@ export default function VideoConsultation() {
         <button
           onClick={handleCreateMeeting}
           disabled={isCreating}
-          className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center mx-auto"
+          className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center mx-auto"
         >
           {isCreating ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -257,15 +257,15 @@ export default function VideoConsultation() {
   const renderMeetingsList = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Your Video Meetings</h3>
-        <p className="text-gray-600">Manage and join your scheduled consultations</p>
+        <h3 className="text-3xl md:text-4xl font-extrabold mb-2 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">Your Video Meetings</h3>
+        <p className="text-blue-100/80">Manage and join your scheduled consultations</p>
       </div>
       
       {meetings.length === 0 ? (
         <div className="text-center py-12">
-          <Video className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No meetings scheduled</h3>
-          <p className="text-gray-500">Create your first video consultation meeting</p>
+          <Video className="w-16 h-16 text-blue-300 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">No meetings scheduled</h3>
+          <p className="text-blue-100/80">Create your first video consultation meeting</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -274,7 +274,7 @@ export default function VideoConsultation() {
             const IconComponent = platform?.icon || Video;
             
             return (
-              <div key={meeting.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+              <div key={meeting.id} className="bg-white border border-blue-100 rounded-xl p-6 hover:shadow-lg transition-shadow">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
