@@ -177,4 +177,51 @@ export async function addEmailToList(listId: number, email: string) {
   }
 }
 
+// Deals (CRM) – create basic deal and associate to contact
+export async function createDeal(params: {
+  dealname: string;
+  amount?: number; // in currency units (e.g., dollars)
+  pipeline?: string; // default pipeline
+  dealstage?: string; // e.g., 'closedwon'
+  closeDate?: string; // ISO
+  currency?: string;
+  contactId?: string; // associate if provided
+}) {
+  const properties: Record<string, any> = {
+    dealname: params.dealname,
+  };
+  if (params.amount !== undefined) properties.amount = params.amount;
+  if (params.pipeline) properties.pipeline = params.pipeline;
+  if (params.dealstage) properties.dealstage = params.dealstage;
+  if (params.closeDate) properties.closedate = params.closeDate;
+  if (params.currency) properties.hs_currency = params.currency.toUpperCase();
+
+  // Create deal
+  const dealRes = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/deals`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ properties }),
+  });
+  if (!dealRes.ok) {
+    const text = await dealRes.text();
+    throw new Error(`HubSpot create deal failed: ${dealRes.status} ${dealRes.statusText} - ${text}`);
+  }
+  const deal = await dealRes.json();
+  const dealId = deal?.id as string;
+
+  // Associate to contact if provided
+  if (params.contactId) {
+    const assocRes = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/deals/${dealId}/associations/contacts/${params.contactId}/deal_to_contact`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    if (!assocRes.ok) {
+      const text = await assocRes.text();
+      throw new Error(`HubSpot associate deal failed: ${assocRes.status} ${assocRes.statusText} - ${text}`);
+    }
+  }
+
+  return dealId;
+}
+
 

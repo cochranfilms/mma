@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleStripeWebhook } from '@/lib/stripe-connect';
 import { createWaveInvoice } from '@/lib/wave';
+import { upsertContact, createDeal } from '@/lib/hubspot';
 
 export const runtime = 'nodejs';
 
@@ -33,6 +34,26 @@ export async function POST(req: NextRequest) {
           metadata: { source: 'mma-website', paymentIntentId },
         },
       });
+
+      // HubSpot Deal capture (best-effort)
+      try {
+        const amount = Math.round(((amountTotal || 0) / 100) * 100) / 100;
+        const dealName = `Website Purchase ${paymentIntentId}`;
+        // If you track customer email/name in session metadata, upsert contact
+        const customerEmail = 'stripe@checkout';
+        const customerName = 'Stripe Customer';
+        const contactId = await upsertContact({ email: customerEmail, firstname: customerName.split(' ')[0], lastname: customerName.split(' ').slice(1).join(' ') });
+        await createDeal({
+          dealname: dealName,
+          amount,
+          currency: (currency || 'USD').toUpperCase(),
+          dealstage: 'closedwon',
+          closeDate: new Date().toISOString(),
+          contactId,
+        });
+      } catch (hsErr) {
+        console.error('HubSpot deal sync failed:', hsErr);
+      }
     }
 
     return NextResponse.json({ ok: true });
