@@ -132,40 +132,53 @@ export default function Hero() {
               </Link>
             </motion.div>
 
-            {/* Social Proof */}
+            {/* Social Proof – Powerhouse Ribbon */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="space-y-6 sm:space-y-8"
+              className="px-4"
             >
-              <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider font-semibold px-4">
-                Trusted by B2B companies across industries
-              </p>
-              
-              {/* Trust Logos */}
-              <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-10 px-4">
-                {[
-                  { src: '/CPI_Logo.png', alt: 'Certified Property Inspectors logo' },
-                  { src: '/ProfielPicture_CCAblack.png', alt: 'Course Creator Academy logo' },
-                  { src: '/CevinKIDSlogo.avif', alt: 'Cevin KIDS logo' },
-                ].map((logo: { src: string; alt: string }, index: number) => (
-                  <motion.div
-                    key={logo.src}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7 + index * 0.1, duration: 0.4 }}
-                    className="group"
-                  >
-                                      <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={240}
-                    height={80}
-                    className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-                  />
-                  </motion.div>
-                ))}
+              <div className="relative mx-auto max-w-6xl">
+                {/* Gradient border – tuned to brand gold tones */}
+                <div className="rounded-3xl p-[2px] bg-gradient-to-r from-[#F7D046] via-[#E0AB10] to-[#B97A00] shadow-[0_10px_40px_rgba(0,0,0,0.45)]">
+                  {/* Inner panel */}
+                  <div className="rounded-3xl bg-white/5 backdrop-blur-md">
+                    {/* Shine */}
+                    <div className="absolute inset-0 pointer-events-none rounded-3xl opacity-30" style={{
+                      background:
+                        'radial-gradient(ellipse at top left, rgba(255,255,255,.25), transparent 40%), radial-gradient(ellipse at bottom right, rgba(224,171,16,.22), transparent 45%)',
+                    }} />
+                    <div className="relative py-5 sm:py-6 px-4 sm:px-6">
+                      <p className="text-[10px] sm:text-xs tracking-[0.2em] uppercase text-black text-center font-semibold">
+                        Trusted by B2B companies across industries
+                      </p>
+                      <div className="mt-4 flex flex-wrap justify-center items-center gap-8 sm:gap-10 md:gap-12">
+                        {[
+                          { src: '/CPI_Logo.png', alt: 'Certified Property Inspectors logo' },
+                          { src: '/ProfielPicture_CCAblack.png', alt: 'Course Creator Academy logo' },
+                          { src: '/CevinKIDSlogo.avif', alt: 'Cevin KIDS logo' },
+                        ].map((logo: { src: string; alt: string }, index: number) => (
+                          <motion.div
+                            key={logo.src}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.7 + index * 0.08, duration: 0.35 }}
+                            className="group"
+                          >
+                            <Image
+                              src={logo.src}
+                              alt={logo.alt}
+                              width={240}
+                              height={80}
+                              className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-80 saturate-75 group-hover:opacity-100 group-hover:saturate-100 transition-all duration-200 drop-shadow-[0_0_16px_rgba(224,171,16,0.28)]"
+                            />
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
