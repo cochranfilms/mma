@@ -7,12 +7,14 @@ type CaptureBody = {
   listName?: string;
   event: string; // e.g., 'roi_calculated', 'service_quiz_completed'
   properties?: Record<string, any>;
+  noteTitle?: string;
+  noteBody?: string;
 };
 
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as CaptureBody;
-    const { email, name, listName, event, properties } = body;
+    const { email, name, listName, event, properties, noteTitle, noteBody } = body;
 
     if (!email || !event) {
       return NextResponse.json({ error: 'email and event are required' }, { status: 400 });
@@ -35,9 +37,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create a note summarizing the event
-    const title = `Tool Event: ${event}`;
-    const bodyText = `Event: ${event}\nProperties: ${JSON.stringify(properties ?? {}, null, 2)}`;
+    // Create a note summarizing the event (allow custom formatting)
+    const title = noteTitle ?? `Tool Event: ${event}`;
+    const bodyText = noteBody ?? `Event: ${event}\nProperties: ${JSON.stringify(properties ?? {}, null, 2)}`;
     try {
       await createNoteForContact({ contactId, title, body: bodyText });
     } catch (e) {

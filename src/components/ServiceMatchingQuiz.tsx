@@ -207,6 +207,20 @@ export default function ServiceMatchingQuiz() {
 
     // Send to HubSpot capture endpoint
     try {
+      const topMatches = resultsArray.slice(0, 3);
+      const qaLines = Object.entries(answers)
+        .map(([qId, val]) => {
+          const q = quizQuestions.find(qq => qq.id === qId);
+          const label = q?.options.find(o => o.value === val)?.label || val;
+          return `- ${q?.question}: ${label}`;
+        })
+        .join('\n');
+
+      const noteTitle = 'Service Matching Quiz - Results';
+      const noteBody = `Service Matching Quiz Completed\n\nAnswers:\n${qaLines}\n\nTop Matches:\n${topMatches
+        .map((m, idx) => `${idx + 1}. ${m.title} (${m.serviceId}) - score ${m.matchScore}`)
+        .join('\n')}`;
+
       fetch('/api/hubspot/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -215,7 +229,9 @@ export default function ServiceMatchingQuiz() {
           name,
           listName: 'Service Matching Quiz Leads',
           event: 'service_quiz_completed',
-          properties: { answers, topMatches: resultsArray.slice(0, 3).map(r => r.serviceId) }
+          properties: { answers, topMatches: topMatches.map(r => ({ id: r.serviceId, score: r.matchScore })) },
+          noteTitle,
+          noteBody
         })
       });
     } catch (_) {}
