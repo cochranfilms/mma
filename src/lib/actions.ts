@@ -9,6 +9,7 @@ import { calculateLeadScore, getRecommendedActions, getEstimatedDealValue } from
 import { calculateProfileCompleteness, advanceStage, progressiveProfileSchema } from './progressive-profiling';
 import { calculateEngagementScore, calculateConversionProbability, getNextBestAction } from './behavioral-tracking';
 import { determineFollowUpSequence } from './follow-up-sequences';
+import { upsertContact, createNoteForContact } from './hubspot';
 
 export async function submitLead(formData: FormData) {
   try {
@@ -137,7 +138,24 @@ export async function submitLead(formData: FormData) {
     // Send confirmation to lead
     const confirmationSent = await sendLeadConfirmation(validatedData);
     
-    // Track lead in Google Sheets or localStorage with enhanced data
+    // Push to HubSpot
+    try {
+      const contactId = await upsertContact({
+        email: validatedData.email,
+        firstname: validatedData.name?.split(' ')?.[0],
+        lastname: validatedData.name?.split(' ')?.slice(1).join(' '),
+        company: validatedData.company,
+        phone: validatedData.phone,
+        website: validatedData.currentSite,
+        jobtitle: validatedData.role,
+      });
+      const note = `Consultation Form Submission\nNeeds: ${validatedData.needs.join(', ')}\nTimeline: ${validatedData.timeline}\nBudget: ${validatedData.budget}\nGeography: ${validatedData.geography}\nLead Score: ${leadScore.totalScore} (${leadScore.qualification})`;
+      await createNoteForContact({ contactId, title: 'Consultation Form', body: note });
+    } catch (hsErr) {
+      console.error('HubSpot upsert failed:', hsErr);
+    }
+
+    // Track lead in Google Sheets or localStorage with enhanced data (legacy)
     const trackingSuccess = await trackLead(validatedData);
 
     // Log the submission with enhanced analytics
@@ -298,7 +316,21 @@ export async function quickStartBooking(formData: FormData) {
       }),
     };
 
-    // Track the quick start lead with enhanced data
+    // Push to HubSpot
+    try {
+      const contactId = await upsertContact({
+        email,
+        company,
+        jobtitle: 'Quick Start',
+        website: undefined,
+      });
+      const note = `Quick Start Lead\nCompany: ${company}\nEmail: ${email}\nLead Score: ${leadScore.totalScore} (${leadScore.qualification})`;
+      await createNoteForContact({ contactId, title: 'Quick Start', body: note });
+    } catch (hsErr) {
+      console.error('HubSpot quick start upsert failed:', hsErr);
+    }
+
+    // Track the quick start lead with enhanced data (legacy)
     await trackLead(quickLeadData);
 
     // Log quick start with analytics

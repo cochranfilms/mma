@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { generatePageMetadata } from '@/lib/seo';
 import BookingForm from '@/components/BookingForm';
+import dynamic from 'next/dynamic';
+const HubSpotForm = dynamic(() => import('@/components/HubSpotForm'), { ssr: false });
 import Image from 'next/image';
 
 export const metadata: Metadata = generatePageMetadata('contact');
@@ -34,6 +36,11 @@ export default function ContactPage() {
       {/* Booking Form Section */}
       <section className="section-padding bg-white">
         <div className="container-custom">
+          {process.env.NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID ? (
+            <div className="mb-12">
+              <HubSpotForm formId={process.env.NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID} />
+            </div>
+          ) : null}
           <BookingForm />
         </div>
       </section>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { upsertContact, createNoteForContact } from '@/lib/hubspot';
 
 export async function POST(request: NextRequest) {
   try {
@@ -122,6 +123,22 @@ export async function POST(request: NextRequest) {
       } catch (metadataError) {
         console.error('Failed to upload metadata:', metadataError);
         // Don't fail the main request if metadata upload fails
+      }
+
+      // Send metadata to HubSpot as a note on contact
+      try {
+        const email = proposalData?.contactInfo?.email as string | undefined;
+        if (email) {
+          const contactId = await upsertContact({
+            email,
+            company: proposalData?.companyName,
+            jobtitle: 'Generated Proposal Contact',
+          });
+          const note = `Generated Proposal Uploaded\nFile: ${filename}\nCompany: ${proposalData?.companyName}\nTotal Investment: ${proposalData?.totalInvestment}\nServices: ${(proposalData?.recommendedServices || []).map((s: any) => s.title).join(', ')}`;
+          await createNoteForContact({ contactId, title: 'Generated Proposal', body: note });
+        }
+      } catch (hsErr) {
+        console.error('HubSpot proposal note failed:', hsErr);
       }
     }
 

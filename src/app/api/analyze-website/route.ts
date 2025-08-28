@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import fs from 'fs';
-import path from 'path';
+// Removed local file and GitHub persistence in favor of HubSpot CRM
+import { upsertContact, createNoteForContact } from '@/lib/hubspot';
 import { services as catalogServices } from '@/content/services';
 
 // Initialize OpenAI
@@ -24,109 +24,6 @@ interface Lead {
   source: string;
 }
 
-interface LeadsData {
-  leads: Lead[];
-  lastUpdated: string | null;
-  totalAnalyses: number;
-}
-
-const GITHUB_OWNER = process.env.GITHUB_OWNER;
-const GITHUB_REPO = process.env.GITHUB_REPO;
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
-const LEADS_FILE_PATH_IN_REPO = 'src/data/leads.json';
-
-function getGitHubHeaders() {
-  if (!GITHUB_OWNER || !GITHUB_REPO || !GITHUB_TOKEN) {
-    throw new Error('Missing GitHub configuration. Set GITHUB_OWNER, GITHUB_REPO, and GITHUB_TOKEN env vars.');
-  }
-  return {
-    'Authorization': `Bearer ${GITHUB_TOKEN}`,
-    'Accept': 'application/vnd.github+json',
-    'Content-Type': 'application/json'
-  } as Record<string, string>;
-}
-
-async function getGitHubFile() {
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(LEADS_FILE_PATH_IN_REPO)}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
-  const res = await fetch(url, { headers: getGitHubHeaders() });
-  if (res.status === 404) {
-    return { exists: false as const };
-  }
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`GitHub GET failed: ${res.status} ${res.statusText} - ${text}`);
-  }
-  const data = await res.json();
-  return {
-    exists: true as const,
-    sha: data.sha as string,
-    contentBase64: data.content as string
-  };
-}
-
-async function putGitHubFile(params: { content: string; message: string; sha?: string }) {
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(LEADS_FILE_PATH_IN_REPO)}`;
-  const body = {
-    message: params.message,
-    content: Buffer.from(params.content, 'utf8').toString('base64'),
-    branch: GITHUB_BRANCH,
-    sha: params.sha,
-    committer: {
-      name: 'MMA Bot',
-      email: 'bot@marketingmousetrapagency.com'
-    }
-  };
-  const res = await fetch(url, {
-    method: 'PUT',
-    headers: getGitHubHeaders(),
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`GitHub PUT failed: ${res.status} ${res.statusText} - ${text}`);
-  }
-  return res.json();
-}
-
-async function getBranchHeadSha(branch: string) {
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs/heads/${encodeURIComponent(branch)}`;
-  const res = await fetch(url, { headers: getGitHubHeaders() });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`GitHub refs GET failed: ${res.status} ${res.statusText} - ${text}`);
-  }
-  const data = await res.json();
-  return data.object?.sha as string;
-}
-
-async function createBranch(newBranch: string, fromSha: string) {
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: getGitHubHeaders(),
-    body: JSON.stringify({ ref: `refs/heads/${newBranch}`, sha: fromSha })
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`GitHub create branch failed: ${res.status} ${res.statusText} - ${text}`);
-  }
-}
-
-async function createPullRequest(branch: string, title: string, body: string) {
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/pulls`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: getGitHubHeaders(),
-    body: JSON.stringify({ title, head: branch, base: GITHUB_BRANCH, body })
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`GitHub PR create failed: ${res.status} ${res.statusText} - ${text}`);
-  }
-  const data = await res.json();
-  return data.html_url as string;
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -193,9 +90,25 @@ export async function POST(request: NextRequest) {
       source: 'website-analyzer'
     };
 
-    // Step 4: Fire repository_dispatch so GitHub Actions updates leads.json on main
-    console.log('📤 Dispatching repository event for leads update...');
-    const githubResult = await dispatchLeadToGitHub(newLead);
+    // Step 4: Send to HubSpot CRM
+    console.log('📥 Sending analysis lead to HubSpot...');
+    let hubspotContactId: string | null = null;
+    try {
+      hubspotContactId = await upsertContact({
+        email,
+        company: scraped?.url ? new URL(scraped.url).hostname : undefined,
+        website: url,
+        jobtitle: 'Website Domination Analyzer Lead',
+      });
+      const noteBody = `Website Analyzer Result\nURL: ${url}\nOverall Score: ${analysis.overallScore}\nCritical Issues: ${analysis.criticalIssues?.join(' | ')}`;
+      await createNoteForContact({
+        contactId: hubspotContactId,
+        title: 'Website Domination Analyzer Result',
+        body: noteBody,
+      });
+    } catch (hsErr) {
+      console.error('HubSpot error:', hsErr);
+    }
     
     console.log('🎉 Analysis complete! Returning results...');
 
@@ -208,7 +121,7 @@ export async function POST(request: NextRequest) {
       designAnalysis: analysis.designAnalysis,
       conversionAnalysis: analysis.conversionAnalysis,
       recommendedServices: ensurePriced(recommendations.length > 0 ? recommendations : getDefaultRecommendations()),
-      githubUpload: githubResult
+      hubspotContactId
     });
 
   } catch (error) {
@@ -480,116 +393,4 @@ function ensurePriced(list: Array<{ id: string; title: string; description: stri
   });
 }
 
-async function storeLeadLocally(newLead: Lead) {
-  try {
-    const leadsFilePath = path.join(process.cwd(), 'src/data/leads.json');
-    
-    // Read existing data
-    let leadsData: LeadsData = { leads: [], lastUpdated: null, totalAnalyses: 0 };
-    if (fs.existsSync(leadsFilePath)) {
-      const fileContent = fs.readFileSync(leadsFilePath, 'utf8');
-      leadsData = JSON.parse(fileContent) as LeadsData;
-    }
-    
-    // Add new lead
-    leadsData.leads.push(newLead);
-    leadsData.lastUpdated = new Date().toISOString();
-    leadsData.totalAnalyses = leadsData.leads.length;
-    
-    // Write back to file
-    fs.writeFileSync(leadsFilePath, JSON.stringify(leadsData, null, 2));
-    
-    console.log('Lead stored locally:', { email: newLead.email, url: newLead.website, score: newLead.analysisScore });
-  } catch (error) {
-    console.error('Error storing lead locally:', error);
-  }
-}
-
-async function uploadLeadToGitHub(newLead: Lead) {
-  try {
-    const repoConfigured = Boolean(GITHUB_OWNER && GITHUB_REPO && GITHUB_TOKEN);
-    if (!repoConfigured) {
-      console.log('⚠️ Missing GitHub env vars; skipping upload');
-      return { success: false, reason: 'missing_env' };
-    }
-
-    // Fetch existing file content (if any)
-    let leadsData: LeadsData = { leads: [], lastUpdated: null, totalAnalyses: 0 };
-    let existingSha: string | undefined = undefined;
-    try {
-      const existing = await getGitHubFile();
-      if (existing.exists) {
-        existingSha = existing.sha;
-        const decoded = Buffer.from(existing.contentBase64, 'base64').toString('utf8');
-        leadsData = JSON.parse(decoded) as LeadsData;
-      }
-    } catch (e) {
-      console.warn('Could not retrieve existing GitHub file; will create new.', e);
-    }
-
-    // Merge new lead
-    leadsData.leads.push(newLead);
-    leadsData.lastUpdated = new Date().toISOString();
-    leadsData.totalAnalyses = leadsData.leads.length;
-
-    const updatedContent = JSON.stringify(leadsData, null, 2);
-    const message = `Auto-update: New website analysis lead - ${new Date().toISOString()}`;
-    try {
-      const result = await putGitHubFile({ content: updatedContent, message, sha: existingSha });
-      console.log('✅ Successfully uploaded leads data to GitHub via API (remote append)');
-      return { success: true, mode: 'direct', commitSha: result?.commit?.sha || null };
-    } catch (putErr: any) {
-      const errMsg = String(putErr?.message || 'unknown');
-      // Fallback: branch protection or permissions → create PR
-      console.warn('Direct push failed, attempting PR fallback:', errMsg);
-      try {
-        const baseSha = await getBranchHeadSha(GITHUB_BRANCH);
-        const branchName = `leads-update-${Date.now()}`;
-        await createBranch(branchName, baseSha);
-        await putGitHubFile({ content: updatedContent, message, sha: existingSha });
-        const prUrl = await createPullRequest(
-          branchName,
-          'Auto-update leads.json from Website Analyzer',
-          'This PR was created automatically when direct push to protected branch failed.'
-        );
-        return { success: true, mode: 'pr', prUrl };
-      } catch (prErr: any) {
-        console.error('PR fallback failed:', prErr);
-        return { success: false, error: prErr?.message || 'fallback_failed', originalError: errMsg };
-      }
-    }
-  } catch (error: any) {
-    console.error('❌ Error uploading to GitHub via API:', error);
-    console.log('⚠️ Analysis will continue despite GitHub upload failure');
-    return { success: false, error: error?.message || 'unknown' };
-  }
-}
-
-async function dispatchLeadToGitHub(newLead: Lead) {
-  try {
-    if (!GITHUB_OWNER || !GITHUB_REPO || !GITHUB_TOKEN) {
-      return { success: false, reason: 'missing_env' };
-    }
-    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/dispatches`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        Accept: 'application/vnd.github+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        event_type: 'update_leads',
-        client_payload: { lead: newLead }
-      })
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`repository_dispatch failed: ${res.status} ${res.statusText} - ${text}`);
-    }
-    return { success: true, mode: 'dispatch' };
-  } catch (error: any) {
-    console.error('Dispatch error:', error);
-    return { success: false, error: error?.message || 'unknown' };
-  }
-}
+// Legacy local/GitHub persistence removed in favor of HubSpot

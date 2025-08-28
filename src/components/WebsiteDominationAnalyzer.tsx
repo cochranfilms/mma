@@ -88,6 +88,20 @@ export default function WebsiteDominationAnalyzer() {
     setIsAnalyzing(true);
     setCurrentStep(0);
 
+    // HubSpot event: analyzer_start
+    try {
+      if (typeof window !== 'undefined' && (window as any)._hsq) {
+        (window as any)._hsq.push(['identify', {
+          email,
+          website: url,
+        }]);
+        (window as any)._hsq.push(['trackCustomBehavioralEvent', {
+          name: 'analyzer_start',
+          properties: { url }
+        }]);
+      }
+    } catch (_) {}
+
     // Simulate analysis steps
     for (let i = 0; i < analysisSteps.length; i++) {
       setCurrentStep(i);
@@ -105,6 +119,18 @@ export default function WebsiteDominationAnalyzer() {
 
       const result = await response.json();
       setAnalysisResult(result);
+      // HubSpot event: analyzer_complete
+      try {
+        if (typeof window !== 'undefined' && (window as any)._hsq) {
+          (window as any)._hsq.push(['trackCustomBehavioralEvent', {
+            name: 'analyzer_complete',
+            properties: {
+              url,
+              score: result?.overallScore,
+            }
+          }]);
+        }
+      } catch (_) {}
       
       // Send emails via EmailJS
       await sendAnalysisEmails(result, email, url);
@@ -114,6 +140,17 @@ export default function WebsiteDominationAnalyzer() {
       // For demo purposes, show mock results
       const mockResult = getMockAnalysis(url);
       setAnalysisResult(mockResult);
+      try {
+        if (typeof window !== 'undefined' && (window as any)._hsq) {
+          (window as any)._hsq.push(['trackCustomBehavioralEvent', {
+            name: 'analyzer_complete',
+            properties: {
+              url,
+              score: mockResult?.overallScore,
+            }
+          }]);
+        }
+      } catch (_) {}
       await sendAnalysisEmails(mockResult, email, url);
     }
 

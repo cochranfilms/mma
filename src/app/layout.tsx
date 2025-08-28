@@ -31,6 +31,26 @@ export default function RootLayout({
             __html: JSON.stringify(websiteSchema),
           }}
         />
+        {/* HubSpot Tracking Code */}
+        {process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID && (
+          <>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function(h,o,t,j,a,r){
+                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                  })(window,document,'script');
+                `,
+              }}
+            />
+            <script
+              async
+              defer
+              src={`https://js.hs-scripts.com/${process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID}.js`}
+              id="hs-script-loader"
+            />
+          </>
+        )}
       </head>
       <body className={`${inter.className} antialiased`}>
         <SiteHeader />

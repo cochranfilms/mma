@@ -155,6 +155,34 @@ export default function BookingForm() {
         }
       });
       
+      // HubSpot identify (if available via tracking script)
+      try {
+        if (typeof window !== 'undefined' && (window as any)._hsq) {
+          (window as any)._hsq.push(['identify', {
+            email: data.email,
+            firstname: data.name?.split(' ')?.[0],
+            lastname: data.name?.split(' ')?.slice(1).join(' '),
+            company: data.company,
+            phone: data.phone,
+            website: data.currentSite,
+            role: data.role,
+            timeline: data.timeline,
+            budget: data.budget,
+            geography: data.geography,
+          }]);
+          (window as any)._hsq.push(['trackCustomBehavioralEvent', {
+            name: 'consultation_form_submitted',
+            properties: {
+              needs: (data.needs || []).join(','),
+              timeline: data.timeline,
+              budget: data.budget,
+            }
+          }]);
+        }
+      } catch (e) {
+        // non-blocking
+      }
+
       await submitLead(formData);
     } catch (error) {
       console.error('Form submission error:', error);
@@ -166,6 +194,22 @@ export default function BookingForm() {
     setIsSubmitting(true);
     
     try {
+      // HubSpot event: quick_start
+      try {
+        if (typeof window !== 'undefined' && (window as any)._hsq) {
+          (window as any)._hsq.push(['identify', {
+            email: data.email,
+            company: data.company,
+          }]);
+          (window as any)._hsq.push(['trackCustomBehavioralEvent', {
+            name: 'quick_start',
+            properties: {
+              company: data.company,
+            }
+          }]);
+        }
+      } catch (_) {}
+
       // Track quick start form completion
       const completionTime = formStartTime ? 
         Math.round((new Date().getTime() - formStartTime.getTime()) / 1000) : 0;
