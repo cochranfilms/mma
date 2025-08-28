@@ -166,7 +166,7 @@ export default function ServiceMatchingQuiz() {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
-  const calculateResults = () => {
+  const calculateResults = async () => {
     const serviceScores: Record<string, number> = {};
     
     // Initialize scores for all actual services
@@ -221,7 +221,7 @@ export default function ServiceMatchingQuiz() {
         .map((m, idx) => `${idx + 1}. ${m.title} (${m.serviceId}) - score ${m.matchScore}`)
         .join('\n')}`;
 
-      fetch('/api/hubspot/capture', {
+      await fetch('/api/hubspot/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -244,11 +244,11 @@ export default function ServiceMatchingQuiz() {
     setResults([]);
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     if (currentQuestion < quizQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      calculateResults();
+      await calculateResults();
     }
   };
 
