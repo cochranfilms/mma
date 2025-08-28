@@ -149,11 +149,12 @@ export async function createWaveInvoice(params: {
     memo?: string;
     metadata?: Record<string, any>;
   };
+  overrideBusinessId?: string;
 }): Promise<CreateInvoiceResult> {
   const cfg = getWaveConfig();
   const isPrimary = params.account === 'primary';
   const apiKey = (isPrimary ? cfg.primaryApiKey : cfg.secondaryApiKey) || cfg.primaryApiKey;
-  const businessId = isPrimary ? cfg.businessIdPrimary : cfg.businessIdSecondary;
+  const businessId = params.overrideBusinessId || (isPrimary ? cfg.businessIdPrimary : cfg.businessIdSecondary);
 
   // If no API key or business ID, fall back to stub
   if (!apiKey || !businessId) {
@@ -170,6 +171,9 @@ export async function createWaveInvoice(params: {
     const inv = await createInvoice(apiKey, businessId, customerId, items);
     return { success: true, invoiceId: inv.id, checkoutUrl: inv.viewUrl, mode: 'live' };
   } catch (error: any) {
-    return { success: false, error: error?.message || 'Wave API error', errorDetails: error?.details, mode: 'live' };
+    const hint = error?.details?.errors?.[0]?.extensions?.code === 'NOT_FOUND'
+      ? `Invalid or unauthorized businessId (${(businessId || '').slice(0, 6)}…); verify Wave business ID matches the API key.`
+      : undefined;
+    return { success: false, error: error?.message || 'Wave API error', errorDetails: { ...error?.details, hint }, mode: 'live' };
   }
 }

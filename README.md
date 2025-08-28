@@ -67,6 +67,22 @@ NEXT_PUBLIC_CALENDLY_URL=
 - `src/app/api/wave/create-invoice/route.ts` – creates primary invoice and returns checkout URL.
 - `src/app/api/wave/webhook/route.ts` – listens for payment events and mirrors secondary invoice (40%).
 - `src/app/services/checkout/page.tsx` – client checkout UI.
+### Wave env configuration (live)
+
+Set these in your deployment environment (Dashboard → Environment Variables):
+
+```
+WAVE_API_BASE=https://gql.waveapps.com/graphql/public
+WAVE_API_KEY_PRIMARY=...           # Primary account API key
+WAVE_API_KEY_SECONDARY=...         # Secondary account API key (for split mirror invoice)
+WAVE_BUSINESS_ID_PRIMARY=...       # Business ID corresponding to PRIMARY key
+WAVE_BUSINESS_ID_SECONDARY=...     # Business ID corresponding to SECONDARY key
+WAVE_INVOICE_PRIMARY_EMAIL=...     # default primary email (60%)
+WAVE_INVOICE_SECONDARY_EMAIL=...   # default secondary email (40%)
+```
+
+If you see `NOT_FOUND` with a message like `Node '...' could not be found` from Wave, it usually means the Business ID does not match the API key’s workspace. Double‑check that the API key belongs to the same Wave business as the Business ID you set.
+
 - `src/app/services/page.tsx` – Buy Now buttons added to Featured and All Services.
 
 ### Important notes
