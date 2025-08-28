@@ -1,4 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { upsertContact, createDeal } from '@/lib/hubspot';
+
+// Minimal Zapier-compatible webhook: POST JSON
+// Expected body example from Zapier step mapping:
+// {
+//   "invoiceId": "INV_123",
+//   "status": "PAID",
+//   "amount": 15000.00,
+//   "currency": "USD",
+//   "customerEmail": "client@example.com",
+//   "customerName": "Client Name",
+//   "memo": "Wave payment",
+//   "serviceId": "web-development"
+// }
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json().catch(() => ({}));
+    const {
+      invoiceId,
+      status,
+      amount,
+      currency,
+      customerEmail,
+      customerName,
+      memo,
+      serviceId,
+    } = body as Record<string, any>;
+
+    if (!invoiceId || !status || !customerEmail) {
+      return NextResponse.json({ ok: false, error: 'invoiceId, status, and customerEmail are required' }, { status: 400 });
+    }
+
+    // Upsert contact and create a closed-won deal when paid
+    if (String(status).toUpperCase() === 'PAID') {
+      try {
+        const contactId = await upsertContact({
+          email: String(customerEmail),
+          firstname: String(customerName || '').split(' ')[0] || undefined,
+          lastname: String(customerName || '').split(' ').slice(1).join(' ') || undefined,
+          jobtitle: 'Wave Invoice Customer',
+        });
+        await createDeal({
+          dealname: `Wave Invoice ${invoiceId}`,
+          amount: typeof amount === 'number' ? amount : Number(amount || 0),
+          currency: (currency || 'USD').toUpperCase(),
+          dealstage: 'closedwon',
+          closeDate: new Date().toISOString(),
+          contactId,
+        });
+      } catch (err) {
+        console.error('HubSpot sync failed for Wave webhook:', err);
+      }
+    }
+
+    // Minimal internal log echo (extend to DB if needed)
+    console.log('Wave webhook received:', { invoiceId, status, amount, currency, customerEmail, memo, serviceId });
+
+    return NextResponse.json({ ok: true });
+  } catch (err: any) {
+    return NextResponse.json({ ok: false, error: err?.message || 'unknown' }, { status: 500 });
+  }
+}
+
+import { NextRequest, NextResponse } from 'next/server';
 import { createWaveInvoice } from '@/lib/wave';
 
 // This webhook will be configured in Wave (or intermediary) to notify payment status
