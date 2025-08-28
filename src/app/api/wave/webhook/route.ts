@@ -1,39 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { upsertContact, createDeal } from '@/lib/hubspot';
+import { createWaveInvoice } from '@/lib/wave';
 
-// Minimal Zapier-compatible webhook: POST JSON
-// Expected body example from Zapier step mapping:
-// {
-//   "invoiceId": "INV_123",
-//   "status": "PAID",
-//   "amount": 15000.00,
-//   "currency": "USD",
-//   "customerEmail": "client@example.com",
-//   "customerName": "Client Name",
-//   "memo": "Wave payment",
-//   "serviceId": "web-development"
-// }
-
+// Zapier-compatible endpoint for Wave invoice events
+// Supports simple PAID payloads and optional split mirror invoicing
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const {
-      invoiceId,
-      status,
-      amount,
-      currency,
-      customerEmail,
-      customerName,
-      memo,
-      serviceId,
-    } = body as Record<string, any>;
 
-    if (!invoiceId || !status || !customerEmail) {
-      return NextResponse.json({ ok: false, error: 'invoiceId, status, and customerEmail are required' }, { status: 400 });
+    // Preferred flat schema (Zapier mapping)
+    const invoiceId = body.invoiceId || body.data?.invoiceId;
+    const status = (body.status || body.eventType || '').toString();
+    const amount = body.amount ?? body.data?.totalAmount;
+    const currency = body.currency || body.data?.currency || 'USD';
+    const customerEmail = body.customerEmail || body.data?.customer?.email;
+    const customerName = body.customerName || body.data?.customer?.name;
+    const memo = body.memo;
+    const split = body.split || body.data?.metadata?.split;
+
+    if (!invoiceId || !status) {
+      return NextResponse.json({ ok: false, error: 'invoiceId and status are required' }, { status: 400 });
     }
 
-    // Upsert contact and create a closed-won deal when paid
-    if (String(status).toUpperCase() === 'PAID') {
+    // 1) CRM capture when invoice is paid
+    if (String(status).toUpperCase() === 'PAID' && customerEmail) {
       try {
         const contactId = await upsertContact({
           email: String(customerEmail),
@@ -54,62 +44,36 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Minimal internal log echo (extend to DB if needed)
-    console.log('Wave webhook received:', { invoiceId, status, amount, currency, customerEmail, memo, serviceId });
+    // 2) Optional: mirror 60/40 split with a secondary invoice (bookkeeping only)
+    if (split && split?.ratio?.secondary) {
+      const total = Number(amount) || 0;
+      const secondaryRatio = Number(split.ratio.secondary) || 0.4;
+      const secondaryAmount = total * secondaryRatio;
+      try {
+        await createWaveInvoice({
+          account: 'secondary',
+          payload: {
+            customer: { email: customerEmail, name: customerName },
+            currency: currency || 'USD',
+            items: [
+              {
+                description: `Secondary split payment (${Math.round(secondaryRatio * 100)}%) for ${invoiceId}`,
+                quantity: 1,
+                unitPrice: secondaryAmount,
+              },
+            ],
+            memo: 'Auto-generated split invoice',
+            metadata: { source: 'mma-website', originInvoiceId: invoiceId, split },
+          },
+        });
+      } catch (err) {
+        console.error('Wave split mirror invoice failed:', err);
+      }
+    }
 
+    console.log('Wave webhook received:', { invoiceId, status, amount, currency, customerEmail, memo, hasSplit: Boolean(split) });
     return NextResponse.json({ ok: true });
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: err?.message || 'unknown' }, { status: 500 });
-  }
-}
-
-import { NextRequest, NextResponse } from 'next/server';
-import { createWaveInvoice } from '@/lib/wave';
-
-// This webhook will be configured in Wave (or intermediary) to notify payment status
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const { eventType, data } = body || {};
-
-    // Basic validation
-    if (!eventType || !data) {
-      return NextResponse.json({ ok: false }, { status: 400 });
-    }
-
-    // Example: payment_succeeded on primary invoice
-    if (eventType === 'payment_succeeded' && data?.metadata?.split) {
-      const split = data.metadata.split as {
-        primaryEmail: string;
-        secondaryEmail: string;
-        ratio: { primary: number; secondary: number };
-      };
-      const total = Number(data.totalAmount) || 0;
-      const secondaryAmount = total * (split.ratio.secondary || 0.4);
-
-      // Create a secondary invoice to mirror the 40% in the secondary account (bookkeeping)
-      // NOTE: This does NOT move funds; it is a record to be settled in the secondary account
-      await createWaveInvoice({
-        account: 'secondary',
-        payload: {
-          customer: { email: data.customer?.email, name: data.customer?.name },
-          currency: data.currency || 'USD',
-          items: [
-            {
-              description: `Secondary split payment (${Math.round((split.ratio.secondary || 0.4) * 100)}%) for ${data.invoiceId}`,
-              quantity: 1,
-              unitPrice: secondaryAmount,
-            },
-          ],
-          memo: 'Auto-generated split invoice',
-          metadata: { source: 'mma-website', originInvoiceId: data.invoiceId, split },
-        },
-      });
-    }
-
-    return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error('Wave webhook error:', error);
-    return NextResponse.json({ ok: false }, { status: 500 });
   }
 }
