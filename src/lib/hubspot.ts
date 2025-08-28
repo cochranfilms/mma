@@ -104,9 +104,9 @@ export async function createNoteForContact(params: {
     headers: getAuthHeaders(),
     body: JSON.stringify({
       properties: {
-        hs_note_body: params.body,
+        // HubSpot Notes don't support a separate title property in v3; prefix into body
+        hs_note_body: params.title ? `${params.title}\n\n${params.body}` : params.body,
         hs_timestamp: new Date().toISOString(),
-        note_title: params.title,
       },
     }),
   });
