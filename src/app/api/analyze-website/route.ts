@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import fs from 'fs';
 import path from 'path';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
 
 // Initialize OpenAI
 const openai = new OpenAI({
@@ -31,6 +27,61 @@ interface LeadsData {
   leads: Lead[];
   lastUpdated: string | null;
   totalAnalyses: number;
+}
+
+const GITHUB_OWNER = process.env.GITHUB_OWNER;
+const GITHUB_REPO = process.env.GITHUB_REPO;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
+const LEADS_FILE_PATH_IN_REPO = 'src/data/leads.json';
+
+function getGitHubHeaders() {
+  if (!GITHUB_OWNER || !GITHUB_REPO || !GITHUB_TOKEN) {
+    throw new Error('Missing GitHub configuration. Set GITHUB_OWNER, GITHUB_REPO, and GITHUB_TOKEN env vars.');
+  }
+  return {
+    'Authorization': `Bearer ${GITHUB_TOKEN}`,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  } as Record<string, string>;
+}
+
+async function getGitHubFile() {
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(LEADS_FILE_PATH_IN_REPO)}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
+  const res = await fetch(url, { headers: getGitHubHeaders() });
+  if (res.status === 404) {
+    return { exists: false as const };
+  }
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`GitHub GET failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+  const data = await res.json();
+  return {
+    exists: true as const,
+    sha: data.sha as string,
+    contentBase64: data.content as string
+  };
+}
+
+async function putGitHubFile(params: { content: string; message: string; sha?: string }) {
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(LEADS_FILE_PATH_IN_REPO)}`;
+  const body = {
+    message: params.message,
+    content: Buffer.from(params.content, 'utf8').toString('base64'),
+    branch: GITHUB_BRANCH,
+    sha: params.sha
+  };
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: getGitHubHeaders(),
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`GitHub PUT failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+  return res.json();
 }
 
 export async function POST(request: NextRequest) {
@@ -365,42 +416,34 @@ async function storeLeadLocally(email: string, url: string, analysis: any) {
 
 async function uploadToGitHub() {
   try {
-    console.log('🔍 Checking Git status for leads.json...');
-    
-    // Check if there are any changes to commit
-    const { stdout: statusOutput } = await execAsync('git status --porcelain src/data/leads.json');
-    console.log('📋 Git status output:', statusOutput);
-    
-    if (!statusOutput.trim()) {
-      console.log('⚠️ No changes to leads.json - skipping GitHub upload');
+    const repoConfigured = Boolean(GITHUB_OWNER && GITHUB_REPO && GITHUB_TOKEN);
+    if (!repoConfigured) {
+      console.log('⚠️ Missing GitHub env vars; skipping upload');
       return;
     }
-    
-    console.log('📤 Starting GitHub upload process...');
-    
-    // Auto-commit and push the updated leads.json file
-    console.log('➕ Adding leads.json to Git...');
-    await execAsync('git add src/data/leads.json');
-    
-    console.log('💾 Committing changes...');
-    const commitMessage = `Auto-update: New website analysis lead - ${new Date().toISOString()}`;
-    await execAsync(`git commit -m "${commitMessage}"`);
-    
-    console.log('🚀 Pushing to GitHub...');
-    await execAsync('git push origin main');
-    
-    console.log('✅ Successfully uploaded leads data to GitHub');
+
+    const leadsFilePath = path.join(process.cwd(), 'src/data/leads.json');
+    if (!fs.existsSync(leadsFilePath)) {
+      console.log('⚠️ leads.json does not exist locally; skipping upload');
+      return;
+    }
+
+    const localContent = fs.readFileSync(leadsFilePath, 'utf8');
+
+    // Fetch existing file to get SHA (if present)
+    let existingSha: string | undefined = undefined;
+    try {
+      const existing = await getGitHubFile();
+      existingSha = existing.exists ? existing.sha : undefined;
+    } catch (e) {
+      console.warn('Could not retrieve existing GitHub file; will attempt create:', e);
+    }
+
+    const message = `Auto-update: New website analysis lead - ${new Date().toISOString()}`;
+    await putGitHubFile({ content: localContent, message, sha: existingSha });
+    console.log('✅ Successfully uploaded leads data to GitHub via API');
   } catch (error: any) {
-    console.error('❌ Error uploading to GitHub:', error);
-    console.error('Git error details:', {
-      message: error?.message,
-      code: error?.code,
-      stderr: error?.stderr,
-      stdout: error?.stdout
-    });
-    
-    // Don't throw error - this is optional functionality
-    // The analysis will still work even if GitHub upload fails
+    console.error('❌ Error uploading to GitHub via API:', error);
     console.log('⚠️ Analysis will continue despite GitHub upload failure');
   }
 }
