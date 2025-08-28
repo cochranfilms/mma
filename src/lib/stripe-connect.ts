@@ -67,6 +67,7 @@ export async function createStripeCheckoutSession(params: CreateCheckoutParams):
     ],
     metadata: {
       customerName,
+      customerEmail,
       ...metadata,
       transferGroup,
     },
@@ -74,6 +75,7 @@ export async function createStripeCheckoutSession(params: CreateCheckoutParams):
       transfer_group: transferGroup,
       metadata: {
         customerName,
+        customerEmail,
         ...metadata,
       },
     },
@@ -102,6 +104,8 @@ export async function handleStripeWebhook(rawBody: string, signature: string | n
     const paymentIntentId = session.payment_intent;
     const amountTotal: number = session.amount_total; // in cents
     const currency: string = session.currency || 'usd';
+    const customerEmail: string | undefined = session?.customer_details?.email || session?.customer_email || session?.metadata?.customerEmail;
+    const customerName: string | undefined = session?.customer_details?.name || session?.metadata?.customerName;
 
     const primaryAccount = process.env.STRIPE_CONNECT_ACCOUNT_PRIMARY;
     const secondaryAccount = process.env.STRIPE_CONNECT_ACCOUNT_SECONDARY;
@@ -127,7 +131,7 @@ export async function handleStripeWebhook(rawBody: string, signature: string | n
     }
 
     // Return data for optional Wave sync step handled by caller
-    return { ok: true, paymentIntentId, amountTotal, currency } as const;
+    return { ok: true, paymentIntentId, amountTotal, currency, customerEmail, customerName } as const;
   }
 
   return { ok: true } as const;

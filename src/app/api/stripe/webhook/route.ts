@@ -17,11 +17,11 @@ export async function POST(req: NextRequest) {
 
     // After successful transfer, sync to Wave as bookkeeping (stub)
     if ('paymentIntentId' in result) {
-      const { amountTotal, currency, paymentIntentId } = result as any;
+      const { amountTotal, currency, paymentIntentId, customerEmail, customerName } = result as any;
       await createWaveInvoice({
         account: 'primary',
         payload: {
-          customer: { email: 'stripe@checkout', name: 'Stripe Customer' },
+          customer: { email: customerEmail || 'stripe@checkout', name: customerName || 'Stripe Customer' },
           currency: currency || 'USD',
           items: [
             {
@@ -39,10 +39,9 @@ export async function POST(req: NextRequest) {
       try {
         const amount = Math.round(((amountTotal || 0) / 100) * 100) / 100;
         const dealName = `Website Purchase ${paymentIntentId}`;
-        // If you track customer email/name in session metadata, upsert contact
-        const customerEmail = 'stripe@checkout';
-        const customerName = 'Stripe Customer';
-        const contactId = await upsertContact({ email: customerEmail, firstname: customerName.split(' ')[0], lastname: customerName.split(' ').slice(1).join(' ') });
+        const email = customerEmail || 'stripe@checkout';
+        const name = customerName || 'Stripe Customer';
+        const contactId = await upsertContact({ email, firstname: name.split(' ')[0], lastname: name.split(' ').slice(1).join(' ') });
         await createDeal({
           dealname: dealName,
           amount,
