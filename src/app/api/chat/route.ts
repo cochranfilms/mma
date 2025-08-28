@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { services } from '@/content/services';
 import { caseStudies } from '@/content/case-studies';
+import { findContactByEmail } from '@/lib/hubspot';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { messages } = body as { messages: ChatMessage[] };
+    const { messages, email } = body as { messages: ChatMessage[]; email?: string };
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Invalid request: messages[] required' }, { status: 400 });
@@ -52,6 +53,20 @@ export async function POST(req: NextRequest) {
       featured: c.featured,
     }));
 
+    // CRM contact context
+    let contactContext = '';
+    if (email) {
+      try {
+        const contact = await findContactByEmail(email);
+        if (contact?.properties) {
+          const p = contact.properties as Record<string, any>;
+          contactContext = `\nCONTACT CONTEXT (from HubSpot): email=${email}, name=${p.firstname || ''} ${p.lastname || ''}, company=${p.company || ''}, phone=${p.phone || ''}, website=${p.website || ''}`;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
     const systemPrompt = `You are Marketing Mousetrap Agency's AI assistant inside the website live chat.
 Be concise, helpful, and specific. Use the structured context below to answer about services, pricing, tools, and work.
 
@@ -68,6 +83,7 @@ Context:
 SERVICES: ${JSON.stringify(servicesSummary)}
 PORTFOLIO: ${JSON.stringify(portfolioSummary)}
 TOOLS: ${JSON.stringify(toolCatalog)}
+${contactContext}
 `;
 
     const completion = await openai.chat.completions.create({

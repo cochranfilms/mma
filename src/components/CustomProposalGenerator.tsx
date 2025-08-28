@@ -400,6 +400,27 @@ export default function CustomProposalGenerator() {
     const proposal = generateProposal();
     setGeneratedProposal(proposal);
     setShowProposal(true);
+    // HubSpot event: proposal_generated
+    try {
+      if (typeof window !== 'undefined' && (window as any)._hsq) {
+        (window as any)._hsq.push(['identify', {
+          email: formData.contactInfo.email,
+          firstname: formData.contactInfo.name?.split(' ')?.[0],
+          lastname: formData.contactInfo.name?.split(' ')?.slice(1).join(' '),
+          company: formData.companyName,
+          phone: formData.contactInfo.phone,
+        }]);
+        (window as any)._hsq.push(['trackCustomBehavioralEvent', {
+          name: 'proposal_generated',
+          properties: {
+            company: formData.companyName,
+            budget: formData.budget,
+            timeline: formData.timeline,
+            services: (proposal.recommendedServices || []).map(s => s.id).join(','),
+          }
+        }]);
+      }
+    } catch (_) {}
   };
 
   const downloadProposal = async () => {
@@ -516,7 +537,7 @@ export default function CustomProposalGenerator() {
       // Save the PDF locally
       pdf.save(filename);
 
-      // Also upload to GitHub
+      // Also upload via API (and push to CRM)
       try {
         const pdfBlob = pdf.output('blob');
         const reader = new FileReader();
@@ -524,7 +545,7 @@ export default function CustomProposalGenerator() {
           try {
             const base64Data = reader.result as string;
             
-            console.log('Uploading proposal to GitHub:', filename);
+            console.log('Uploading proposal via API:', filename);
             
             const response = await fetch('/api/upload-proposal', {
               method: 'POST',
@@ -545,7 +566,19 @@ export default function CustomProposalGenerator() {
 
             if (response.ok) {
               const result = await response.json();
-              console.log('Successfully uploaded to GitHub:', result);
+              console.log('Successfully uploaded via API:', result);
+              // _hsq event: proposal_uploaded
+              try {
+                if (typeof window !== 'undefined' && (window as any)._hsq) {
+                  (window as any)._hsq.push(['trackCustomBehavioralEvent', {
+                    name: 'proposal_uploaded',
+                    properties: {
+                      company: formData.companyName,
+                      email: formData.contactInfo.email,
+                    }
+                  }]);
+                }
+              } catch (_) {}
             } else {
               const errorText = await response.text();
               console.error('GitHub upload failed:', response.status, errorText);

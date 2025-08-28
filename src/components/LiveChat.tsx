@@ -22,6 +22,7 @@ export default function LiveChat() {
     }
   ]);
   const [inputText, setInputText] = useState('');
+  const [userEmail, setUserEmail] = useState<string>('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -59,7 +60,7 @@ export default function LiveChat() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: payloadMessages })
+        body: JSON.stringify({ messages: payloadMessages, email: userEmail || undefined })
       });
 
       if (!res.ok) {
@@ -76,6 +77,19 @@ export default function LiveChat() {
       };
 
       setMessages(prev => [...prev, agentResponse]);
+      // send transcript to CRM (non-blocking)
+      try {
+        if (userEmail) {
+          const transcript = [...messages, userMessage, agentResponse]
+            .map(m => `${m.sender === 'user' ? 'User' : 'Agent'}: ${m.text}`)
+            .join('\n');
+          fetch('/api/chat/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: userEmail, transcript }),
+          });
+        }
+      } catch (_) {}
     } catch (error: any) {
       const agentResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -170,6 +184,15 @@ export default function LiveChat() {
                 <h3 className="font-semibold">Live Chat Support</h3>
               </div>
               <div className="flex items-center gap-2">
+                {/* Optional email capture to link chat with CRM */}
+                <input
+                  type="email"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="hidden md:block text-black px-2 py-1 rounded"
+                  aria-label="Your email for personalized help"
+                />
                 <button
                   onClick={() => setIsMinimized(true)}
                   className="text-white/80 hover:text-white transition-colors"

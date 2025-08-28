@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { upsertContact, ensureStaticList, addEmailToList, createNoteForContact } from '@/lib/hubspot';
 
 type EmailJsPayload = {
   service_id: string;
@@ -81,6 +82,27 @@ export async function POST(request: Request) {
 
     if (TEMPLATE_ID_ADMIN) await sendOne(TEMPLATE_ID_ADMIN);
     if (TEMPLATE_ID_CLIENT) await sendOne(TEMPLATE_ID_CLIENT);
+
+    // HubSpot CRM: upsert contact, add to Early Access list, attach note
+    try {
+      const contactId = await upsertContact({
+        email,
+        firstname: first_name,
+        company,
+        jobtitle: 'Early Access',
+        website,
+        phone,
+      });
+      const listId = await ensureStaticList('Early Access');
+      await addEmailToList(listId, email);
+      await createNoteForContact({
+        contactId,
+        title: 'Early Access Request',
+        body: `Goals: ${goals || ''}`,
+      });
+    } catch (hsErr) {
+      console.error('HubSpot early access upsert/list failed:', hsErr);
+    }
 
     return NextResponse.json(
       { ok: true },
