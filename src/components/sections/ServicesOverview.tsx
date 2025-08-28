@@ -75,12 +75,15 @@ export default function ServicesOverview() {
     { number: '24/7', label: 'Support', icon: BoltIcon }
   ];
 
+  const enableAutoRotate = false;
+
   useEffect(() => {
+    if (!enableAutoRotate) return;
     const timer = setInterval(() => {
       setActiveService((prev) => (prev + 1) % featuredServices.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [featuredServices.length]);
+  }, [featuredServices.length, enableAutoRotate]);
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white relative overflow-hidden">
