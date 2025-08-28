@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { 
@@ -55,6 +55,23 @@ export default function WebsiteDominationAnalyzer() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
+  const [emailjsInitialized, setEmailjsInitialized] = useState(false);
+
+  // Initialize EmailJS once when component mounts
+  useEffect(() => {
+    const initEmailJS = () => {
+      try {
+        const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'p4pF3OWvh-DXtae4c';
+        emailjs.init(publicKey);
+        setEmailjsInitialized(true);
+        console.log('EmailJS initialized successfully with key:', publicKey.substring(0, 8) + '...');
+      } catch (error) {
+        console.error('Failed to initialize EmailJS:', error);
+      }
+    };
+
+    initEmailJS();
+  }, []);
 
   const analysisSteps = [
     { title: 'SCANNING WEBSITE', description: 'Infiltrating target website architecture' },
@@ -176,8 +193,11 @@ export default function WebsiteDominationAnalyzer() {
 
   const sendAnalysisEmails = async (analysis: AnalysisResult, userEmail: string, websiteUrl: string) => {
     try {
-      // Initialize EmailJS (you'll need to add your public key to environment variables)
-      emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY');
+      // Check if EmailJS is initialized
+      if (!emailjsInitialized) {
+        console.error('EmailJS not initialized. Please check your environment variables.');
+        return;
+      }
 
       const currentDate = new Date().toLocaleDateString();
       const currentTime = new Date().toLocaleTimeString();
@@ -253,14 +273,17 @@ export default function WebsiteDominationAnalyzer() {
       };
 
       // Send client email
-      await emailjs.send(
+      console.log('Sending client email...');
+      const clientResponse = await emailjs.send(
         'service_hers22k', // Your service ID
         'template_4hroedw', // Client template ID
         templateParams
       );
+      console.log('Client email sent successfully:', clientResponse);
 
       // Send admin email
-      await emailjs.send(
+      console.log('Sending admin email...');
+      const adminResponse = await emailjs.send(
         'service_hers22k', // Your service ID
         'template_rlhix8p', // Admin template ID
         {
@@ -268,10 +291,19 @@ export default function WebsiteDominationAnalyzer() {
           ADMIN_EMAIL: 'admin@marketingmousetrap.com', // Your admin email
         }
       );
+      console.log('Admin email sent successfully:', adminResponse);
 
-      console.log('Analysis emails sent successfully');
-    } catch (error) {
+      console.log('All analysis emails sent successfully');
+    } catch (error: any) {
       console.error('Error sending emails:', error);
+      console.error('Error details:', {
+        message: error?.message || 'Unknown error',
+        status: error?.status || 'No status',
+        text: error?.text || 'No text'
+      });
+      
+      // Show user-friendly error message
+      alert('There was an issue sending the analysis emails. Please check your email configuration or try again later.');
     }
   };
 

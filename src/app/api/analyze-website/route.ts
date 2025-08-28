@@ -37,6 +37,8 @@ export async function POST(request: NextRequest) {
   try {
     const { url, email }: AnalysisRequest = await request.json();
 
+    console.log('🔍 Starting analysis for:', { url, email });
+
     if (!url || !email) {
       return NextResponse.json(
         { error: 'URL and email are required' },
@@ -54,23 +56,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if OpenAI API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('❌ OPENAI_API_KEY not found in environment variables');
+      return NextResponse.json(
+        { error: 'OpenAI API key not configured' },
+        { status: 500 }
+      );
+    }
+
+    console.log('✅ OpenAI API key found');
+
     // Step 1: Scrape website content
+    console.log('📡 Scraping website content...');
     const websiteContent = await scrapeWebsite(url);
+    console.log('✅ Website content scraped:', websiteContent.substring(0, 200) + '...');
     
     // Step 2: Analyze with OpenAI
+    console.log('🤖 Analyzing with OpenAI...');
     const analysis = await analyzeWithAI(url, websiteContent);
+    console.log('✅ OpenAI analysis complete:', { 
+      overallScore: analysis.overallScore,
+      criticalIssuesCount: analysis.criticalIssues?.length || 0,
+      hasRecommendations: !!analysis.opportunities
+    });
     
     // Step 3: Generate service recommendations
+    console.log('🎯 Generating service recommendations...');
     const recommendations = generateServiceRecommendations(analysis);
+    console.log('✅ Service recommendations generated:', recommendations.length, 'services');
     
     // Step 4: Store lead in local JSON file
+    console.log('💾 Storing lead locally...');
     await storeLeadLocally(email, url, analysis);
     
     // Step 5: Upload to GitHub automatically
+    console.log('📤 Uploading to GitHub...');
     await uploadToGitHub();
     
-    // Step 6: Send analysis emails via EmailJS (client-side will handle this)
-    // We'll return the data needed for EmailJS
+    console.log('🎉 Analysis complete! Returning results...');
 
     return NextResponse.json({
       url,
@@ -80,11 +104,16 @@ export async function POST(request: NextRequest) {
       seoAnalysis: analysis.seoAnalysis,
       designAnalysis: analysis.designAnalysis,
       conversionAnalysis: analysis.conversionAnalysis,
-      recommendedServices: recommendations
+      recommendedServices: recommendations,
+      debug: {
+        openaiUsed: true,
+        timestamp: new Date().toISOString(),
+        websiteContentLength: websiteContent.length
+      }
     });
 
   } catch (error) {
-    console.error('Website analysis error:', error);
+    console.error('❌ API Error:', error);
     return NextResponse.json(
       { error: 'Analysis failed. Please try again.' },
       { status: 500 }
@@ -181,12 +210,13 @@ Be brutally honest but professional. Identify real problems that Marketing Mouse
 `;
 
   try {
+    console.log('🤖 Making OpenAI API call...');
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo", // Use more reliable and cheaper model
       messages: [
         {
           role: "system",
-          content: "You are a website analysis expert. Provide detailed, actionable insights in valid JSON format only."
+          content: "You are a website analysis expert. Provide detailed, actionable insights in valid JSON format only. Always return valid JSON."
         },
         {
           role: "user", 
@@ -194,8 +224,10 @@ Be brutally honest but professional. Identify real problems that Marketing Mouse
         }
       ],
       temperature: 0.7,
-      max_tokens: 2000,
+      max_tokens: 1500,
     });
+    
+    console.log('✅ OpenAI API call successful');
 
     const analysisText = completion.choices[0].message.content;
     if (!analysisText) {
@@ -206,16 +238,23 @@ Be brutally honest but professional. Identify real problems that Marketing Mouse
     const analysis = JSON.parse(analysisText);
     return analysis;
 
-  } catch (error) {
-    console.error('OpenAI analysis error:', error);
+  } catch (error: any) {
+    console.error('❌ OpenAI analysis error:', error);
+    console.error('Error details:', {
+      message: error?.message,
+      status: error?.status,
+      code: error?.code,
+      type: error?.type
+    });
     
     // Fallback analysis if OpenAI fails
+    console.log('⚠️ Using fallback analysis due to OpenAI error');
     return {
       overallScore: 45,
       criticalIssues: [
-        'Website analysis could not be completed automatically',
-        'Manual review required for detailed assessment',
-        'Contact our team for comprehensive audit'
+        'OpenAI analysis failed - using fallback data',
+        'Check API key and OpenAI service status',
+        'Contact support if this persists'
       ],
       opportunities: [
         'Professional website audit available',
