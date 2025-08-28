@@ -63,6 +63,8 @@ export default function CalendarBooking() {
   const [availableSlots, setAvailableSlots] = useState<BookingSlot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<'service' | 'date' | 'time' | 'confirmation'>('service');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
   // Generate sample available slots for the next 7 days
   useEffect(() => {
@@ -117,13 +119,44 @@ export default function CalendarBooking() {
 
   const handleBooking = async () => {
     setIsLoading(true);
-    
-    // Simulate API call to Calendly
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // In a real implementation, this would redirect to Calendly or open their widget
-    window.open('https://calendly.com/your-calendly-link', '_blank');
-    
+
+    try {
+      // 1) Create Calendly single-use link
+      const cal = await fetch('/api/calendly/schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serviceId: selectedService, name, email }),
+      }).then(r => r.json());
+
+      // 2) Capture to HubSpot
+      try {
+        await fetch('/api/hubspot/capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name,
+            listName: 'Calendar Bookings',
+            event: 'calendar_booking_started',
+            properties: {
+              serviceId: selectedService,
+              date: selectedDate,
+              time: selectedTime,
+            },
+            noteTitle: 'Calendar Booking Initiated',
+            noteBody: `Service: ${selectedService}\nDate: ${selectedDate}\nTime: ${selectedTime}`,
+          })
+        });
+      } catch (_) {}
+
+      if (cal?.schedulingUrl) {
+        window.open(cal.schedulingUrl, '_blank');
+      } else {
+        alert(cal?.error || 'Could not create scheduling link.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
     setIsLoading(false);
   };
 
@@ -254,6 +287,22 @@ export default function CalendarBooking() {
         </div>
         
         <div className="bg-blue-50 rounded-xl p-6 space-y-4 border border-blue-100">
+          <div className="grid md:grid-cols-2 gap-3">
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 border border-blue-200 rounded-lg"
+            />
+            <input
+              type="email"
+              placeholder="you@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 border border-blue-200 rounded-lg"
+            />
+          </div>
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Service:</span>
             <span className="font-semibold text-gray-900">{service.name}</span>
