@@ -32,7 +32,7 @@ const serviceROIData = {
   },
   'web-presence': {
     name: 'Web Presence Upgrades',
-    baseInvestment: 15000,
+    baseInvestment: 7500,
     avgROI: 4.1,
     timeframe: '3-6 months',
     metrics: {

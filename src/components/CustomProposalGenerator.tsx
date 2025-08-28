@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { FileText, Download, Mail, Calendar, CheckCircle, Star, ArrowRight } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface ProposalForm {
   companyName: string;
@@ -32,6 +34,8 @@ interface GeneratedProposal {
     expectedOutcomes: string[];
   }>;
   totalInvestment: string;
+  timeline: string;
+  expectedOutcomes: string[];
   implementationPlan: string[];
   nextSteps: string[];
 }
@@ -48,7 +52,7 @@ const serviceOptions = [
     id: 'web-presence',
     title: 'Web Presence Upgrades',
     description: 'Modern websites that convert visitors into customers',
-    baseInvestment: '$15,000 - $50,000',
+    baseInvestment: '$7,500 - $35,000',
     timeline: '3-6 months'
   },
   {
@@ -196,6 +200,8 @@ export default function CustomProposalGenerator() {
       summary: generateSummary(formData, recommendedServices),
       recommendedServices,
       totalInvestment,
+      timeline: formData.timeline === 'urgent' ? '1-2 months' : formData.timeline === 'standard' ? '3-6 months' : '6+ months',
+      expectedOutcomes: recommendedServices.flatMap(service => service.expectedOutcomes),
       implementationPlan,
       nextSteps
     };
@@ -344,9 +350,154 @@ export default function CustomProposalGenerator() {
     setShowProposal(true);
   };
 
-  const downloadProposal = () => {
-    // In a real implementation, this would generate and download a PDF
-    alert('Proposal download functionality would be implemented here');
+  const downloadProposal = async () => {
+    if (!generatedProposal) return;
+
+    try {
+      // Create a new jsPDF instance
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      let yPosition = margin;
+
+      // Helper function to add text with word wrapping
+      const addText = (text: string, fontSize: number = 12, isBold: boolean = false) => {
+        pdf.setFontSize(fontSize);
+        if (isBold) {
+          pdf.setFont('helvetica', 'bold');
+        } else {
+          pdf.setFont('helvetica', 'normal');
+        }
+        
+        const lines = pdf.splitTextToSize(text, pageWidth - 2 * margin);
+        lines.forEach((line: string) => {
+          if (yPosition > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+          }
+          pdf.text(line, margin, yPosition);
+          yPosition += fontSize * 0.4;
+        });
+        yPosition += 5; // Add some spacing after text
+      };
+
+      // Header
+      pdf.setFillColor(16, 24, 64); // Dark blue background
+      pdf.rect(0, 0, pageWidth, 40, 'F');
+      
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Marketing Proposal', margin, 25);
+      
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Generated on ${new Date().toLocaleDateString()}`, margin, 35);
+
+      yPosition = 55;
+      pdf.setTextColor(0, 0, 0);
+
+      // Company Information
+      addText('COMPANY INFORMATION', 16, true);
+      addText(`Company: ${formData.companyName}`);
+      addText(`Industry: ${formData.industry}`);
+      addText(`Business Size: ${formData.businessSize}`);
+      addText(`Primary Goal: ${formData.primaryGoal}`);
+      addText(`Current Challenges: ${formData.currentChallenges}`);
+      addText(`Budget Range: ${formData.budget}`);
+      addText(`Timeline: ${formData.timeline}`);
+      yPosition += 10;
+
+      // Recommended Services
+      addText('RECOMMENDED SERVICES', 16, true);
+      generatedProposal.recommendedServices.forEach((service, index) => {
+        addText(`${index + 1}. ${service.title}`, 14, true);
+        addText(`${service.description}`);
+        addText(`Investment: ${service.investment}`);
+        addText(`Timeline: ${service.timeline}`);
+        
+        if (service.deliverables && service.deliverables.length > 0) {
+          addText('Key Deliverables:', 12, true);
+          service.deliverables.forEach((deliverable) => {
+            addText(`• ${deliverable}`);
+          });
+        }
+        yPosition += 5;
+      });
+
+      // Investment Summary
+      addText('INVESTMENT SUMMARY', 16, true);
+      addText(`Total Estimated Investment: ${generatedProposal.totalInvestment}`, 14, true);
+      addText(`Project Timeline: ${generatedProposal.timeline}`);
+      yPosition += 10;
+
+      // Expected Outcomes
+      if (generatedProposal.expectedOutcomes && generatedProposal.expectedOutcomes.length > 0) {
+        addText('EXPECTED OUTCOMES', 16, true);
+        generatedProposal.expectedOutcomes.forEach((outcome: string) => {
+          addText(`• ${outcome}`);
+        });
+        yPosition += 10;
+      }
+
+      // Contact Information
+      addText('CONTACT INFORMATION', 16, true);
+      addText(`Name: ${formData.contactInfo.name}`);
+      addText(`Email: ${formData.contactInfo.email}`);
+      if (formData.contactInfo.phone) {
+        addText(`Phone: ${formData.contactInfo.phone}`);
+      }
+      addText(`Preferred Contact: ${formData.contactInfo.preferredContact}`);
+      yPosition += 10;
+
+      // Footer
+      const footerY = pageHeight - 20;
+      pdf.setFontSize(10);
+      pdf.setTextColor(128, 128, 128);
+      pdf.text('Marketing Mousetrap Agency - Strategic Marketing Solutions', margin, footerY);
+      pdf.text('Contact us to discuss your project in detail', margin, footerY + 5);
+
+      // Generate filename
+      const filename = `${formData.companyName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_marketing_proposal_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Save the PDF locally
+      pdf.save(filename);
+
+      // Also upload to GitHub
+      try {
+        const pdfBlob = pdf.output('blob');
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64Data = reader.result as string;
+          
+          await fetch('/api/upload-proposal', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              filename,
+              pdfData: base64Data,
+              proposalData: {
+                companyName: formData.companyName,
+                contactInfo: formData.contactInfo,
+                totalInvestment: generatedProposal.totalInvestment,
+                recommendedServices: generatedProposal.recommendedServices,
+              },
+            }),
+          });
+        };
+        reader.readAsDataURL(pdfBlob);
+      } catch (uploadError) {
+        console.error('Error uploading to GitHub:', uploadError);
+        // Don't show error to user since PDF download still worked
+      }
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('There was an error generating the PDF. Please try again.');
+    }
   };
 
   const sendProposal = () => {

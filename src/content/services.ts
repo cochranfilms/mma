@@ -179,7 +179,7 @@ export const services = [
       'Analytics + event tracking',
       'Performance optimization',
     ],
-    startingPrice: 10000,
+    startingPrice: 7500,
     category: 'web',
     outcomes: [
       'Higher conversion with clear UX',
@@ -201,15 +201,34 @@ export const services = [
         { title: 'Build', description: 'Clean, typed implementation with testing and observability.' },
         { title: 'Launch', description: 'SEO, redirects, monitoring, and training for your team.' }
       ],
-      tech: ['Next.js', 'TypeScript', 'Tailwind', 'Vercel', 'Headless CMS'],
+      tech: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Express', 'Prisma', 'PostgreSQL', 'MongoDB', 'Supabase', 'Firebase', 'Vercel', 'AWS', 'Docker', 'Stripe', 'Auth0', 'Clerk', 'Sanity', 'Contentful', 'Shopify', 'WooCommerce', 'Framer Motion', 'Three.js', 'GraphQL', 'tRPC', 'Zustand', 'Redux', 'React Query', 'SWR', 'Zod', 'React Hook Form', 'Storybook', 'Jest', 'Playwright', 'Cypress'],
       roi: {
         items: [
           { label: 'Conversion rate lift (sitewide)', estValue: 8000 },
           { label: 'Organic traffic growth via SEO', estValue: 5000 },
           { label: 'Reduced engineering time (DX)', estValue: 3000 }
         ],
-        example: { investment: 12000, estimatedReturn: 20000 }
+        example: { investment: 9000, estimatedReturn: 17500 }
       }
+    },
+    pricing: {
+      packages: [
+        { id: 'landing-page', name: 'Landing Page', description: 'Single high-converting page', price: 7500, includes: ['UX research', 'Responsive design', 'CMS integration', 'Analytics setup'] },
+        { id: 'marketing-site', name: 'Marketing Site', description: '5-10 pages with CMS', price: 13000, includes: ['Full site architecture', 'Design system', 'CMS workflows', 'SEO optimization'] },
+        { id: 'web-app', name: 'Web Application', description: 'Custom web app with auth', price: 18000, includes: ['User authentication', 'Database design', 'API integration', 'Admin dashboard'] },
+        { id: 'ecommerce', name: 'E-commerce Site', description: 'Full online store', price: 28000, includes: ['Product catalog', 'Payment processing', 'Inventory management', 'Order fulfillment'] }
+      ],
+      addOns: [
+        { id: 'extra-page', name: 'Additional Page', description: 'Custom page with CMS', price: 1000 },
+        { id: 'third-party', name: 'Third-party Integration', description: 'API or service integration', price: 1500 },
+        { id: 'multilingual', name: 'Multi-language Support', description: 'i18n implementation', price: 2500 },
+        { id: 'advanced-seo', name: 'Advanced SEO Package', description: 'Schema, sitemap, optimization', price: 2000 },
+        { id: 'performance', name: 'Performance Optimization', description: 'Speed and Core Web Vitals', price: 1300 },
+        { id: 'accessibility', name: 'Accessibility Audit', description: 'WCAG compliance review', price: 1700 },
+        { id: 'maintenance', name: 'Monthly Maintenance', description: 'Updates and monitoring', price: 700 },
+        { id: 'training', name: 'Team Training Session', description: 'CMS and workflow training', price: 800 }
+      ],
+      fullyCustomizable: true
     }
   },
   {

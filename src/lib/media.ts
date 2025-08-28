@@ -20,16 +20,16 @@ const serviceImageMap: Record<string, Partial<Record<ImageSize, string[]>>> = {
   },
   photography: {
     card: [
-      'media-connections-card-1.jpg',
-      'b2b-marketing-card-3.jpg',
-      'consulting-card-1.jpg',
+      '/home.jpg',
+      '/home.jpg',
+      '/home.jpg',
     ],
   },
   'brand-development': {
     card: [
-      'consulting-card-2.jpg',
-      'b2b-marketing-card-2.jpg',
-      'b2b-marketing-card-3.jpg',
+      '/7evenKidsFresh.jpg',
+      '/7evenKidsFresh.jpg',
+      '/7evenKidsFresh.jpg',
     ],
   },
   'live-production': {
@@ -48,9 +48,9 @@ const serviceImageMap: Record<string, Partial<Record<ImageSize, string[]>>> = {
   },
   'white-label': {
     card: [
-      'consulting-card-1.jpg',
-      'consulting-card-2.jpg',
-      'b2b-marketing-card-1.jpg',
+      '/WhiteLabel.png',
+      '/WhiteLabel.png',
+      '/WhiteLabel.png',
     ],
   },
 };

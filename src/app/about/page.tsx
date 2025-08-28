@@ -74,22 +74,6 @@ export default function AboutPage() {
 
       {/* Story Section */}
       <section className="py-20 bg-white">
-        
-      {/* About Hero Image */}
-      <div className="relative mb-16">
-        <Image
-          src="/media-assets/images/consulting-hero-1.jpg"
-          alt="Professional consulting and business strategy"
-          width={1200}
-          height={600}
-          className="w-full h-96 object-cover rounded-2xl shadow-2xl"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl"></div>
-        <div className="absolute bottom-8 left-8 text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">About Marketing Mousetrap Agency</h1>
-          <p className="text-xl opacity-90">Building powerful B2B media connections that drive results</p>
-        </div>
-      </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>

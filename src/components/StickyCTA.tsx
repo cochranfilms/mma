@@ -39,19 +39,12 @@ export default function StickyCTA() {
               Book a free consultation and discover how we can transform your B2B marketing.
             </p>
 
-            <div className="space-y-2">
+            <div>
               <Link
                 href="/contact"
                 className="block w-full bg-white text-accent-600 text-center py-2 px-4 rounded-lg font-medium text-sm hover:bg-accent-50 transition-colors"
               >
                 Book Free Consultation
-              </Link>
-              
-              <Link
-                href={process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact'}
-                className="block w-full bg-transparent border border-white text-white text-center py-2 px-4 rounded-lg font-medium text-sm hover:bg-white hover:text-accent-600 transition-colors"
-              >
-                Schedule Call
               </Link>
             </div>
           </div>
