@@ -25,11 +25,11 @@ export async function POST(req: NextRequest) {
 
     // Curate structured context from site content
     const toolCatalog = [
-      { id: 'roi-calculator', name: 'ROI Calculator', path: '/communication-tools', description: 'Estimate potential ROI for services.' },
-      { id: 'proposal-generator', name: 'Custom Proposal Generator', path: '/communication-tools', description: 'Generate a tailored proposal.' },
-      { id: 'service-quiz', name: 'Service Matching Quiz', path: '/communication-tools', description: 'Find the right service for your goals.' },
-      { id: 'calendar-booking', name: 'Calendar Booking', path: '/communication-tools', description: 'Schedule a consultation.' },
-      { id: 'instant-quote', name: 'Instant Quote Calculator', path: '/communication-tools', description: 'Get real-time pricing estimates.' },
+      { id: 'roi-calculator', name: 'ROI Calculator', path: '/tools', description: 'Estimate potential ROI for services.' },
+      { id: 'proposal-generator', name: 'Custom Proposal Generator', path: '/tools', description: 'Generate a tailored proposal.' },
+      { id: 'service-quiz', name: 'Service Matching Quiz', path: '/tools', description: 'Find the right service for your goals.' },
+      { id: 'calendar-booking', name: 'Calendar Booking', path: '/tools', description: 'Schedule a consultation.' },
+      { id: 'instant-quote', name: 'Instant Quote Calculator', path: '/tools', description: 'Get real-time pricing estimates.' },
     ];
 
     const servicesSummary = services.map((s) => ({
@@ -62,7 +62,7 @@ When users ask about:
 - Tools: suggest relevant tools with links.
 - Scheduling: offer the booking link.
 
-Always include page paths when relevant (e.g., /services, /work, /communication-tools, /services/[id]). Keep replies under 120 words unless details are requested.
+Always include page paths when relevant (e.g., /services, /work, /tools, /services/[id]). Keep replies under 120 words unless details are requested.
 
 Context:
 SERVICES: ${JSON.stringify(servicesSummary)}
