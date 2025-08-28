@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarDaysIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
+// Temporary disable per request
 export default function StickyCTA() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   if (!isVisible) return null;
 
