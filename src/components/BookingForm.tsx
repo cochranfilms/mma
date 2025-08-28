@@ -75,6 +75,7 @@ export default function BookingForm() {
     handleSubmit,
     watch,
     setValue,
+    getValues,
     formState: { errors, isValid },
     trigger
   } = useForm<FormData>({
@@ -131,6 +132,25 @@ export default function BookingForm() {
       case 4: return ['name', 'email', 'consent'];
       default: return [];
     }
+  };
+
+  // Compute validity only for the current step so navigation isn't blocked by future required fields
+  const isCurrentStepValid = () => {
+    const fields = getFieldsForStep(currentStep);
+    return fields.every((field) => {
+      const value = getValues(field);
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      if (typeof value === 'boolean') {
+        return value === true; // consent checkbox
+      }
+      if (field === 'email') {
+        const email = (value || '').toString();
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+      return Boolean(value && value.toString().trim().length > 0);
+    });
   };
 
   const onSubmit = async (data: FormData) => {
@@ -628,7 +648,7 @@ export default function BookingForm() {
             <button
               type="button"
               onClick={nextStep}
-              disabled={!isValid}
+              disabled={!isCurrentStepValid()}
               className="flex items-center px-6 py-3 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Next
