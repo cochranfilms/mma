@@ -225,3 +225,58 @@ export async function createDeal(params: {
 }
 
 
+// Fetch associated deals for a contact (minimal properties)
+export async function getDealsForContact(contactId: string) {
+  // 1) Get association IDs
+  const assocRes = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}/associations/deals`, {
+    headers: getAuthHeaders(),
+  });
+  if (!assocRes.ok) {
+    const text = await assocRes.text();
+    throw new Error(`HubSpot fetch contact->deals association failed: ${assocRes.status} ${assocRes.statusText} - ${text}`);
+  }
+  const assocData = await assocRes.json();
+  const dealIds: string[] = (assocData?.results || []).map((r: any) => r.to?.id).filter(Boolean);
+  if (dealIds.length === 0) return [] as Array<Record<string, any>>;
+
+  // 2) Fetch each deal (could be optimized via batch read)
+  const properties = ['dealname','amount','dealstage','pipeline','hs_currency','closedate'];
+  const results: Array<Record<string, any>> = [];
+  for (const id of dealIds) {
+    const dealRes = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/deals/${id}?properties=${properties.join(',')}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!dealRes.ok) continue;
+    const deal = await dealRes.json();
+    results.push({ id: deal?.id, ...(deal?.properties || {}) });
+  }
+  return results;
+}
+
+// Fetch associated notes for a contact (minimal properties)
+export async function getNotesForContact(contactId: string) {
+  const assocRes = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/contacts/${contactId}/associations/notes`, {
+    headers: getAuthHeaders(),
+  });
+  if (!assocRes.ok) {
+    const text = await assocRes.text();
+    throw new Error(`HubSpot fetch contact->notes association failed: ${assocRes.status} ${assocRes.statusText} - ${text}`);
+  }
+  const assocData = await assocRes.json();
+  const noteIds: string[] = (assocData?.results || []).map((r: any) => r.to?.id).filter(Boolean);
+  if (noteIds.length === 0) return [] as Array<Record<string, any>>;
+
+  const properties = ['note_title','hs_note_body','hs_timestamp'];
+  const notes: Array<Record<string, any>> = [];
+  for (const id of noteIds) {
+    const noteRes = await fetch(`${HUBSPOT_API_BASE}/crm/v3/objects/notes/${id}?properties=${properties.join(',')}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!noteRes.ok) continue;
+    const note = await noteRes.json();
+    notes.push({ id: note?.id, ...(note?.properties || {}) });
+  }
+  return notes;
+}
+
+

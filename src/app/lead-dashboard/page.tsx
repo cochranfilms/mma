@@ -11,15 +11,18 @@ export default function LeadDashboardPage() {
     score: LeadScore;
     profile: ProgressiveProfile;
     behavior: UserBehaviorProfile;
+    deals?: any[];
+    notes?: any[];
   } | null>(null);
 
   useEffect(() => {
-    // Sample lead data for demonstration
-    const sampleLeadData: {
+    const buildSample = (): {
       score: LeadScore;
       profile: ProgressiveProfile;
       behavior: UserBehaviorProfile;
-    } = {
+      deals?: any[];
+      notes?: any[];
+    } => ({
       score: {
         company: 'TechCorp Solutions',
         role: 'CMO',
@@ -83,9 +86,49 @@ export default function LeadDashboardPage() {
         conversionProbability: 78,
         nextBestAction: 'Schedule consultation call',
       },
-    };
+    });
 
-    setLeadData(sampleLeadData);
+    let es: EventSource | null = null;
+
+    async function load() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const email = params.get('email');
+        if (!email) {
+          setLeadData(buildSample());
+          return;
+        }
+
+        const resp = await fetch(`/api/hubspot/lead?email=${encodeURIComponent(email)}`, { cache: 'no-store' });
+        if (!resp.ok) throw new Error('Request failed');
+        const json = await resp.json();
+        if (json?.configured && json?.found && json?.data) {
+          setLeadData(json.data);
+        } else {
+          // Not configured or not found -> fallback to sample
+          setLeadData(buildSample());
+        }
+
+        // Start live updates via SSE
+        es = new EventSource(`/api/hubspot/lead/stream?email=${encodeURIComponent(email)}`);
+        es.onmessage = (evt) => {
+          try {
+            const payload = JSON.parse(evt.data);
+            if (payload?.configured && payload?.found && payload?.data) {
+              setLeadData(payload.data);
+            }
+          } catch {}
+        };
+        es.onerror = () => {
+          if (es) es.close();
+        };
+      } catch (e) {
+        setLeadData(buildSample());
+      }
+    }
+
+    load();
+    return () => { if (es) es.close(); };
   }, []);
 
   if (!leadData) {

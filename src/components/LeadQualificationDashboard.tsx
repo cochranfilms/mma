@@ -26,6 +26,8 @@ interface LeadQualificationDashboardProps {
     profile: ProgressiveProfile;
     behavior: UserBehaviorProfile;
     followUp?: FollowUpSequence;
+    deals?: Array<Record<string, any>>;
+    notes?: Array<Record<string, any>>;
   };
 }
 
@@ -34,6 +36,8 @@ export default function LeadQualificationDashboard({ leadData }: LeadQualificati
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { score, profile, behavior, followUp } = leadData;
+  const deals = leadData.deals || [];
+  const notes = leadData.notes || [];
 
   const getQualificationColor = (qualification: string) => {
     switch (qualification) {
@@ -241,6 +245,41 @@ export default function LeadQualificationDashboard({ leadData }: LeadQualificati
                 </div>
               </div>
             </div>
+
+            {/* CRM Data */}
+            {(deals.length > 0 || notes.length > 0) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {deals.length > 0 && (
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Associated Deals</h3>
+                    <div className="space-y-3">
+                      {deals.map((d, i) => (
+                        <div key={d.id || i} className="flex justify-between text-sm">
+                          <span className="text-gray-700">{d.dealname || 'Deal'}</span>
+                          <span className="text-gray-900 font-medium">
+                            {d.amount ? `${d.amount}${d.hs_currency ? ` ${d.hs_currency}` : ''}` : ''}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {notes.length > 0 && (
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Notes</h3>
+                    <div className="space-y-3">
+                      {notes.slice(0, 5).map((n, i) => (
+                        <div key={n.id || i} className="text-sm">
+                          <p className="font-medium text-gray-900">{n.note_title || 'Note'}</p>
+                          <p className="text-gray-600 line-clamp-2">{n.hs_note_body || ''}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </motion.div>
         )}
 
