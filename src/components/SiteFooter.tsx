@@ -32,10 +32,8 @@ export default function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-accent-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">MMA</span>
-              </div>
+            <div className="flex items-center space-x-3 mb-4">
+              <img src="/Logo.png" alt="Marketing Mousetrap logo" className="h-10 w-auto" />
               <span className="font-bold text-xl">Marketing Mousetrap</span>
             </div>
             <p className="text-accent-300 text-sm leading-relaxed mb-6">
