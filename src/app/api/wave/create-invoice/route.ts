@@ -25,22 +25,28 @@ export async function POST(req: NextRequest) {
     const primaryEmail = primaryWaveEmail || envPrimary;
     const secondaryEmail = secondaryWaveEmail || envSecondary;
 
-    if (!customerName || !customerEmail || !serviceId || !primaryEmail || !secondaryEmail) {
-      return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
+    if (!customerName || !customerEmail) {
+      return NextResponse.json({ success: false, error: 'customerName and customerEmail are required' }, { status: 400 });
     }
 
-    const draft = buildInvoiceDraft({
-      customerName,
-      customerEmail,
-      customerCompany,
-      serviceId,
-      quantity,
-      currency,
-      memo,
-      primaryWaveEmail: primaryEmail,
-      secondaryWaveEmail: secondaryEmail,
-      items,
-    });
+    let draft;
+    try {
+      draft = buildInvoiceDraft({
+        customerName,
+        customerEmail,
+        customerCompany,
+        serviceId,
+        quantity,
+        currency,
+        memo,
+        primaryWaveEmail: primaryEmail,
+        secondaryWaveEmail: secondaryEmail,
+        items,
+      });
+    } catch (e: any) {
+      const msg = String(e?.message || 'Failed to build invoice draft');
+      return NextResponse.json({ success: false, error: msg }, { status: 400 });
+    }
 
     const payload = toWavePayload(draft);
 
@@ -54,7 +60,7 @@ export async function POST(req: NextRequest) {
     }});
 
     if (!created.success) {
-      return NextResponse.json({ success: false, error: created.error || 'Failed to create invoice', details: created.errorDetails, mode: created.mode }, { status: 500 });
+      return NextResponse.json({ success: false, error: created.error || 'Wave API error', details: created.errorDetails, mode: created.mode }, { status: 500 });
     }
 
     // Respond with checkout URL and echo split metadata for client UI
