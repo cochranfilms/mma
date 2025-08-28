@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { upsertContact, createNoteForContact } from '@/lib/hubspot';
+import { upsertContact, createNoteForContact, ensureStaticList, addEmailToList } from '@/lib/hubspot';
 
 export async function POST(request: NextRequest) {
   try {
@@ -136,6 +136,8 @@ export async function POST(request: NextRequest) {
           });
           const note = `Generated Proposal Uploaded\nFile: ${filename}\nCompany: ${proposalData?.companyName}\nTotal Investment: ${proposalData?.totalInvestment}\nServices: ${(proposalData?.recommendedServices || []).map((s: any) => s.title).join(', ')}`;
           await createNoteForContact({ contactId, title: 'Generated Proposal', body: note });
+          const listId = await ensureStaticList('Generated Proposals');
+          await addEmailToList(listId, email);
         }
       } catch (hsErr) {
         console.error('HubSpot proposal note failed:', hsErr);

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 // Removed local file and GitHub persistence in favor of HubSpot CRM
-import { upsertContact, createNoteForContact } from '@/lib/hubspot';
+import { upsertContact, createNoteForContact, ensureStaticList, addEmailToList } from '@/lib/hubspot';
 import { services as catalogServices } from '@/content/services';
 
 // Initialize OpenAI
@@ -106,6 +106,9 @@ export async function POST(request: NextRequest) {
         title: 'Website Domination Analyzer Result',
         body: noteBody,
       });
+      // Ensure and add to list for analyzer leads
+      const listId = await ensureStaticList('Website Domination Analyzer Leads');
+      await addEmailToList(listId, email);
     } catch (hsErr) {
       console.error('HubSpot error:', hsErr);
     }

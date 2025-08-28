@@ -9,7 +9,7 @@ import { calculateLeadScore, getRecommendedActions, getEstimatedDealValue } from
 import { calculateProfileCompleteness, advanceStage, progressiveProfileSchema } from './progressive-profiling';
 import { calculateEngagementScore, calculateConversionProbability, getNextBestAction } from './behavioral-tracking';
 import { determineFollowUpSequence } from './follow-up-sequences';
-import { upsertContact, createNoteForContact } from './hubspot';
+import { upsertContact, createNoteForContact, ensureStaticList, addEmailToList } from './hubspot';
 
 export async function submitLead(formData: FormData) {
   try {
@@ -151,6 +151,8 @@ export async function submitLead(formData: FormData) {
       });
       const note = `Consultation Form Submission\nNeeds: ${validatedData.needs.join(', ')}\nTimeline: ${validatedData.timeline}\nBudget: ${validatedData.budget}\nGeography: ${validatedData.geography}\nLead Score: ${leadScore.totalScore} (${leadScore.qualification})`;
       await createNoteForContact({ contactId, title: 'Consultation Form', body: note });
+      const listId = await ensureStaticList('Consultation Leads');
+      await addEmailToList(listId, validatedData.email);
     } catch (hsErr) {
       console.error('HubSpot upsert failed:', hsErr);
     }
@@ -326,6 +328,8 @@ export async function quickStartBooking(formData: FormData) {
       });
       const note = `Quick Start Lead\nCompany: ${company}\nEmail: ${email}\nLead Score: ${leadScore.totalScore} (${leadScore.qualification})`;
       await createNoteForContact({ contactId, title: 'Quick Start', body: note });
+      const listId = await ensureStaticList('Quick Start Leads');
+      await addEmailToList(listId, email);
     } catch (hsErr) {
       console.error('HubSpot quick start upsert failed:', hsErr);
     }

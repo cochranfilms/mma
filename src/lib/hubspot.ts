@@ -129,4 +129,52 @@ export async function createNoteForContact(params: {
   return noteId;
 }
 
+// Lists helpers (Contacts Lists API v1)
+export async function ensureStaticList(listName: string): Promise<number> {
+  // Try to find list by name (paginate)
+  let offset = 0;
+  const count = 250;
+  while (true) {
+    const res = await fetch(`${HUBSPOT_API_BASE}/contacts/v1/lists?count=${count}&offset=${offset}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`HubSpot lists fetch failed: ${res.status} ${res.statusText} - ${text}`);
+    }
+    const data = await res.json();
+    const lists: Array<{ listId: number; name: string }> = data?.lists || [];
+    const found = lists.find((l) => l.name === listName);
+    if (found) return found.listId;
+    if (!data?.hasMore) break;
+    offset = data?.offset || 0;
+    if (!offset) break;
+  }
+
+  // Create list
+  const createRes = await fetch(`${HUBSPOT_API_BASE}/contacts/v1/lists`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ name: listName, dynamic: false }),
+  });
+  if (!createRes.ok) {
+    const text = await createRes.text();
+    throw new Error(`HubSpot create list failed: ${createRes.status} ${createRes.statusText} - ${text}`);
+  }
+  const created = await createRes.json();
+  return created?.listId as number;
+}
+
+export async function addEmailToList(listId: number, email: string) {
+  const res = await fetch(`${HUBSPOT_API_BASE}/contacts/v1/lists/${listId}/add`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ emails: [email] }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`HubSpot add to list failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+}
+
 
