@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Upload proposal API called');
     const { filename, pdfData, proposalData } = await request.json();
 
+    console.log('Received data:', { filename, hasData: !!pdfData, proposalData: !!proposalData });
+
     if (!filename || !pdfData) {
+      console.error('Missing required fields:', { filename: !!filename, pdfData: !!pdfData });
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -13,6 +17,13 @@ export async function POST(request: NextRequest) {
     const GITHUB_OWNER = process.env.GITHUB_OWNER;
     const GITHUB_REPO = process.env.GITHUB_REPO;
     const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
+
+    console.log('GitHub config:', { 
+      hasToken: !!GITHUB_TOKEN, 
+      owner: GITHUB_OWNER, 
+      repo: GITHUB_REPO, 
+      branch: GITHUB_BRANCH 
+    });
 
     if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
       console.error('Missing GitHub environment variables');

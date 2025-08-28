@@ -175,15 +175,56 @@ export default function CustomProposalGenerator() {
           return formData.selectedServices.includes(service.id);
         }
         
-        // Auto-recommend based on goals and challenges
-        if (formData.primaryGoal.includes('brand awareness') && service.id === 'media-relations') return true;
-        if (formData.primaryGoal.includes('website') && service.id === 'web-presence') return true;
-        if (formData.primaryGoal.includes('leads') && (service.id === 'content-campaigns' || service.id === 'web-presence')) return true;
-        if (formData.primaryGoal.includes('relationships') && service.id === 'partnership-development') return true;
-        if (formData.primaryGoal.includes('brand') && service.id === 'brand-strategy') return true;
+        // Auto-recommend based on goals and challenges (more flexible matching)
+        const goal = formData.primaryGoal.toLowerCase();
+        const challenges = formData.currentChallenges.join(' ').toLowerCase();
+        
+        // Media Relations recommendations
+        if ((goal.includes('brand') || goal.includes('awareness') || goal.includes('visibility') || 
+             challenges.includes('visibility') || challenges.includes('awareness')) && 
+             service.id === 'media-relations') return true;
+             
+        // Web Presence recommendations  
+        if ((goal.includes('website') || goal.includes('online') || goal.includes('digital') ||
+             goal.includes('leads') || challenges.includes('website') || challenges.includes('online')) && 
+             service.id === 'web-presence') return true;
+             
+        // Content & Campaigns recommendations
+        if ((goal.includes('leads') || goal.includes('content') || goal.includes('marketing') ||
+             challenges.includes('content') || challenges.includes('marketing')) && 
+             service.id === 'content-campaigns') return true;
+             
+        // Partnership Development recommendations
+        if ((goal.includes('partnerships') || goal.includes('relationships') || goal.includes('network') ||
+             challenges.includes('partnerships') || challenges.includes('relationships')) && 
+             service.id === 'partnership-development') return true;
+             
+        // Brand Strategy recommendations
+        if ((goal.includes('brand') || goal.includes('positioning') || goal.includes('identity') ||
+             challenges.includes('brand') || challenges.includes('positioning')) && 
+             service.id === 'brand-strategy') return true;
+             
+        // Photo & Printing recommendations
+        if ((goal.includes('events') || goal.includes('activation') || goal.includes('experience') ||
+             challenges.includes('events') || challenges.includes('activation')) && 
+             service.id === 'photo-printing') return true;
         
         return false;
-      })
+      });
+
+    // If no services were recommended, provide default recommendations based on business size
+    if (recommendedServices.length === 0) {
+      if (formData.businessSize === 'startup' || formData.businessSize === 'small') {
+        recommendedServices.push(serviceOptions.find(s => s.id === 'web-presence')!);
+        recommendedServices.push(serviceOptions.find(s => s.id === 'content-campaigns')!);
+      } else {
+        recommendedServices.push(serviceOptions.find(s => s.id === 'web-presence')!);
+        recommendedServices.push(serviceOptions.find(s => s.id === 'media-relations')!);
+        recommendedServices.push(serviceOptions.find(s => s.id === 'brand-strategy')!);
+      }
+    }
+
+    const finalRecommendedServices = recommendedServices
       .map(service => ({
         ...service,
         deliverables: getServiceDeliverables(service.id),
@@ -192,16 +233,16 @@ export default function CustomProposalGenerator() {
         expectedOutcomes: getExpectedOutcomes(service.id, formData.primaryGoal)
       }));
 
-    const totalInvestment = calculateTotalInvestment(recommendedServices);
-    const implementationPlan = generateImplementationPlan(recommendedServices, formData.timeline);
+    const totalInvestment = calculateTotalInvestment(finalRecommendedServices);
+    const implementationPlan = generateImplementationPlan(finalRecommendedServices, formData.timeline);
     const nextSteps = generateNextSteps(formData.contactInfo.preferredContact);
 
     return {
-      summary: generateSummary(formData, recommendedServices),
-      recommendedServices,
+      summary: generateSummary(formData, finalRecommendedServices),
+      recommendedServices: finalRecommendedServices,
       totalInvestment,
       timeline: formData.timeline === 'urgent' ? '1-2 months' : formData.timeline === 'standard' ? '3-6 months' : '6+ months',
-      expectedOutcomes: recommendedServices.flatMap(service => service.expectedOutcomes),
+      expectedOutcomes: finalRecommendedServices.flatMap(service => service.expectedOutcomes),
       implementationPlan,
       nextSteps
     };
@@ -299,10 +340,21 @@ export default function CustomProposalGenerator() {
 
   const calculateTotalInvestment = (services: GeneratedProposal['recommendedServices']): string => {
     const total = services.reduce((sum, service) => {
-      const amount = parseInt(service.investment.replace(/[$,]/g, ''));
-      return sum + amount;
+      // Handle investment ranges like "$5,000 - $15,000"
+      const investmentStr = service.investment.replace(/[$,]/g, '');
+      let amount = 0;
+      
+      if (investmentStr.includes(' - ')) {
+        // Take the average of the range
+        const [min, max] = investmentStr.split(' - ').map(num => parseInt(num.trim()));
+        amount = (min + max) / 2;
+      } else {
+        amount = parseInt(investmentStr);
+      }
+      
+      return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
-    return `$${total.toLocaleString()}`;
+    return `$${Math.round(total).toLocaleString()}`;
   };
 
   const generateImplementationPlan = (services: GeneratedProposal['recommendedServices'], timeline: string): string[] => {
@@ -469,29 +521,42 @@ export default function CustomProposalGenerator() {
         const pdfBlob = pdf.output('blob');
         const reader = new FileReader();
         reader.onloadend = async () => {
-          const base64Data = reader.result as string;
-          
-          await fetch('/api/upload-proposal', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              filename,
-              pdfData: base64Data,
-              proposalData: {
-                companyName: formData.companyName,
-                contactInfo: formData.contactInfo,
-                totalInvestment: generatedProposal.totalInvestment,
-                recommendedServices: generatedProposal.recommendedServices,
+          try {
+            const base64Data = reader.result as string;
+            
+            console.log('Uploading proposal to GitHub:', filename);
+            
+            const response = await fetch('/api/upload-proposal', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
               },
-            }),
-          });
+              body: JSON.stringify({
+                filename,
+                pdfData: base64Data,
+                proposalData: {
+                  companyName: formData.companyName,
+                  contactInfo: formData.contactInfo,
+                  totalInvestment: generatedProposal.totalInvestment,
+                  recommendedServices: generatedProposal.recommendedServices,
+                },
+              }),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log('Successfully uploaded to GitHub:', result);
+            } else {
+              const errorText = await response.text();
+              console.error('GitHub upload failed:', response.status, errorText);
+            }
+          } catch (uploadError) {
+            console.error('Error in GitHub upload process:', uploadError);
+          }
         };
         reader.readAsDataURL(pdfBlob);
       } catch (uploadError) {
-        console.error('Error uploading to GitHub:', uploadError);
-        // Don't show error to user since PDF download still worked
+        console.error('Error preparing GitHub upload:', uploadError);
       }
       
     } catch (error) {
