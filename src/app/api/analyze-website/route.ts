@@ -89,6 +89,45 @@ async function putGitHubFile(params: { content: string; message: string; sha?: s
   return res.json();
 }
 
+async function getBranchHeadSha(branch: string) {
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs/heads/${encodeURIComponent(branch)}`;
+  const res = await fetch(url, { headers: getGitHubHeaders() });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`GitHub refs GET failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+  const data = await res.json();
+  return data.object?.sha as string;
+}
+
+async function createBranch(newBranch: string, fromSha: string) {
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: getGitHubHeaders(),
+    body: JSON.stringify({ ref: `refs/heads/${newBranch}`, sha: fromSha })
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`GitHub create branch failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+}
+
+async function createPullRequest(branch: string, title: string, body: string) {
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/pulls`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: getGitHubHeaders(),
+    body: JSON.stringify({ title, head: branch, base: GITHUB_BRANCH, body })
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`GitHub PR create failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+  const data = await res.json();
+  return data.html_url as string;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { url, email }: AnalysisRequest = await request.json();
@@ -499,9 +538,30 @@ async function uploadLeadToGitHub(newLead: Lead) {
 
     const updatedContent = JSON.stringify(leadsData, null, 2);
     const message = `Auto-update: New website analysis lead - ${new Date().toISOString()}`;
-    const result = await putGitHubFile({ content: updatedContent, message, sha: existingSha });
-    console.log('✅ Successfully uploaded leads data to GitHub via API (remote append)');
-    return { success: true, commitSha: result?.commit?.sha || null };
+    try {
+      const result = await putGitHubFile({ content: updatedContent, message, sha: existingSha });
+      console.log('✅ Successfully uploaded leads data to GitHub via API (remote append)');
+      return { success: true, mode: 'direct', commitSha: result?.commit?.sha || null };
+    } catch (putErr: any) {
+      const errMsg = String(putErr?.message || 'unknown');
+      // Fallback: branch protection or permissions → create PR
+      console.warn('Direct push failed, attempting PR fallback:', errMsg);
+      try {
+        const baseSha = await getBranchHeadSha(GITHUB_BRANCH);
+        const branchName = `leads-update-${Date.now()}`;
+        await createBranch(branchName, baseSha);
+        await putGitHubFile({ content: updatedContent, message, sha: existingSha });
+        const prUrl = await createPullRequest(
+          branchName,
+          'Auto-update leads.json from Website Analyzer',
+          'This PR was created automatically when direct push to protected branch failed.'
+        );
+        return { success: true, mode: 'pr', prUrl };
+      } catch (prErr: any) {
+        console.error('PR fallback failed:', prErr);
+        return { success: false, error: prErr?.message || 'fallback_failed', originalError: errMsg };
+      }
+    }
   } catch (error: any) {
     console.error('❌ Error uploading to GitHub via API:', error);
     console.log('⚠️ Analysis will continue despite GitHub upload failure');
