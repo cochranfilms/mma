@@ -238,6 +238,13 @@ export default function WebsiteDominationAnalyzer() {
 
       const currentDate = new Date().toLocaleDateString();
       const currentTime = new Date().toLocaleTimeString();
+      const scheduleUrl = 'https://app.marketingmousetrapagency.com/contact';
+      const topService = analysis.recommendedServices?.[0];
+      const buyNowUrl = typeof window !== 'undefined'
+        ? (topService?.id
+            ? `${window.location.origin}/services/${topService.id}`
+            : `${window.location.origin}/services`)
+        : '/services';
 
       // Prepare template parameters
       const templateParams = {
@@ -313,6 +320,14 @@ export default function WebsiteDominationAnalyzer() {
         SERVICE_3_DESC: analysis.recommendedServices[2]?.description || '',
         SERVICE_3_IMPACT: analysis.recommendedServices[2]?.impact || '',
         SERVICE_3_PRICE: analysis.recommendedServices[2]?.price || 0,
+
+        // Low-score specific CTAs
+        BUY_NOW_URL: buyNowUrl,
+        SCHEDULE_URL: scheduleUrl,
+        TOP_SERVICE_TITLE: topService?.title || '',
+        TOP_SERVICE_DESC: topService?.description || '',
+        TOP_SERVICE_IMPACT: topService?.impact || '',
+        TOP_SERVICE_PRICE: topService?.price || 0,
       };
 
       // Send client email
@@ -338,6 +353,26 @@ export default function WebsiteDominationAnalyzer() {
         }
       );
       console.log('Admin email sent successfully:', adminResponse);
+
+      // Conditional: Send Action Plan email for low scores (<= 75) with 1-minute delay (non-blocking)
+      if (analysis.overallScore <= 75) {
+        const lowScoreTemplateId = 'template_wsppflc';
+        if (lowScoreTemplateId) {
+          console.log('Queueing low-score action plan email to send in 60 seconds...');
+          setTimeout(() => {
+            emailjs
+              .send('service_hers22k', lowScoreTemplateId, templateParams)
+              .then((resp) => {
+                console.log('Low-score action plan email sent successfully:', resp);
+              })
+              .catch((err) => {
+                console.error('Failed to send low-score action plan email:', err);
+              });
+          }, 60_000);
+        } else {
+          console.warn('Low-score template ID (NEXT_PUBLIC_EMAILJS_TEMPLATE_LOW_SCORE) not configured. Skipping low-score email send.');
+        }
+      }
 
       console.log('All analysis emails sent successfully');
     } catch (error: any) {
