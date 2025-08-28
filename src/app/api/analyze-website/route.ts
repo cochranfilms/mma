@@ -193,13 +193,9 @@ export async function POST(request: NextRequest) {
       source: 'website-analyzer'
     };
 
-    // Step 4: Store lead locally (best-effort)
-    console.log('💾 Storing lead locally (best-effort)...');
-    await storeLeadLocally(newLead);
-    
-    // Step 5: Upload to GitHub directly by appending the new lead remotely
-    console.log('📤 Uploading to GitHub (remote append)...');
-    const githubResult = await uploadLeadToGitHub(newLead);
+    // Step 4: Fire repository_dispatch so GitHub Actions updates leads.json on main
+    console.log('📤 Dispatching repository event for leads update...');
+    const githubResult = await dispatchLeadToGitHub(newLead);
     
     console.log('🎉 Analysis complete! Returning results...');
 
@@ -565,6 +561,35 @@ async function uploadLeadToGitHub(newLead: Lead) {
   } catch (error: any) {
     console.error('❌ Error uploading to GitHub via API:', error);
     console.log('⚠️ Analysis will continue despite GitHub upload failure');
+    return { success: false, error: error?.message || 'unknown' };
+  }
+}
+
+async function dispatchLeadToGitHub(newLead: Lead) {
+  try {
+    if (!GITHUB_OWNER || !GITHUB_REPO || !GITHUB_TOKEN) {
+      return { success: false, reason: 'missing_env' };
+    }
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/dispatches`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        event_type: 'update_leads',
+        client_payload: { lead: newLead }
+      })
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`repository_dispatch failed: ${res.status} ${res.statusText} - ${text}`);
+    }
+    return { success: true, mode: 'dispatch' };
+  } catch (error: any) {
+    console.error('Dispatch error:', error);
     return { success: false, error: error?.message || 'unknown' };
   }
 }

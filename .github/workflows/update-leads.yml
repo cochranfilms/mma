@@ -1,0 +1,45 @@
+name: Update leads.json
+
+on:
+  repository_dispatch:
+    types: [update_leads]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Append lead to src/data/leads.json
+        id: append
+        run: |
+          set -e
+          PAYLOAD='${{ toJson(github.event.client_payload) }}'
+          echo "$PAYLOAD" > payload.json
+
+          LEADS_FILE="src/data/leads.json"
+          if [ ! -f "$LEADS_FILE" ]; then
+            echo '{"leads": [], "lastUpdated": null, "totalAnalyses": 0}' > "$LEADS_FILE"
+          fi
+
+          node -e "const fs=require('fs'); const payload=JSON.parse(fs.readFileSync('payload.json','utf8')); const file='src/data/leads.json'; let j={leads:[],lastUpdated:null,totalAnalyses:0}; if(fs.existsSync(file)) j=JSON.parse(fs.readFileSync(file,'utf8')); j.leads.push(payload.lead); j.lastUpdated=new Date().toISOString(); j.totalAnalyses=j.leads.length; fs.writeFileSync(file, JSON.stringify(j,null,2)); console.log('Leads length:', j.leads.length);"
+
+      - name: Commit and push
+        run: |
+          git config user.name "MMA Bot"
+          git config user.email "bot@marketingmousetrapagency.com"
+          git add src/data/leads.json
+          git commit -m "Auto-append lead via workflow"
+          git push origin HEAD:refs/heads/main
+
