@@ -71,7 +71,11 @@ async function putGitHubFile(params: { content: string; message: string; sha?: s
     message: params.message,
     content: Buffer.from(params.content, 'utf8').toString('base64'),
     branch: GITHUB_BRANCH,
-    sha: params.sha
+    sha: params.sha,
+    committer: {
+      name: 'MMA Bot',
+      email: 'bot@marketingmousetrapagency.com'
+    }
   };
   const res = await fetch(url, {
     method: 'PUT',
@@ -135,7 +139,8 @@ export async function POST(request: NextRequest) {
     
     // Step 3: Generate service recommendations
     console.log('🎯 Generating service recommendations...');
-    const recommendations = generateServiceRecommendations(analysis);
+    const scraped = JSON.parse(websiteContent || '{}');
+    const recommendations = generateServiceRecommendations(analysis, scraped);
     console.log('✅ Service recommendations generated:', recommendations.length, 'services');
     
     // Construct lead once and reuse for storage and GitHub upload
@@ -155,7 +160,7 @@ export async function POST(request: NextRequest) {
     
     // Step 5: Upload to GitHub directly by appending the new lead remotely
     console.log('📤 Uploading to GitHub (remote append)...');
-    await uploadLeadToGitHub(newLead);
+    const githubResult = await uploadLeadToGitHub(newLead);
     
     console.log('🎉 Analysis complete! Returning results...');
 
@@ -167,7 +172,8 @@ export async function POST(request: NextRequest) {
       seoAnalysis: analysis.seoAnalysis,
       designAnalysis: analysis.designAnalysis,
       conversionAnalysis: analysis.conversionAnalysis,
-      recommendedServices: recommendations.length > 0 ? recommendations : getDefaultRecommendations()
+      recommendedServices: ensurePriced(recommendations.length > 0 ? recommendations : getDefaultRecommendations()),
+      githubUpload: githubResult
     });
 
   } catch (error) {
@@ -338,7 +344,7 @@ Be brutally honest but professional. Identify real problems that Marketing Mouse
   }
 }
 
-function generateServiceRecommendations(analysis: any) {
+function generateServiceRecommendations(analysis: any, scraped: any) {
   const recommendations: Array<{ id: string; title: string; description: string; impact: string; price: number }> = [];
 
   function toRec(serviceId: string, impact: string) {
@@ -355,30 +361,51 @@ function generateServiceRecommendations(analysis: any) {
   }
 
   // Map analysis to real services
-  if (analysis.seoAnalysis.score < 60) {
-    toRec('web-development', `Projected ${Math.floor(Math.random() * 200 + 120)}% lift in organic traffic`);
+  const linkCount = scraped?.linkCount ?? 0;
+  const hasContact = !!scraped?.hasContactForm;
+  const hasAnalytics = !!scraped?.hasAnalytics;
+  const hasSSL = !!scraped?.hasSSL;
+  const hasViewport = !!scraped?.mobileViewport;
+  const hasMeta = !!scraped?.metaDescription;
+
+  if (analysis.seoAnalysis.score < 60 || !hasMeta || linkCount < 10) {
+    toRec('web-development', `Technical SEO + performance overhaul to address low SEO score and weak metadata. Projected ${Math.floor(Math.random() * 120 + 120)}% organic lift`);
   }
-  if (analysis.designAnalysis.score < 60) {
-    toRec('web-development', `Expected ${Math.floor(Math.random() * 250 + 120)}% improvement in UX-driven conversions`);
+  if (analysis.designAnalysis.score < 60 || !hasViewport) {
+    toRec('web-development', 'Responsive UX rebuild to fix mobile viewport and usability issues; improve task completion and engagement');
   }
-  if (analysis.conversionAnalysis.score < 60) {
-    toRec('web-development', `Estimated ${Math.floor(Math.random() * 300 + 150)}% increase in lead conversion`);
+  if (analysis.conversionAnalysis.score < 60 || !hasContact || !hasAnalytics) {
+    toRec('web-development', 'Implement lead capture, analytics events, and CRO patterns to stop drop‑offs and measure funnel performance');
   }
-  if ((analysis.overallScore ?? 0) < 70) {
-    toRec('brand-development', 'Clarify positioning to increase pricing power and win rate');
+  if ((analysis.overallScore ?? 0) < 70 || !hasSSL) {
+    toRec('brand-development', 'Positioning + messaging tune‑up to raise clarity and pricing power; tighten brand signals across site');
   }
 
   // Ensure unique by id and return up to 3
   const unique = new Map<string, typeof recommendations[number]>();
   recommendations.forEach(r => { if (!unique.has(r.id)) unique.set(r.id, r); });
-  const list = Array.from(unique.values());
+  let list = Array.from(unique.values());
   if (list.length === 0) {
     // Default set if none matched
     toRec('web-development', 'Comprehensive site overhaul for performance, SEO, and CRO');
     toRec('brand-development', 'Positioning and identity to improve message-market fit');
     toRec('video-production', 'High-converting creative assets to drive campaigns');
-    return recommendations.slice(0, 3);
+    list = Array.from(new Map(recommendations.map(r => [r.id, r])).values());
   }
+
+  // Pad to 3 unique items by priority order
+  const priority = ['web-development', 'brand-development', 'video-production', 'photography', 'live-production', 'white-label'];
+  for (const pid of priority) {
+    if (list.length >= 3) break;
+    if (!list.find(r => r.id === pid)) {
+      toRec(pid, 'High-ROI initiative aligned with current gaps');
+      // refresh list with unique map
+      const map = new Map<string, typeof recommendations[number]>();
+      recommendations.forEach(r => { if (!map.has(r.id)) map.set(r.id, r); });
+      list = Array.from(map.values());
+    }
+  }
+
   return list.slice(0, 3);
 }
 
@@ -406,6 +433,16 @@ function getDefaultRecommendations() {
       price: 10000
     }
   ];
+}
+
+function ensurePriced(list: Array<{ id: string; title: string; description: string; impact: string; price: number }>) {
+  // Replace any $0 or missing price with the service's real starting price
+  return list.map(item => {
+    if (item.price && item.price > 0) return item;
+    const svc = catalogServices.find(s => s.id === item.id);
+    const startingPrice = (svc as any)?.startingPrice || (svc?.pricing?.packages?.[0]?.price ?? 1000);
+    return { ...item, price: startingPrice };
+  });
 }
 
 async function storeLeadLocally(newLead: Lead) {
@@ -438,7 +475,7 @@ async function uploadLeadToGitHub(newLead: Lead) {
     const repoConfigured = Boolean(GITHUB_OWNER && GITHUB_REPO && GITHUB_TOKEN);
     if (!repoConfigured) {
       console.log('⚠️ Missing GitHub env vars; skipping upload');
-      return;
+      return { success: false, reason: 'missing_env' };
     }
 
     // Fetch existing file content (if any)
@@ -462,10 +499,12 @@ async function uploadLeadToGitHub(newLead: Lead) {
 
     const updatedContent = JSON.stringify(leadsData, null, 2);
     const message = `Auto-update: New website analysis lead - ${new Date().toISOString()}`;
-    await putGitHubFile({ content: updatedContent, message, sha: existingSha });
+    const result = await putGitHubFile({ content: updatedContent, message, sha: existingSha });
     console.log('✅ Successfully uploaded leads data to GitHub via API (remote append)');
+    return { success: true, commitSha: result?.commit?.sha || null };
   } catch (error: any) {
     console.error('❌ Error uploading to GitHub via API:', error);
     console.log('⚠️ Analysis will continue despite GitHub upload failure');
+    return { success: false, error: error?.message || 'unknown' };
   }
 }
