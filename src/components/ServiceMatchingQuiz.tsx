@@ -159,6 +159,8 @@ export default function ServiceMatchingQuiz() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState<QuizResult[]>([]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
   const handleAnswer = (questionId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
@@ -202,6 +204,21 @@ export default function ServiceMatchingQuiz() {
 
     setResults(resultsArray);
     setShowResults(true);
+
+    // Send to HubSpot capture endpoint
+    try {
+      fetch('/api/hubspot/capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name,
+          listName: 'Service Matching Quiz Leads',
+          event: 'service_quiz_completed',
+          properties: { answers, topMatches: resultsArray.slice(0, 3).map(r => r.serviceId) }
+        })
+      });
+    } catch (_) {}
   };
 
   const resetQuiz = () => {
@@ -282,6 +299,22 @@ export default function ServiceMatchingQuiz() {
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">Service Matching Quiz</h3>
         <p className="text-gray-600">Answer a few questions to find the perfect MMA service for your business</p>
+        <div className="grid md:grid-cols-2 gap-4 mt-6">
+          <input
+            type="text"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          />
+        </div>
         
         {/* Progress Bar */}
         <div className="mt-6">

@@ -84,6 +84,8 @@ export default function InstantQuoteCalculator() {
   const [urgency, setUrgency] = useState<'standard' | 'rush' | 'emergency'>('standard');
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [quote, setQuote] = useState<QuoteBreakdown | null>(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
   const urgencyMultipliers = {
     standard: 1.0,
@@ -150,6 +152,22 @@ export default function InstantQuoteCalculator() {
       <div className="text-center">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Service</h3>
         <p className="text-gray-600">Select the MMA service that best fits your needs</p>
+      </div>
+      <div className="grid md:grid-cols-2 gap-4">
+        <input
+          type="text"
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-lg"
+        />
+        <input
+          type="email"
+          placeholder="you@company.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-lg"
+        />
       </div>
       
       <div className="grid md:grid-cols-2 gap-4">
@@ -402,7 +420,31 @@ export default function InstantQuoteCalculator() {
               </div>
               
               <div className="space-y-3">
-                <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                <button
+                  onClick={async () => {
+                    try {
+                      await fetch('/api/hubspot/capture', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          email,
+                          name,
+                          listName: 'Instant Quote Leads',
+                          event: 'instant_quote_generated',
+                          properties: {
+                            service: selectedService,
+                            totalPrice: quote.totalPrice,
+                            monthlyPrice: quote.monthlyPrice,
+                            addOns: quote.addOns.map(a => ({ id: a.addOn.id, qty: a.quantity })),
+                            businessSize: selectedBusinessSize,
+                            urgency
+                          }
+                        })
+                      });
+                    } catch (_) {}
+                  }}
+                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                >
                   Get Started Now
                   <ArrowRight className="w-4 h-4" />
                 </button>

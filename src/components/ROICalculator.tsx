@@ -98,6 +98,8 @@ export default function ROICalculator() {
   const [businessSize, setBusinessSize] = useState('medium');
   const [industry, setIndustry] = useState('b2b');
   const [showResults, setShowResults] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
   const businessSizeMultipliers = {
     small: 0.7,
@@ -142,8 +144,29 @@ export default function ROICalculator() {
     };
   };
 
-  const handleCalculate = () => {
+  const handleCalculate = async () => {
     setShowResults(true);
+    const calc = calculateROI();
+    try {
+      await fetch('/api/hubspot/capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name,
+          listName: 'ROI Calculator Leads',
+          event: 'roi_calculated',
+          properties: {
+            service: selectedService,
+            investment: calc.investment,
+            projectedReturn: calc.projectedReturn,
+            roi: calc.roi,
+            businessSize,
+            industry
+          }
+        })
+      });
+    } catch (_) {}
   };
 
   const resetCalculator = () => {
@@ -256,6 +279,23 @@ export default function ROICalculator() {
       </div>
 
       <div className="space-y-6">
+        {/* Lead Inputs */}
+        <div className="grid md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="email"
+            placeholder="you@company.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+        </div>
         {/* Service Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">

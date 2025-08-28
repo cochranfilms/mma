@@ -51,6 +51,7 @@ interface AnalysisResult {
 
 export default function WebsiteDominationAnalyzer() {
   const [url, setUrl] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
@@ -93,6 +94,8 @@ export default function WebsiteDominationAnalyzer() {
       if (typeof window !== 'undefined' && (window as any)._hsq) {
         (window as any)._hsq.push(['identify', {
           email,
+          firstname: name?.split(' ')?.[0],
+          lastname: name?.split(' ')?.slice(1).join(' '),
           website: url,
         }]);
         (window as any)._hsq.push(['trackCustomBehavioralEvent', {
@@ -100,6 +103,21 @@ export default function WebsiteDominationAnalyzer() {
           properties: { url }
         }]);
       }
+    } catch (_) {}
+
+    // Server-side capture
+    try {
+      await fetch('/api/hubspot/capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name,
+          listName: 'Website Domination Analyzer Leads',
+          event: 'analyzer_start',
+          properties: { url }
+        })
+      });
     } catch (_) {}
 
     // Simulate analysis steps
@@ -114,7 +132,7 @@ export default function WebsiteDominationAnalyzer() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url, email }),
+        body: JSON.stringify({ url, email, name }),
       });
 
       const result = await response.json();
@@ -130,6 +148,21 @@ export default function WebsiteDominationAnalyzer() {
             }
           }]);
         }
+      } catch (_) {}
+
+      // Server-side capture completion
+      try {
+        await fetch('/api/hubspot/capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name,
+            listName: 'Website Domination Analyzer Leads',
+            event: 'analyzer_complete',
+            properties: { url, score: result?.overallScore }
+          })
+        });
       } catch (_) {}
       
       // Send emails via EmailJS
@@ -472,6 +505,19 @@ export default function WebsiteDominationAnalyzer() {
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     placeholder="https://your-competitors-website.com"
+                    className="w-full px-6 py-4 bg-black/50 border border-red-400/30 rounded-xl text-white placeholder-gray-400 focus:border-red-400 focus:outline-none text-lg"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-red-200 font-semibold mb-3">
+                    YOUR NAME
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Jane Doe"
                     className="w-full px-6 py-4 bg-black/50 border border-red-400/30 rounded-xl text-white placeholder-gray-400 focus:border-red-400 focus:outline-none text-lg"
                   />
                 </div>

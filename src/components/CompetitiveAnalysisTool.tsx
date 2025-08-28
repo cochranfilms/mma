@@ -168,6 +168,8 @@ export default function CompetitiveAnalysisTool() {
   const [selectedService, setSelectedService] = useState('media-relations');
   const [showResults, setShowResults] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResult | null>(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
   const calculateScores = (): AnalysisResult => {
     const serviceContext = serviceContexts[selectedService as keyof typeof serviceContexts];
@@ -231,10 +233,27 @@ export default function CompetitiveAnalysisTool() {
     };
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     const results = calculateScores();
     setAnalysisResults(results);
     setShowResults(true);
+    try {
+      await fetch('/api/hubspot/capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name,
+          listName: 'Competitive Analysis Leads',
+          event: 'competitive_analysis_ran',
+          properties: {
+            service: selectedService,
+            mmaScore: results.mmaScore,
+            recommendations: results.recommendations
+          }
+        })
+      });
+    } catch (_) {}
   };
 
   const resetAnalysis = () => {
@@ -372,6 +391,22 @@ export default function CompetitiveAnalysisTool() {
       </div>
 
       <div className="space-y-6">
+        <div className="grid md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="email"
+            placeholder="you@company.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+        </div>
         {/* Service Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">

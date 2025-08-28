@@ -12,6 +12,7 @@ const openai = new OpenAI({
 interface AnalysisRequest {
   url: string;
   email: string;
+  name?: string;
 }
 
 interface Lead {
@@ -27,9 +28,9 @@ interface Lead {
 
 export async function POST(request: NextRequest) {
   try {
-    const { url, email }: AnalysisRequest = await request.json();
+    const { url, email, name }: AnalysisRequest = await request.json();
 
-    console.log('🔍 Starting analysis for:', { url, email });
+    console.log('🔍 Starting analysis for:', { url, email, name });
 
     if (!url || !email) {
       return NextResponse.json(
@@ -96,6 +97,8 @@ export async function POST(request: NextRequest) {
     try {
       hubspotContactId = await upsertContact({
         email,
+        firstname: name?.split(' ')?.[0],
+        lastname: name?.split(' ')?.slice(1).join(' '),
         company: scraped?.url ? new URL(scraped.url).hostname : undefined,
         website: url,
         jobtitle: 'Website Domination Analyzer Lead',
