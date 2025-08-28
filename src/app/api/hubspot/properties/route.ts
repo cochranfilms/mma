@@ -35,25 +35,25 @@ export async function POST(_req: NextRequest) {
       fieldType: 'textarea',
       groupName: 'contactinformation'
     },
-    { name: 'quiz_goal', label: 'Quiz Goal', type: 'string', fieldType: 'select', groupName: 'contactinformation', options: [
+    { name: 'quiz_goal', label: 'Quiz Goal', type: 'enumeration', fieldType: 'select', groupName: 'contactinformation', options: [
       { label: 'Increase brand awareness and visibility', value: 'brand-awareness' },
       { label: 'Generate more qualified leads', value: 'lead-generation' },
       { label: 'Build strategic partnerships', value: 'partnerships' },
       { label: 'Improve digital presence and conversion', value: 'digital-presence' },
     ] },
-    { name: 'quiz_industry', label: 'Quiz Industry', type: 'string', fieldType: 'select', groupName: 'contactinformation', options: [
+    { name: 'quiz_industry', label: 'Quiz Industry', type: 'enumeration', fieldType: 'select', groupName: 'contactinformation', options: [
       { label: 'B2B/Professional Services', value: 'b2b' },
       { label: 'E-commerce/Retail', value: 'ecommerce' },
       { label: 'Events/Experiential', value: 'events' },
       { label: 'Technology/SaaS', value: 'technology' },
     ] },
-    { name: 'quiz_budget_timeline', label: 'Quiz Budget/Timeline', type: 'string', fieldType: 'select', groupName: 'contactinformation', options: [
+    { name: 'quiz_budget_timeline', label: 'Quiz Budget/Timeline', type: 'enumeration', fieldType: 'select', groupName: 'contactinformation', options: [
       { label: 'Quick wins with limited budget', value: 'quick-wins' },
       { label: 'Strategic long-term investment', value: 'strategic-investment' },
       { label: 'Event-specific budget', value: 'event-focused' },
       { label: 'Growth-focused with flexible budget', value: 'growth-focused' },
     ] },
-    { name: 'quiz_current_challenge', label: 'Quiz Current Challenge', type: 'string', fieldType: 'select', groupName: 'contactinformation', options: [
+    { name: 'quiz_current_challenge', label: 'Quiz Current Challenge', type: 'enumeration', fieldType: 'select', groupName: 'contactinformation', options: [
       { label: 'Lack of visibility in your industry', value: 'visibility' },
       { label: 'Website not converting visitors', value: 'conversion' },
       { label: 'Difficulty building industry relationships', value: 'relationships' },
