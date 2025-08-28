@@ -1,0 +1,348 @@
+import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
+import fs from 'fs';
+import path from 'path';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
+// Initialize OpenAI
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+interface AnalysisRequest {
+  url: string;
+  email: string;
+}
+
+interface Lead {
+  id: string;
+  email: string;
+  website: string;
+  analysisScore: number;
+  analysisData: any;
+  createdAt: string;
+  source: string;
+}
+
+interface LeadsData {
+  leads: Lead[];
+  lastUpdated: string | null;
+  totalAnalyses: number;
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { url, email }: AnalysisRequest = await request.json();
+
+    if (!url || !email) {
+      return NextResponse.json(
+        { error: 'URL and email are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate URL format
+    try {
+      new URL(url);
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid URL format' },
+        { status: 400 }
+      );
+    }
+
+    // Step 1: Scrape website content
+    const websiteContent = await scrapeWebsite(url);
+    
+    // Step 2: Analyze with OpenAI
+    const analysis = await analyzeWithAI(url, websiteContent);
+    
+    // Step 3: Generate service recommendations
+    const recommendations = generateServiceRecommendations(analysis);
+    
+    // Step 4: Store lead in local JSON file
+    await storeLeadLocally(email, url, analysis);
+    
+    // Step 5: Upload to GitHub automatically
+    await uploadToGitHub();
+    
+    // Step 6: Send analysis emails via EmailJS (client-side will handle this)
+    // We'll return the data needed for EmailJS
+
+    return NextResponse.json({
+      url,
+      overallScore: analysis.overallScore,
+      criticalIssues: analysis.criticalIssues,
+      opportunities: analysis.opportunities,
+      seoAnalysis: analysis.seoAnalysis,
+      designAnalysis: analysis.designAnalysis,
+      conversionAnalysis: analysis.conversionAnalysis,
+      recommendedServices: recommendations
+    });
+
+  } catch (error) {
+    console.error('Website analysis error:', error);
+    return NextResponse.json(
+      { error: 'Analysis failed. Please try again.' },
+      { status: 500 }
+    );
+  }
+}
+
+async function scrapeWebsite(url: string): Promise<string> {
+  try {
+    // Use a web scraping service or library like Puppeteer
+    // For now, we'll use a simple fetch to get basic content
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; MMA-Analyzer/1.0)',
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const html = await response.text();
+    
+    // Extract key information from HTML
+    const title = html.match(/<title[^>]*>([^<]+)<\/title>/i)?.[1] || '';
+    const metaDescription = html.match(/<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"']+)["\'][^>]*>/i)?.[1] || '';
+    const headings = html.match(/<h[1-6][^>]*>([^<]+)<\/h[1-6]>/gi) || [];
+    const links = html.match(/<a[^>]*href=["\']([^"']+)["\'][^>]*>/gi) || [];
+    
+    return JSON.stringify({
+      url,
+      title,
+      metaDescription,
+      headings: headings.slice(0, 10), // Limit to first 10 headings
+      linkCount: links.length,
+      contentLength: html.length,
+      hasContactForm: html.includes('contact') || html.includes('form'),
+      hasPhoneNumber: /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/.test(html),
+      hasEmailAddress: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/.test(html),
+      hasSocialMedia: html.includes('facebook') || html.includes('twitter') || html.includes('linkedin'),
+      hasAnalytics: html.includes('google-analytics') || html.includes('gtag') || html.includes('ga('),
+      hasSSL: url.startsWith('https://'),
+      mobileViewport: html.includes('viewport'),
+    });
+  } catch (error) {
+    console.error('Website scraping error:', error);
+    return JSON.stringify({ url, error: 'Could not access website' });
+  }
+}
+
+async function analyzeWithAI(url: string, websiteContent: string) {
+  const prompt = `
+You are an expert website analyst for Marketing Mousetrap Agency, a premium B2B marketing agency. 
+Analyze this website data and provide a comprehensive assessment:
+
+Website: ${url}
+Data: ${websiteContent}
+
+Provide analysis in this exact JSON format:
+{
+  "overallScore": [number 0-100],
+  "criticalIssues": [array of 3-5 critical problems],
+  "opportunities": [array of 3-5 improvement opportunities],
+  "seoAnalysis": {
+    "score": [number 0-100],
+    "issues": [array of SEO problems],
+    "recommendations": [array of SEO improvements]
+  },
+  "designAnalysis": {
+    "score": [number 0-100], 
+    "issues": [array of design/UX problems],
+    "recommendations": [array of design improvements]
+  },
+  "conversionAnalysis": {
+    "score": [number 0-100],
+    "issues": [array of conversion problems],
+    "recommendations": [array of conversion improvements]
+  }
+}
+
+Focus on:
+- SEO optimization gaps
+- Conversion rate optimization issues  
+- User experience problems
+- Missing marketing automation
+- Lead generation weaknesses
+- Mobile optimization issues
+- Page speed problems
+- Missing trust signals
+- Poor call-to-action placement
+- Lack of social proof
+
+Be brutally honest but professional. Identify real problems that Marketing Mousetrap Agency can solve.
+`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are a website analysis expert. Provide detailed, actionable insights in valid JSON format only."
+        },
+        {
+          role: "user", 
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+    });
+
+    const analysisText = completion.choices[0].message.content;
+    if (!analysisText) {
+      throw new Error('No analysis received from OpenAI');
+    }
+
+    // Parse the JSON response
+    const analysis = JSON.parse(analysisText);
+    return analysis;
+
+  } catch (error) {
+    console.error('OpenAI analysis error:', error);
+    
+    // Fallback analysis if OpenAI fails
+    return {
+      overallScore: 45,
+      criticalIssues: [
+        'Website analysis could not be completed automatically',
+        'Manual review required for detailed assessment',
+        'Contact our team for comprehensive audit'
+      ],
+      opportunities: [
+        'Professional website audit available',
+        'Custom optimization strategy needed',
+        'Expert consultation recommended'
+      ],
+      seoAnalysis: {
+        score: 40,
+        issues: ['Requires manual SEO audit'],
+        recommendations: ['Professional SEO assessment needed']
+      },
+      designAnalysis: {
+        score: 45,
+        issues: ['Design review required'],
+        recommendations: ['UX audit recommended']
+      },
+      conversionAnalysis: {
+        score: 35,
+        issues: ['Conversion audit needed'],
+        recommendations: ['CRO assessment required']
+      }
+    };
+  }
+}
+
+function generateServiceRecommendations(analysis: any) {
+  const services = [];
+  
+  // Recommend services based on analysis scores
+  if (analysis.seoAnalysis.score < 60) {
+    services.push({
+      id: 'seo-audit',
+      title: 'SEO Warfare Implementation',
+      description: 'Complete SEO overhaul to dominate search rankings',
+      impact: `Projected ${Math.floor(Math.random() * 200 + 150)}% increase in organic traffic`,
+      price: 5000
+    });
+  }
+  
+  if (analysis.designAnalysis.score < 60) {
+    services.push({
+      id: 'website-redesign',
+      title: 'Website Domination Package',
+      description: 'Complete website transformation with conversion focus',
+      impact: `Expected ${Math.floor(Math.random() * 300 + 200)}% increase in conversions`,
+      price: 15000
+    });
+  }
+  
+  if (analysis.conversionAnalysis.score < 60) {
+    services.push({
+      id: 'conversion-optimization',
+      title: 'Conversion Warfare System',
+      description: 'Advanced CRO and lead generation implementation',
+      impact: `Estimated ${Math.floor(Math.random() * 400 + 250)}% improvement in lead conversion`,
+      price: 8000
+    });
+  }
+  
+  // Always include automation if overall score is low
+  if (analysis.overallScore < 70) {
+    services.push({
+      id: 'marketing-automation',
+      title: 'AI Marketing Automation',
+      description: 'Automated email sequences and lead nurturing system',
+      impact: `Projected ${Math.floor(Math.random() * 350 + 200)}% increase in qualified leads`,
+      price: 10000
+    });
+  }
+  
+  return services.slice(0, 3); // Return top 3 recommendations
+}
+
+async function storeLeadLocally(email: string, url: string, analysis: any) {
+  try {
+    const leadsFilePath = path.join(process.cwd(), 'src/data/leads.json');
+    
+    // Read existing data
+    let leadsData: LeadsData = { leads: [], lastUpdated: null, totalAnalyses: 0 };
+    if (fs.existsSync(leadsFilePath)) {
+      const fileContent = fs.readFileSync(leadsFilePath, 'utf8');
+      leadsData = JSON.parse(fileContent) as LeadsData;
+    }
+    
+    // Add new lead
+    const newLead: Lead = {
+      id: Date.now().toString(),
+      email,
+      website: url,
+      analysisScore: analysis.overallScore,
+      analysisData: analysis,
+      createdAt: new Date().toISOString(),
+      source: 'website-analyzer'
+    };
+    
+    leadsData.leads.push(newLead);
+    leadsData.lastUpdated = new Date().toISOString();
+    leadsData.totalAnalyses = leadsData.leads.length;
+    
+    // Write back to file
+    fs.writeFileSync(leadsFilePath, JSON.stringify(leadsData, null, 2));
+    
+    console.log('Lead stored locally:', { email, url, score: analysis.overallScore });
+  } catch (error) {
+    console.error('Error storing lead locally:', error);
+  }
+}
+
+async function uploadToGitHub() {
+  try {
+    // Check if there are any changes to commit
+    const { stdout: statusOutput } = await execAsync('git status --porcelain src/data/leads.json');
+    
+    if (!statusOutput.trim()) {
+      console.log('No changes to leads.json - skipping GitHub upload');
+      return;
+    }
+    
+    // Auto-commit and push the updated leads.json file
+    await execAsync('git add src/data/leads.json');
+    await execAsync(`git commit -m "Auto-update: New website analysis lead - ${new Date().toISOString()}"`);
+    await execAsync('git push origin main');
+    
+    console.log('Successfully uploaded leads data to GitHub');
+  } catch (error) {
+    console.error('Error uploading to GitHub:', error);
+    // Don't throw error - this is optional functionality
+    // The analysis will still work even if GitHub upload fails
+  }
+}

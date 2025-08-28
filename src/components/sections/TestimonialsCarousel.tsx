@@ -2,173 +2,304 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { testimonials } from '@/content/testimonials';
-import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
+import { 
+  BoltIcon, 
+  ChartBarIcon, 
+  GlobeAltIcon, 
+  RocketLaunchIcon,
+  ArrowRightIcon,
+  PlayIcon,
+  CheckCircleIcon,
+  TrophyIcon
+} from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
-export default function TestimonialsCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const featuredTestimonials = testimonials.filter(testimonial => testimonial.featured);
+export default function IndustryPowerhouseSection() {
+  const [activeTab, setActiveTab] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const stats = [
+    { number: '6+', label: 'Years Experience', icon: TrophyIcon },
+    { number: '50M+', label: 'Audience Reached', icon: GlobeAltIcon },
+    { number: '300%', label: 'Avg ROI Increase', icon: ChartBarIcon },
+    { number: '24/7', label: 'Strategic Support', icon: BoltIcon }
+  ];
+
+  const trustedBrands = [
+    {
+      name: 'iHeartMedia',
+      displayName: 'iHeartMedia',
+      brandColor: 'from-red-500 to-pink-600',
+      description: 'Strategic media partnerships across 850+ stations',
+      impact: 'Reached 250M+ listeners nationwide'
+    },
+    {
+      name: 'Disney',
+      displayName: 'Disney',
+      brandColor: 'from-blue-600 to-purple-700',
+      description: 'Content strategy for magical brand experiences',
+      impact: 'Enhanced digital engagement by 400%'
+    },
+    {
+      name: 'Georgia Power',
+      displayName: 'Georgia Power',
+      brandColor: 'from-green-500 to-emerald-600',
+      description: 'B2B communications for energy solutions',
+      impact: 'Improved stakeholder relations by 200%'
+    }
+  ];
+
+  const capabilities = [
+    {
+      title: 'Media Domination',
+      description: 'We don\'t just get coverage - we create media moments that define industries',
+      features: ['National TV & Radio', 'Podcast Networks', 'Digital Amplification']
+    },
+    {
+      title: 'Digital Transformation',
+      description: 'Websites that don\'t just look good - they convert visitors into customers',
+      features: ['Conversion Optimization', 'User Experience Design', 'Performance Analytics']
+    },
+    {
+      title: 'Strategic Partnerships',
+      description: 'We forge connections that create exponential growth opportunities',
+      features: ['B2B Network Access', 'Joint Ventures', 'Strategic Alliances']
+    }
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
-        prevIndex === featuredTestimonials.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 5000);
-
+      setActiveTab((prev) => (prev + 1) % capabilities.length);
+    }, 4000);
     return () => clearInterval(timer);
-  }, [featuredTestimonials.length]);
-
-  const nextTestimonial = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === featuredTestimonials.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const prevTestimonial = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? featuredTestimonials.length - 1 : prevIndex - 1
-    );
-  };
-
-  const goToTestimonial = (index: number) => {
-    setCurrentIndex(index);
-  };
-
-  if (featuredTestimonials.length === 0) return null;
+  }, []);
 
   return (
-    <section className="py-20 bg-gradient-to-br from-white via-slate-50 to-blue-50 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(59,130,246,0.1)_1px,transparent_0)] bg-[length:28px_28px]"></div>
+    <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.3)_0%,transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(99,102,241,0.3)_0%,transparent_50%)]"></div>
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full opacity-20"
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+          style={{
+            backgroundImage: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)',
+            backgroundSize: '200% 200%',
+          }}
+        />
       </div>
 
       <div className="container-custom relative z-10">
+        {/* Header */}
         <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center px-4 py-2 bg-blue-500/20 rounded-full border border-blue-400/30 mb-6"
+          >
+            <RocketLaunchIcon className="w-5 h-5 mr-2 text-blue-300" />
+            <span className="text-blue-200 font-medium">Industry Powerhouse</span>
+          </motion.div>
+          
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold mb-4 text-gray-900"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent"
           >
-            What Our Clients Say
+            We Don't Just Promise Results
+            <br />
+            <span className="text-4xl md:text-5xl text-yellow-400">We Deliver Dominance</span>
           </motion.h2>
+          
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
+            className="text-xl text-blue-100 max-w-4xl mx-auto leading-relaxed"
           >
-            Don't just take our word for it. Here's what B2B companies across industries 
-            have to say about working with Marketing Mousetrap Agency.
+            6 years of transforming B2B marketing for industry giants. When Fortune 500 companies 
+            need results that matter, they choose Marketing Mousetrap Agency.
           </motion.p>
         </div>
 
-        <div className="max-w-4xl mx-auto relative">
-          {/* Testimonial Display */}
-          <div className="relative min-h-[400px] flex items-center">
+        {/* Stats Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20"
+        >
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+              className="text-center group"
+            >
+              <div className="bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-2xl p-6 border border-blue-400/30 hover:border-blue-300/50 transition-all duration-300 group-hover:scale-105">
+                <stat.icon className="w-8 h-8 text-blue-300 mx-auto mb-4" />
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">{stat.number}</div>
+                <div className="text-blue-200 font-medium">{stat.label}</div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Trusted Brands Showcase */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mb-20"
+        >
+          <h3 className="text-3xl font-bold text-center mb-4 text-white">
+            Trusted by Industry Leaders
+          </h3>
+          <p className="text-blue-200 text-center mb-12 max-w-2xl mx-auto">
+            When these powerhouse brands needed marketing that moves mountains, they chose us.
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {trustedBrands.map((brand, index) => (
+              <motion.div
+                key={brand.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300 hover:scale-105 group"
+              >
+                <div className="h-20 flex items-center justify-center mb-6">
+                  <div className={`bg-gradient-to-r ${brand.brandColor} text-white font-bold text-xl px-8 py-4 rounded-xl shadow-lg transform group-hover:scale-105 transition-all duration-300`}>
+                    {brand.displayName}
+                  </div>
+                </div>
+                <p className="text-blue-100 mb-4 font-medium">{brand.description}</p>
+                <div className="flex items-center text-green-400 font-semibold">
+                  <CheckCircleIcon className="w-5 h-5 mr-2" />
+                  {brand.impact}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Interactive Capabilities */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="mb-16"
+        >
+          <h3 className="text-3xl font-bold text-center mb-12 text-white">
+            Our Competitive Advantage
+          </h3>
+          
+          <div className="max-w-6xl mx-auto">
+            {/* Tab Navigation */}
+            <div className="flex flex-wrap justify-center mb-8 gap-4">
+              {capabilities.map((capability, index) => (
+                <button
+                  key={capability.title}
+                  onClick={() => setActiveTab(index)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    activeTab === index
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
+                      : 'bg-white/10 text-blue-200 hover:bg-white/20'
+                  }`}
+                >
+                  {capability.title}
+                </button>
+              ))}
+            </div>
+
+            {/* Tab Content */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 50 }}
+                key={activeTab}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
-                className="text-center"
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 border border-white/20"
               >
-                <div className="mb-8">
-                  {/* Stars */}
-                  <div className="flex justify-center space-x-1 mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIcon
-                        key={i}
-                        className="w-6 h-6 text-yellow-400 fill-current"
-                      />
-                    ))}
-                  </div>
-
-                  {/* Quote */}
-                  <blockquote className="text-xl md:text-2xl font-medium text-gray-900 leading-relaxed mb-8 italic">
-                    "{featuredTestimonials[currentIndex].quote}"
-                  </blockquote>
-
-                  {/* Author */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-full flex items-center justify-center mb-4 shadow-lg">
-                      <span className="text-blue-600 font-bold text-lg">
-                        {featuredTestimonials[currentIndex].author.split(' ').map(n => n[0]).join('')}
-                      </span>
+                <h4 className="text-2xl font-bold text-white mb-4">
+                  {capabilities[activeTab].title}
+                </h4>
+                <p className="text-blue-100 text-lg mb-6 leading-relaxed">
+                  {capabilities[activeTab].description}
+                </p>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {capabilities[activeTab].features.map((feature, index) => (
+                    <div key={feature} className="flex items-center text-blue-200">
+                      <CheckCircleIcon className="w-5 h-5 mr-3 text-green-400" />
+                      {feature}
                     </div>
-                    <div className="text-center">
-                      <p className="font-semibold text-gray-900">
-                        {featuredTestimonials[currentIndex].author}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {featuredTestimonials[currentIndex].title}
-                      </p>
-                      <p className="text-sm text-blue-600 font-medium">
-                        {featuredTestimonials[currentIndex].company}
-                      </p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
+        </motion.div>
 
-          {/* Navigation Arrows */}
-          <button
-            onClick={prevTestimonial}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-8 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors hover:border-blue-300"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeftIcon className="w-6 h-6 text-blue-600" />
-          </button>
-
-          <button
-            onClick={nextTestimonial}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-8 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors hover:border-blue-300"
-            aria-label="Next testimonial"
-          >
-            <ChevronRightIcon className="w-6 h-6 text-blue-600" />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center space-x-2 mt-8">
-            {featuredTestimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToTestimonial(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom CTA */}
+        {/* Powerful CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-center mt-16"
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center"
         >
-          <p className="text-xl text-gray-600 mb-6">
-            Ready to join our satisfied clients?
-          </p>
-          <a
-            href="/contact"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-          >
-            Start Your Success Story
-            <ChevronRightIcon className="w-4 h-4 ml-2" />
-          </a>
+          <div className="bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-3xl p-12 border border-yellow-400/30 max-w-4xl mx-auto">
+            <h3 className="text-4xl font-bold text-white mb-6">
+              Ready to Join the Elite?
+            </h3>
+            <p className="text-xl text-yellow-100 mb-8 leading-relaxed">
+              Stop settling for average results. Your competitors are already losing ground. 
+              The question isn't whether you can afford our services—it's whether you can afford to wait.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Link
+                href="/contact"
+                className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold py-4 px-10 rounded-xl hover:from-yellow-300 hover:to-orange-400 transition-all duration-200 transform hover:scale-105 hover:shadow-2xl inline-flex items-center text-lg"
+              >
+                <RocketLaunchIcon className="w-6 h-6 mr-3" />
+                Claim Your Competitive Edge
+                <ArrowRightIcon className="w-5 h-5 ml-3" />
+              </Link>
+              
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-semibold py-4 px-8 rounded-xl transition-all duration-200 inline-flex items-center hover:shadow-lg"
+              >
+                <PlayIcon className="w-5 h-5 mr-2" />
+                Watch Success Stories
+              </button>
+            </div>
+
+            <p className="text-yellow-200 text-sm mt-6 opacity-90">
+              ⚡ Limited availability - Only 3 new partnerships per quarter
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>

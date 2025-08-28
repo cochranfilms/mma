@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Website Analysis Results - Marketing Mousetrap Agency</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .score-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 69, 0, 0.1);
+            border-radius: 10px;
+            border: 2px solid #ff4500;
+        }
+        .score-circle {
+            display: inline-flex;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+        .status {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ff4500;
+            margin-top: 10px;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #ff4500;
+        }
+        .section h3 {
+            color: #ff4500;
+            margin-top: 0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .section h3::before {
+            content: "⚡";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .critical-issues h3::before { content: "🚨"; }
+        .opportunities h3::before { content: "🚀"; }
+        .services h3::before { content: "🎯"; }
+        .issue-list, .opportunity-list {
+            list-style: none;
+            padding: 0;
+        }
+        .issue-list li, .opportunity-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            padding-left: 25px;
+        }
+        .issue-list li::before {
+            content: "❌";
+            position: absolute;
+            left: 0;
+        }
+        .opportunity-list li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .score-card {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 69, 0, 0.3);
+        }
+        .score-card h4 {
+            margin: 0 0 8px 0;
+            color: #ff6b35;
+            font-size: 12px;
+            word-wrap: break-word;
+        }
+        .score-card .score {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        .service-card {
+            background: linear-gradient(135deg, rgba(255, 69, 0, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%);
+            border: 1px solid #ff4500;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .service-card h4 {
+            color: #ff4500;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .service-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b35;
+            margin: 10px 0;
+        }
+        .service-impact {
+            color: #4ade80;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);
+            border-radius: 10px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #ff4500;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        .footer {
+            background: #1a1a1a;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+        .urgency {
+            background: rgba(255, 69, 0, 0.2);
+            border: 2px solid #ff4500;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .urgency strong {
+            color: #ff4500;
+        }
+        
+        /* Mobile Responsiveness */
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                border-radius: 5px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .header p {
+                font-size: 14px;
+            }
+            .score-circle {
+                width: 80px;
+                height: 80px;
+                font-size: 24px;
+            }
+            .status {
+                font-size: 14px;
+            }
+            .scores-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .score-card {
+                padding: 8px;
+            }
+            .score-card h4 {
+                font-size: 11px;
+            }
+            .score-card .score {
+                font-size: 18px;
+            }
+            .section h3 {
+                font-size: 18px;
+            }
+            .cta-button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 5px 0;
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+        
+        /* Text overflow protection */
+        * {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 WEBSITE ANALYSIS COMPLETE</h1>
+            <p>Your Website Domination Report is Ready</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello,</p>
+            <p>We've completed a comprehensive analysis of <strong>{{WEBSITE_URL}}</strong> and the results are eye-opening. Your website has critical vulnerabilities that are costing you customers and revenue every single day.</p>
+            
+            <div class="score-section">
+                <div class="score-circle">{{OVERALL_SCORE}}</div>
+                <div class="status">{{SCORE_STATUS}}</div>
+                <p><strong>Analysis Date:</strong> {{ANALYSIS_DATE}} at {{ANALYSIS_TIME}}</p>
+            </div>
+
+            <div class="scores-grid">
+                <div class="score-card">
+                    <h4>SEO WARFARE</h4>
+                    <div class="score">{{SEO_SCORE}}/100</div>
+                </div>
+                <div class="score-card">
+                    <h4>DESIGN IMPACT</h4>
+                    <div class="score">{{DESIGN_SCORE}}/100</div>
+                </div>
+                <div class="score-card">
+                    <h4>CONVERSION POWER</h4>
+                    <div class="score">{{CONVERSION_SCORE}}/100</div>
+                </div>
+            </div>
+
+            <div class="section critical-issues">
+                <h3>Critical Vulnerabilities</h3>
+                <p>These issues are actively damaging your business:</p>
+                <ul class="issue-list">
+                    <li>{{CRITICAL_ISSUE_1}}</li>
+                    <li>{{CRITICAL_ISSUE_2}}</li>
+                    <li>{{CRITICAL_ISSUE_3}}</li>
+                    <li>{{CRITICAL_ISSUE_4}}</li>
+                    <li>{{CRITICAL_ISSUE_5}}</li>
+                </ul>
+            </div>
+
+            <div class="section opportunities">
+                <h3>Domination Opportunities</h3>
+                <p>Here's how we can transform your website into a conversion machine:</p>
+                <ul class="opportunity-list">
+                    <li>{{OPPORTUNITY_1}}</li>
+                    <li>{{OPPORTUNITY_2}}</li>
+                    <li>{{OPPORTUNITY_3}}</li>
+                    <li>{{OPPORTUNITY_4}}</li>
+                    <li>{{OPPORTUNITY_5}}</li>
+                </ul>
+            </div>
+
+            <div class="section services">
+                <h3>Recommended Battle Plan</h3>
+                <p>Based on your analysis, here are the services that will deliver maximum ROI:</p>
+                
+                <div class="service-card">
+                    <h4>{{SERVICE_1_TITLE}}</h4>
+                    <p>{{SERVICE_1_DESC}}</p>
+                    <div class="service-impact">{{SERVICE_1_IMPACT}}</div>
+                    <div class="service-price">${{SERVICE_1_PRICE}}</div>
+                </div>
+
+                <div class="service-card">
+                    <h4>{{SERVICE_2_TITLE}}</h4>
+                    <p>{{SERVICE_2_DESC}}</p>
+                    <div class="service-impact">{{SERVICE_2_IMPACT}}</div>
+                    <div class="service-price">${{SERVICE_2_PRICE}}</div>
+                </div>
+
+                <div class="service-card">
+                    <h4>{{SERVICE_3_TITLE}}</h4>
+                    <p>{{SERVICE_3_DESC}}</p>
+                    <div class="service-impact">{{SERVICE_3_IMPACT}}</div>
+                    <div class="service-price">${{SERVICE_3_PRICE}}</div>
+                </div>
+            </div>
+
+            <div class="urgency">
+                <p><strong>⚡ URGENT:</strong> Your competitors aren't waiting. Every day you delay is market share lost forever.</p>
+                <p><strong>Limited Availability:</strong> Only 3 new domination campaigns accepted per quarter.</p>
+            </div>
+
+            <div class="cta-section">
+                <h3>Ready to Dominate Your Market?</h3>
+                <p>Don't let your competitors steal another customer. Let's transform your website into a conversion machine.</p>
+                <a href="https://marketingmousetrap.com/contact" class="cta-button">🚀 SCHEDULE DOMINATION CALL</a>
+                <a href="https://marketingmousetrap.com/services" class="cta-button">🔥 VIEW FULL ARSENAL</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Marketing Mousetrap Agency</strong><br>
+            Elite B2B Marketing & Website Domination<br>
+            📧 Contact: info@marketingmousetrap.com<br>
+            🌐 Website: marketingmousetrap.com</p>
+            <p><em>This analysis was generated by our AI-powered Website Domination Analyzer.</em></p>
+        </div>
+    </div>
+</body>
+</html>

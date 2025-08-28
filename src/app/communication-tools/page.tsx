@@ -3,6 +3,7 @@ import LiveChat from '@/components/LiveChat';
 import CalendarBooking from '@/components/CalendarBooking';
 import VideoConsultation from '@/components/VideoConsultation';
 import InstantQuoteCalculator from '@/components/InstantQuoteCalculator';
+import WebsiteDominationAnalyzer from '@/components/WebsiteDominationAnalyzer';
 import { MessageCircle, Calendar, Video, DollarSign, ArrowRight, Users, Clock, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -251,6 +252,9 @@ export default function CommunicationToolsPage() {
           </div>
         </div>
       </section>
+
+      {/* Website Domination Analyzer */}
+      <WebsiteDominationAnalyzer />
     </div>
   );
 }

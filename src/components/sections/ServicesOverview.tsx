@@ -1,11 +1,21 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { getServiceImage } from '@/lib/media';
 import Link from 'next/link';
 import { services } from '@/content/services';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { 
+  ArrowRightIcon, 
+  RocketLaunchIcon,
+  BoltIcon,
+  TrophyIcon,
+  FireIcon,
+  CheckCircleIcon,
+  StarIcon,
+  ChartBarIcon
+} from '@heroicons/react/24/outline';
 
 // Enhanced icon mapping for services
 const iconMap: Record<string, React.ComponentType<any>> = {
@@ -55,117 +65,267 @@ const iconMap: Record<string, React.ComponentType<any>> = {
 };
 
 export default function ServicesOverview() {
+  const [activeService, setActiveService] = useState(0);
   const featuredServices = services.filter(service => service.featured);
 
+  const serviceStats = [
+    { number: '500%', label: 'ROI Increase', icon: ChartBarIcon },
+    { number: '48hr', label: 'Launch Time', icon: RocketLaunchIcon },
+    { number: '100%', label: 'Success Rate', icon: TrophyIcon },
+    { number: '24/7', label: 'Support', icon: BoltIcon }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveService((prev) => (prev + 1) % featuredServices.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [featuredServices.length]);
+
   return (
-    <section className="py-20 bg-gradient-to-br from-white via-slate-50 to-blue-50 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(59,130,246,0.1)_1px,transparent_0)] bg-[length:28px_28px]"></div>
+    <section className="py-20 bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(59,130,246,0.3)_0%,transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(99,102,241,0.3)_0%,transparent_50%)]"></div>
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full opacity-10"
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+          style={{
+            backgroundImage: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)',
+            backgroundSize: '200% 200%',
+          }}
+        />
       </div>
 
       <div className="container-custom relative z-10">
-        <div className="text-center mb-20">
+        {/* Explosive Header */}
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center px-4 py-2 bg-orange-500/20 rounded-full border border-orange-400/30 mb-6"
+          >
+            <FireIcon className="w-5 h-5 mr-2 text-orange-300" />
+            <span className="text-orange-200 font-medium">Elite Services Arsenal</span>
+          </motion.div>
+          
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-bold mb-6 text-gray-900"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent"
           >
-            Our Services
+            Services That
+            <br />
+            <span className="text-4xl md:text-5xl text-orange-400">Obliterate Competition</span>
           </motion.h2>
+          
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-xl text-blue-100 max-w-4xl mx-auto leading-relaxed"
           >
-            We offer comprehensive solutions to upgrade every aspect of your B2B media presence. 
-            From strategic media relations to modern website design, we help you build connections that drive results.
+            While others play catch-up, we're already dominating the next frontier. 
+            Our battle-tested services don't just deliver results—they create market legends.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredServices.map((service, index) => {
-            const IconComponent = iconMap[service.icon] || iconMap.megaphone;
-            
-            const imageSrc = getServiceImage(service.id, index, 'card');
-            
-            return (
-              <motion.div
+        {/* Performance Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
+        >
+          {serviceStats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+              className="text-center group"
+            >
+              <div className="bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-2xl p-6 border border-orange-400/30 hover:border-orange-300/50 transition-all duration-300 group-hover:scale-105">
+                <stat.icon className="w-8 h-8 text-orange-300 mx-auto mb-4" />
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">{stat.number}</div>
+                <div className="text-orange-200 font-medium">{stat.label}</div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Interactive Service Showcase */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mb-16"
+        >
+          <h3 className="text-3xl font-bold text-center mb-12 text-white">
+            Choose Your Weapon
+          </h3>
+          
+          {/* Service Navigation */}
+          <div className="flex flex-wrap justify-center mb-8 gap-4">
+            {featuredServices.map((service, index) => (
+              <button
                 key={service.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className="group"
+                onClick={() => setActiveService(index)}
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  activeService === index
+                    ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg'
+                    : 'bg-white/10 text-blue-200 hover:bg-white/20'
+                }`}
               >
-                <div className="bg-white rounded-2xl p-8 h-full shadow-lg border border-gray-100 hover:shadow-xl hover:border-blue-200 transition-all duration-300 hover:transform hover:-translate-y-2">
-                  {/* Service Card Image */}
-                  <div className="mb-6 overflow-hidden rounded-xl">
+                {service.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Active Service Display */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeService}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="max-w-6xl mx-auto"
+            >
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                {/* Service Image */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-600/20 rounded-2xl blur-xl"></div>
+                  <div className="relative bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-2 border border-white/20">
                     <Image
-                      src={imageSrc}
-                      alt={`${service.title} - Professional service`}
-                      width={400}
-                      height={300}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      src={getServiceImage(featuredServices[activeService].id, activeService, 'card')}
+                      alt={`${featuredServices[activeService].title} - Elite service`}
+                      width={600}
+                      height={400}
+                      className="w-full h-80 object-cover rounded-xl"
                     />
                   </div>
-                  
-                  {/* Enhanced Icon */}
-                  <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent />
-                  </div>
-                  
-                  {/* Content */}
-                  <h3 className="text-2xl font-bold mb-4 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">{service.subtitle}</p>
-                  
-                  {/* Enhanced Key Benefits */}
-                  <ul className="space-y-3 mb-8">
-                    {service.outcomes.slice(0, 2).map((outcome, outcomeIndex) => (
-                      <li key={outcomeIndex} className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform duration-300"></div>
-                        <span className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
-                          {outcome}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  {/* Enhanced CTA */}
-                  <Link
-                    href={`/services#${service.id}`}
-                    className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-all duration-300 group-hover:translate-x-1"
-                  >
-                    Learn More
-                    <ArrowRightIcon className="w-4 h-4 ml-2 group-hover:scale-110 transition-transform duration-300" />
-                  </Link>
                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
 
-        {/* Enhanced View All Services CTA */}
+                {/* Service Details */}
+                <div>
+                  <div className="mb-6">
+                    <div className="inline-flex items-center px-3 py-1 bg-orange-500/20 rounded-full border border-orange-400/30 mb-4">
+                      <StarIcon className="w-4 h-4 mr-2 text-orange-300" />
+                      <span className="text-orange-200 text-sm font-medium">Elite Service</span>
+                    </div>
+                    <h4 className="text-3xl font-bold text-white mb-4">
+                      {featuredServices[activeService].title}
+                    </h4>
+                    <p className="text-xl text-blue-100 mb-6 leading-relaxed">
+                      {featuredServices[activeService].subtitle}
+                    </p>
+                  </div>
+
+                  {/* Key Outcomes */}
+                  <div className="mb-8">
+                    <h5 className="text-lg font-semibold text-white mb-4">Guaranteed Outcomes:</h5>
+                    <div className="grid gap-3">
+                      {featuredServices[activeService].outcomes.slice(0, 3).map((outcome, index) => (
+                        <div key={index} className="flex items-center text-green-400">
+                          <CheckCircleIcon className="w-5 h-5 mr-3 flex-shrink-0" />
+                          <span className="text-blue-100">{outcome}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Pricing */}
+                  <div className="mb-8">
+                    <div className="bg-gradient-to-r from-orange-500/10 to-red-600/10 rounded-xl p-6 border border-orange-400/20">
+                      <div className="flex items-baseline">
+                        <span className="text-2xl text-orange-200">Starting at</span>
+                        <span className="text-4xl font-bold text-white ml-2">
+                          ${featuredServices[activeService].startingPrice?.toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-orange-200 text-sm mt-2">Investment that pays for itself</p>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link
+                      href={`/services#${featuredServices[activeService].id}`}
+                      className="bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-4 px-8 rounded-xl hover:from-orange-400 hover:to-red-500 transition-all duration-200 transform hover:scale-105 hover:shadow-2xl inline-flex items-center justify-center"
+                    >
+                      <RocketLaunchIcon className="w-5 h-5 mr-2" />
+                      Dominate With This Service
+                    </Link>
+                    
+                    <Link
+                      href="/contact"
+                      className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-semibold py-4 px-8 rounded-xl transition-all duration-200 inline-flex items-center justify-center"
+                    >
+                      Get Custom Strategy
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Explosive Final CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="text-center mt-20"
+          className="text-center"
         >
-          <Link
-            href="/services"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-          >
-            View All Services
-            <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-          </Link>
+          <div className="bg-gradient-to-br from-orange-400/20 to-red-500/20 rounded-3xl p-12 border border-orange-400/30 max-w-4xl mx-auto">
+            <h3 className="text-4xl font-bold text-white mb-6">
+              Ready to Annihilate Your Competition?
+            </h3>
+            <p className="text-xl text-orange-100 mb-8 leading-relaxed">
+              Stop letting competitors steal your market share. Our elite services don't just level the playing field—they tilt it permanently in your favor.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Link
+                href="/services"
+                className="bg-gradient-to-r from-orange-400 to-red-500 text-black font-bold py-4 px-10 rounded-xl hover:from-orange-300 hover:to-red-400 transition-all duration-200 transform hover:scale-105 hover:shadow-2xl inline-flex items-center text-lg"
+              >
+                <FireIcon className="w-6 h-6 mr-3" />
+                Unleash Full Arsenal
+                <ArrowRightIcon className="w-5 h-5 ml-3" />
+              </Link>
+              
+              <Link
+                href="/contact"
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-semibold py-4 px-8 rounded-xl transition-all duration-200 inline-flex items-center hover:shadow-lg"
+              >
+                <BoltIcon className="w-5 h-5 mr-2" />
+                Get Battle Plan
+              </Link>
+            </div>
+
+            <p className="text-orange-200 text-sm mt-6 opacity-90">
+              ⚡ Warning: Results may cause extreme market dominance
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>
