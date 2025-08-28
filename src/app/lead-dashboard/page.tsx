@@ -115,7 +115,17 @@ export default function LeadDashboardPage() {
           try {
             const payload = JSON.parse(evt.data);
             if (payload?.configured && payload?.found && payload?.data) {
-              setLeadData(payload.data);
+              setLeadData((prev) => {
+                if (!prev) return payload.data;
+                // Merge to avoid dropping fields
+                return {
+                  ...prev,
+                  ...payload.data,
+                  score: { ...(prev as any).score, ...(payload.data.score || {}) },
+                  profile: { ...(prev as any).profile, ...(payload.data.profile || {}) },
+                  behavior: { ...(prev as any).behavior, ...(payload.data.behavior || {}) },
+                } as any;
+              });
             }
           } catch {}
         };
