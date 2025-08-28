@@ -1,0 +1,82 @@
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:4007
+  - Environments: .env.local
+
+ ✓ Starting...
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/.next/cache/webpack/client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Ready in 1030ms
+ ○ Compiling /about ...
+ ✓ Compiled /about in 2.6s (1339 modules)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /about. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /about. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /about. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /about. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3886902405"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "868168613"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "2366266021"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "868168613"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3103493349"
+ ⨯     at stringify (<anonymous>)
+    at stringify (<anonymous>)
+digest: "3886902405"
+ GET /about 500 in 2740ms
+ ✓ Compiled in 153ms (645 modules)

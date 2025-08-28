@@ -34,53 +34,67 @@ export default function LiveChat() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!inputText.trim()) return;
+  const handleSendMessage = async (overrideText?: string) => {
+    const textToSend = (overrideText ?? inputText).trim();
+    if (!textToSend) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
-      text: inputText,
+      text: textToSend,
       sender: 'user',
       timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const prompt = textToSend;
     setInputText('');
     setIsTyping(true);
 
-    // Simulate agent response
-    setTimeout(() => {
+    try {
+      const payloadMessages = [
+        ...messages.map(m => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text })),
+        { role: 'user', content: prompt }
+      ];
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: payloadMessages })
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || 'Failed to get response');
+      }
+
+      const data = await res.json();
       const agentResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        text: generateAgentResponse(inputText),
+        text: data.reply || 'Sorry, I could not generate a response right now.',
+        sender: 'agent',
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, agentResponse]);
+    } catch (error: any) {
+      const agentResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        text: 'There was an error connecting to our AI assistant. Please try again shortly.',
         sender: 'agent',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, agentResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
-  const generateAgentResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase();
-    
-    if (input.includes('pricing') || input.includes('cost') || input.includes('price')) {
-      return 'Our pricing varies based on your specific needs. I\'d be happy to connect you with our team for a personalized quote. Would you like to schedule a consultation?';
-    }
-    
-    if (input.includes('consultation') || input.includes('meeting') || input.includes('schedule')) {
-      return 'Great! I can help you schedule a consultation. We offer free 30-minute discovery calls. What time works best for you this week?';
-    }
-    
-    if (input.includes('service') || input.includes('help') || input.includes('support')) {
-      return 'We offer comprehensive MMA services including B2B marketing, campaign execution, consulting, and more. Which area are you most interested in?';
-    }
-    
-    if (input.includes('roi') || input.includes('return') || input.includes('results')) {
-      return 'Our clients typically see 3-5x ROI within 6-12 months. We\'d be happy to show you case studies and discuss your specific goals.';
-    }
-    
-    return 'Thank you for your message! I\'m here to help with any questions about MMA services. Would you like to learn more about our offerings or schedule a consultation?';
+  const handleQuickAction = (prompt: string) => {
+    handleSendMessage(prompt);
+  };
+
+  const generateAgentResponse = (_userInput: string): string => {
+    return '...' ;
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -179,6 +193,36 @@ export default function LiveChat() {
 
           {/* Chat Input */}
           <div className="p-4 border-t border-gray-200">
+            <div className="flex flex-wrap gap-2 mb-3">
+              <button
+                onClick={() => handleQuickAction('Show me your services and pricing.')}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full text-xs transition-colors"
+                aria-label="View services"
+              >
+                View services
+              </button>
+              <button
+                onClick={() => handleQuickAction('Show me your work and who you work with.')}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full text-xs transition-colors"
+                aria-label="See work"
+              >
+                See work
+              </button>
+              <button
+                onClick={() => handleQuickAction('I would like to use the ROI Calculator.')}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full text-xs transition-colors"
+                aria-label="Use ROI calculator"
+              >
+                Use ROI calculator
+              </button>
+              <button
+                onClick={() => handleQuickAction('Help me book a call.')}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full text-xs transition-colors"
+                aria-label="Book a call"
+              >
+                Book a call
+              </button>
+            </div>
             <div className="flex items-center gap-2">
               <input
                 ref={inputRef}
