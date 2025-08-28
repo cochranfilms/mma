@@ -4,8 +4,7 @@ import CalendarBooking from '@/components/CalendarBooking';
 import VideoConsultation from '@/components/VideoConsultation';
 import InstantQuoteCalculator from '@/components/InstantQuoteCalculator';
 import WebsiteDominationAnalyzer from '@/components/WebsiteDominationAnalyzer';
-import EmailJSDebugger from '@/components/EmailJSDebugger';
-import OpenAIDebugger from '@/components/OpenAIDebugger';
+// Debug components removed
 import { MessageCircle, Calendar, Video, DollarSign, ArrowRight, Users, Clock, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -257,10 +256,7 @@ export default function CommunicationToolsPage() {
 
       {/* Website Domination Analyzer */}
       <WebsiteDominationAnalyzer />
-      
-      {/* Temporary Debug Components */}
-      <EmailJSDebugger />
-      <OpenAIDebugger />
+
     </div>
   );
 }

@@ -49,17 +49,19 @@
             border: 2px solid #ff4500;
         }
         .score-circle {
-            display: inline-flex;
+            display: inline-block; /* Better email client support */
             width: 100px;
             height: 100px;
+            line-height: 100px; /* Vertically center number */
+            text-align: center;
             border-radius: 50%;
             background: linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);
-            align-items: center;
-            justify-content: center;
             margin: 0 auto 15px auto;
-            font-size: 28px;
+            font-size: 24px; /* Smaller to avoid overflow */
             font-weight: bold;
             color: white;
+            overflow: hidden; /* Safety for large text */
+            white-space: nowrap;
         }
         .status {
             font-size: 16px;
@@ -258,6 +260,7 @@
 <body>
     <div class="container">
         <div class="header">
+            <img src="https://app.marketingmousetrapagency.com/Logo.png" alt="Marketing Mousetrap Agency" style="max-width: 200px; height: auto; display:block; margin: 0 auto 10px auto;" />
             <h1>🚨 WEBSITE ANALYSIS COMPLETE</h1>
             <p>Your Website Domination Report is Ready</p>
         </div>
@@ -345,8 +348,8 @@
             <div class="cta-section">
                 <h3>Ready to Dominate Your Market?</h3>
                 <p>Don't let your competitors steal another customer. Let's transform your website into a conversion machine.</p>
-                <a href="https://marketingmousetrap.com/contact" class="cta-button">🚀 SCHEDULE DOMINATION CALL</a>
-                <a href="https://marketingmousetrap.com/services" class="cta-button">🔥 VIEW FULL ARSENAL</a>
+                <a href="https://app.marketingmousetrapagency.com/contact" class="cta-button">🚀 SCHEDULE DOMINATION CALL</a>
+                <a href="https://app.marketingmousetrapagency.com/services" class="cta-button">🔥 VIEW FULL ARSENAL</a>
             </div>
         </div>
 

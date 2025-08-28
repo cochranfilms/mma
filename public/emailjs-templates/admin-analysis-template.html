@@ -79,17 +79,19 @@
             border: 2px solid #ef4444;
         }
         .score-circle {
-            display: inline-flex;
+            display: inline-block; /* Better email client support */
             width: 80px;
             height: 80px;
+            line-height: 80px; /* Vertically center number */
+            text-align: center;
             border-radius: 50%;
             background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-            align-items: center;
-            justify-content: center;
             margin: 0 auto 10px auto;
-            font-size: 22px;
+            font-size: 18px; /* Smaller to avoid overflow */
             font-weight: bold;
             color: white;
+            overflow: hidden; /* Safety for large text */
+            white-space: nowrap;
         }
         .priority {
             display: inline-block;
@@ -285,6 +287,7 @@
 <body>
     <div class="container">
         <div class="header">
+            <img src="https://app.marketingmousetrapagency.com/Logo.png" alt="Marketing Mousetrap Agency" style="max-width: 200px; height: auto; display:block; margin: 0 auto 10px auto;" />
             <h1>🎯 NEW WEBSITE ANALYSIS LEAD</h1>
             <p>High-Quality Lead Generated from Website Domination Analyzer</p>
         </div>
@@ -391,7 +394,7 @@
                 <div style="text-align: center; margin: 20px 0;">
                     <a href="mailto:{{USER_EMAIL}}" class="action-button">📧 Email Lead</a>
                     <a href="tel:{{USER_EMAIL}}" class="action-button">📞 Call Lead</a>
-                    <a href="https://marketingmousetrap.com/admin/leads" class="action-button">👥 View in CRM</a>
+                    <a href="https://app.marketingmousetrapagency.com/lead-dashboard" class="action-button">👥 View in CRM</a>
                 </div>
             </div>
 

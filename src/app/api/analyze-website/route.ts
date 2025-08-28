@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import fs from 'fs';
 import path from 'path';
+import { services as catalogServices } from '@/content/services';
 
 // Initialize OpenAI
 const openai = new OpenAI({
@@ -137,13 +138,24 @@ export async function POST(request: NextRequest) {
     const recommendations = generateServiceRecommendations(analysis);
     console.log('✅ Service recommendations generated:', recommendations.length, 'services');
     
-    // Step 4: Store lead in local JSON file
-    console.log('💾 Storing lead locally...');
-    await storeLeadLocally(email, url, analysis);
+    // Construct lead once and reuse for storage and GitHub upload
+    const newLead: Lead = {
+      id: Date.now().toString(),
+      email,
+      website: url,
+      analysisScore: analysis.overallScore,
+      analysisData: analysis,
+      createdAt: new Date().toISOString(),
+      source: 'website-analyzer'
+    };
+
+    // Step 4: Store lead locally (best-effort)
+    console.log('💾 Storing lead locally (best-effort)...');
+    await storeLeadLocally(newLead);
     
-    // Step 5: Upload to GitHub automatically
-    console.log('📤 Uploading to GitHub...');
-    await uploadToGitHub();
+    // Step 5: Upload to GitHub directly by appending the new lead remotely
+    console.log('📤 Uploading to GitHub (remote append)...');
+    await uploadLeadToGitHub(newLead);
     
     console.log('🎉 Analysis complete! Returning results...');
 
@@ -155,12 +167,7 @@ export async function POST(request: NextRequest) {
       seoAnalysis: analysis.seoAnalysis,
       designAnalysis: analysis.designAnalysis,
       conversionAnalysis: analysis.conversionAnalysis,
-      recommendedServices: recommendations,
-      debug: {
-        openaiUsed: true,
-        timestamp: new Date().toISOString(),
-        websiteContentLength: websiteContent.length
-      }
+      recommendedServices: recommendations.length > 0 ? recommendations : getDefaultRecommendations()
     });
 
   } catch (error) {
@@ -332,54 +339,76 @@ Be brutally honest but professional. Identify real problems that Marketing Mouse
 }
 
 function generateServiceRecommendations(analysis: any) {
-  const services = [];
-  
-  // Recommend services based on analysis scores
-  if (analysis.seoAnalysis.score < 60) {
-    services.push({
-      id: 'seo-audit',
-      title: 'SEO Warfare Implementation',
-      description: 'Complete SEO overhaul to dominate search rankings',
-      impact: `Projected ${Math.floor(Math.random() * 200 + 150)}% increase in organic traffic`,
-      price: 5000
+  const recommendations: Array<{ id: string; title: string; description: string; impact: string; price: number }> = [];
+
+  function toRec(serviceId: string, impact: string) {
+    const svc = catalogServices.find(s => s.id === serviceId);
+    if (!svc) return;
+    const startingPrice = (svc as any).startingPrice || (svc.pricing?.packages?.[0]?.price ?? 0);
+    recommendations.push({
+      id: svc.id,
+      title: svc.title,
+      description: svc.description,
+      impact,
+      price: startingPrice,
     });
   }
-  
+
+  // Map analysis to real services
+  if (analysis.seoAnalysis.score < 60) {
+    toRec('web-development', `Projected ${Math.floor(Math.random() * 200 + 120)}% lift in organic traffic`);
+  }
   if (analysis.designAnalysis.score < 60) {
-    services.push({
+    toRec('web-development', `Expected ${Math.floor(Math.random() * 250 + 120)}% improvement in UX-driven conversions`);
+  }
+  if (analysis.conversionAnalysis.score < 60) {
+    toRec('web-development', `Estimated ${Math.floor(Math.random() * 300 + 150)}% increase in lead conversion`);
+  }
+  if ((analysis.overallScore ?? 0) < 70) {
+    toRec('brand-development', 'Clarify positioning to increase pricing power and win rate');
+  }
+
+  // Ensure unique by id and return up to 3
+  const unique = new Map<string, typeof recommendations[number]>();
+  recommendations.forEach(r => { if (!unique.has(r.id)) unique.set(r.id, r); });
+  const list = Array.from(unique.values());
+  if (list.length === 0) {
+    // Default set if none matched
+    toRec('web-development', 'Comprehensive site overhaul for performance, SEO, and CRO');
+    toRec('brand-development', 'Positioning and identity to improve message-market fit');
+    toRec('video-production', 'High-converting creative assets to drive campaigns');
+    return recommendations.slice(0, 3);
+  }
+  return list.slice(0, 3);
+}
+
+function getDefaultRecommendations() {
+  return [
+    {
       id: 'website-redesign',
       title: 'Website Domination Package',
       description: 'Complete website transformation with conversion focus',
-      impact: `Expected ${Math.floor(Math.random() * 300 + 200)}% increase in conversions`,
+      impact: 'Expected 200-300% increase in conversions',
       price: 15000
-    });
-  }
-  
-  if (analysis.conversionAnalysis.score < 60) {
-    services.push({
-      id: 'conversion-optimization',
-      title: 'Conversion Warfare System',
-      description: 'Advanced CRO and lead generation implementation',
-      impact: `Estimated ${Math.floor(Math.random() * 400 + 250)}% improvement in lead conversion`,
-      price: 8000
-    });
-  }
-  
-  // Always include automation if overall score is low
-  if (analysis.overallScore < 70) {
-    services.push({
+    },
+    {
+      id: 'seo-audit',
+      title: 'SEO Warfare Implementation',
+      description: 'Technical SEO overhaul and authority building',
+      impact: 'Projected 150-250% increase in organic traffic',
+      price: 5000
+    },
+    {
       id: 'marketing-automation',
       title: 'AI Marketing Automation',
       description: 'Automated email sequences and lead nurturing system',
-      impact: `Projected ${Math.floor(Math.random() * 350 + 200)}% increase in qualified leads`,
+      impact: 'Projected 200% increase in qualified leads',
       price: 10000
-    });
-  }
-  
-  return services.slice(0, 3); // Return top 3 recommendations
+    }
+  ];
 }
 
-async function storeLeadLocally(email: string, url: string, analysis: any) {
+async function storeLeadLocally(newLead: Lead) {
   try {
     const leadsFilePath = path.join(process.cwd(), 'src/data/leads.json');
     
@@ -391,16 +420,6 @@ async function storeLeadLocally(email: string, url: string, analysis: any) {
     }
     
     // Add new lead
-    const newLead: Lead = {
-      id: Date.now().toString(),
-      email,
-      website: url,
-      analysisScore: analysis.overallScore,
-      analysisData: analysis,
-      createdAt: new Date().toISOString(),
-      source: 'website-analyzer'
-    };
-    
     leadsData.leads.push(newLead);
     leadsData.lastUpdated = new Date().toISOString();
     leadsData.totalAnalyses = leadsData.leads.length;
@@ -408,13 +427,13 @@ async function storeLeadLocally(email: string, url: string, analysis: any) {
     // Write back to file
     fs.writeFileSync(leadsFilePath, JSON.stringify(leadsData, null, 2));
     
-    console.log('Lead stored locally:', { email, url, score: analysis.overallScore });
+    console.log('Lead stored locally:', { email: newLead.email, url: newLead.website, score: newLead.analysisScore });
   } catch (error) {
     console.error('Error storing lead locally:', error);
   }
 }
 
-async function uploadToGitHub() {
+async function uploadLeadToGitHub(newLead: Lead) {
   try {
     const repoConfigured = Boolean(GITHUB_OWNER && GITHUB_REPO && GITHUB_TOKEN);
     if (!repoConfigured) {
@@ -422,26 +441,29 @@ async function uploadToGitHub() {
       return;
     }
 
-    const leadsFilePath = path.join(process.cwd(), 'src/data/leads.json');
-    if (!fs.existsSync(leadsFilePath)) {
-      console.log('⚠️ leads.json does not exist locally; skipping upload');
-      return;
-    }
-
-    const localContent = fs.readFileSync(leadsFilePath, 'utf8');
-
-    // Fetch existing file to get SHA (if present)
+    // Fetch existing file content (if any)
+    let leadsData: LeadsData = { leads: [], lastUpdated: null, totalAnalyses: 0 };
     let existingSha: string | undefined = undefined;
     try {
       const existing = await getGitHubFile();
-      existingSha = existing.exists ? existing.sha : undefined;
+      if (existing.exists) {
+        existingSha = existing.sha;
+        const decoded = Buffer.from(existing.contentBase64, 'base64').toString('utf8');
+        leadsData = JSON.parse(decoded) as LeadsData;
+      }
     } catch (e) {
-      console.warn('Could not retrieve existing GitHub file; will attempt create:', e);
+      console.warn('Could not retrieve existing GitHub file; will create new.', e);
     }
 
+    // Merge new lead
+    leadsData.leads.push(newLead);
+    leadsData.lastUpdated = new Date().toISOString();
+    leadsData.totalAnalyses = leadsData.leads.length;
+
+    const updatedContent = JSON.stringify(leadsData, null, 2);
     const message = `Auto-update: New website analysis lead - ${new Date().toISOString()}`;
-    await putGitHubFile({ content: localContent, message, sha: existingSha });
-    console.log('✅ Successfully uploaded leads data to GitHub via API');
+    await putGitHubFile({ content: updatedContent, message, sha: existingSha });
+    console.log('✅ Successfully uploaded leads data to GitHub via API (remote append)');
   } catch (error: any) {
     console.error('❌ Error uploading to GitHub via API:', error);
     console.log('⚠️ Analysis will continue despite GitHub upload failure');
