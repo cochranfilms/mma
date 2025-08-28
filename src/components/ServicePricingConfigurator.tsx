@@ -96,7 +96,7 @@ export default function ServicePricingConfigurator({
         }
       }
 
-      const res = await fetch('/api/wave/create-invoice', {
+      const res = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -109,7 +109,7 @@ export default function ServicePricingConfigurator({
       });
       const json = await res.json();
       if (!json.success) {
-        throw new Error(json.error || 'Failed to create invoice');
+        throw new Error(json.error || 'Failed to create checkout session');
       }
       if (json.checkoutUrl) {
         window.location.href = json.checkoutUrl;
@@ -222,7 +222,7 @@ export default function ServicePricingConfigurator({
             >
               {isSubmitting ? 'Creating Invoice…' : 'Buy Now'}
             </button>
-            <div className="text-xs text-gray-500 mt-2">You will be redirected to a secure Wave invoice to complete payment.</div>
+            <div className="text-xs text-gray-500 mt-2">You will be redirected to Stripe Checkout to complete payment.</div>
           </aside>
         </div>
       </div>
