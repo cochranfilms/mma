@@ -365,23 +365,42 @@ async function storeLeadLocally(email: string, url: string, analysis: any) {
 
 async function uploadToGitHub() {
   try {
+    console.log('🔍 Checking Git status for leads.json...');
+    
     // Check if there are any changes to commit
     const { stdout: statusOutput } = await execAsync('git status --porcelain src/data/leads.json');
+    console.log('📋 Git status output:', statusOutput);
     
     if (!statusOutput.trim()) {
-      console.log('No changes to leads.json - skipping GitHub upload');
+      console.log('⚠️ No changes to leads.json - skipping GitHub upload');
       return;
     }
     
+    console.log('📤 Starting GitHub upload process...');
+    
     // Auto-commit and push the updated leads.json file
+    console.log('➕ Adding leads.json to Git...');
     await execAsync('git add src/data/leads.json');
-    await execAsync(`git commit -m "Auto-update: New website analysis lead - ${new Date().toISOString()}"`);
+    
+    console.log('💾 Committing changes...');
+    const commitMessage = `Auto-update: New website analysis lead - ${new Date().toISOString()}`;
+    await execAsync(`git commit -m "${commitMessage}"`);
+    
+    console.log('🚀 Pushing to GitHub...');
     await execAsync('git push origin main');
     
-    console.log('Successfully uploaded leads data to GitHub');
-  } catch (error) {
-    console.error('Error uploading to GitHub:', error);
+    console.log('✅ Successfully uploaded leads data to GitHub');
+  } catch (error: any) {
+    console.error('❌ Error uploading to GitHub:', error);
+    console.error('Git error details:', {
+      message: error?.message,
+      code: error?.code,
+      stderr: error?.stderr,
+      stdout: error?.stdout
+    });
+    
     // Don't throw error - this is optional functionality
     // The analysis will still work even if GitHub upload fails
+    console.log('⚠️ Analysis will continue despite GitHub upload failure');
   }
 }

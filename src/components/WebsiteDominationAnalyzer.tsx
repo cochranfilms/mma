@@ -204,6 +204,12 @@ export default function WebsiteDominationAnalyzer() {
 
       // Prepare template parameters
       const templateParams = {
+        // EmailJS Recipients (CRITICAL for delivery)
+        to_email: userEmail, // Primary recipient
+        to_name: userEmail.split('@')[0], // Name from email
+        from_name: 'Marketing Mousetrap Agency',
+        reply_to: 'admin@marketingmousetrap.com',
+        
         // User Info
         USER_EMAIL: userEmail,
         WEBSITE_URL: websiteUrl,
@@ -288,7 +294,10 @@ export default function WebsiteDominationAnalyzer() {
         'template_rlhix8p', // Admin template ID
         {
           ...templateParams,
-          ADMIN_EMAIL: 'admin@marketingmousetrap.com', // Your admin email
+          // Override recipient for admin email
+          to_email: 'admin@marketingmousetrap.com', // Admin receives this
+          to_name: 'Admin',
+          ADMIN_EMAIL: 'admin@marketingmousetrap.com',
         }
       );
       console.log('Admin email sent successfully:', adminResponse);
