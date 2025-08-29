@@ -96,15 +96,20 @@ export default function ServicePricingConfigurator({
         }
       }
 
-      const res = await fetch('/api/wave/create-invoice', {
+      const res = await fetch('/api/create-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          customerName,
-          customerEmail,
-          customerCompany,
-          serviceId,
-          items,
+          contractData: {
+            clientName: customerName,
+            clientEmail: customerEmail,
+            selectedPackage: 'custom',
+            contractId: 'SVC-' + Date.now()
+          },
+          invoice: {
+            items,
+            totalAmount: total / 100 // convert cents to dollars
+          }
         }),
       });
       const contentType = res.headers.get('content-type') || '';
@@ -119,11 +124,11 @@ export default function ServicePricingConfigurator({
         const text = await res.text();
         throw new Error(text || `HTTP ${res.status}`);
       }
-      if (!json?.success || !json?.checkoutUrl) {
-        const hint = json?.details?.hint ? ` — ${json.details.hint}` : '';
+      if (!json?.success || !json?.paymentUrl) {
+        const hint = json?.errorDetails?.hint ? ` — ${json.errorDetails.hint}` : '';
         throw new Error(json?.error ? `${json.error}${hint}` : 'Failed to create invoice');
       }
-      window.location.href = json.checkoutUrl;
+      window.location.href = json.paymentUrl;
       return;
     } catch (e: any) {
       setError(e?.message || 'Something went wrong');
