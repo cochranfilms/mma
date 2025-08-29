@@ -31,20 +31,20 @@ export async function GET(_req: NextRequest) {
 
     // Try different approaches to get businesses
     const queries = [
-      // Approach 1: Businesses with Connection pattern
+      // Approach 1: Simple businesses query (no pagination)
       { 
-        name: 'Businesses Connection',
+        name: 'Simple businesses',
         query: `query { businesses { edges { node { id name isActive } } } }`
       },
-      // Approach 2: Businesses with pagination and Connection
+      // Approach 2: Businesses with first parameter
       { 
-        name: 'Businesses with pagination Connection',
-        query: `query { businesses(page: 1) { edges { node { id name isActive } } } }`
+        name: 'Businesses with first',
+        query: `query { businesses(first: 10) { edges { node { id name isActive } } } }`
       },
-      // Approach 3: Just try to get any business info
+      // Approach 3: Just get pageInfo to test connection
       { 
-        name: 'Simple business query',
-        query: `query { businesses { pageInfo { hasNextPage } } }`
+        name: 'Businesses pageInfo only',
+        query: `query { businesses { pageInfo { hasNextPage hasPreviousPage } } }`
       }
     ];
 
