@@ -29,8 +29,13 @@ export async function GET(_req: NextRequest) {
       return NextResponse.json({ success: false, error: 'WAVE_API_KEY is not set' }, { status: 400 });
     }
 
-    const q = `query ListBusinesses { businesses(page: { page: 1 }) { edges { node { id name isActive } } } }`;
-    const data = await fetchWave(apiBase, apiKey, q);
+    // Wave uses PaginationInput with page and pageSize as scalars
+    const q = `query ListBusinesses($page: Int!, $pageSize: Int!) {
+      businesses(page: { page: $page, pageSize: $pageSize }) {
+        edges { node { id name isActive } }
+      }
+    }`;
+    const data = await fetchWave(apiBase, apiKey, q, { page: 1, pageSize: 25 });
     const list = (data?.businesses?.edges || []).map((e: any) => ({ id: e?.node?.id, name: e?.node?.name, isActive: e?.node?.isActive }));
     return NextResponse.json({ success: true, apiBase, businesses: list });
   } catch (err: any) {
