@@ -65,6 +65,9 @@ export default function CalendarBooking() {
   const [step, setStep] = useState<'service' | 'date' | 'time' | 'confirmation'>('service');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null);
+  const [invoiceId, setInvoiceId] = useState<string | null>(null);
+  const [invoiceError, setInvoiceError] = useState<string | null>(null);
 
   // Generate sample available slots for the next 7 days
   useEffect(() => {
@@ -115,12 +118,26 @@ export default function CalendarBooking() {
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time);
     setStep('confirmation');
+    // Auto-generate invoice for paid services at time selection step
+    if (selectedService === 'strategy' || selectedService === 'consultation' || selectedService === 'follow-up') {
+      if (!invoiceUrl) {
+        createWaveInvoiceForSelection();
+      }
+    }
   };
 
   const handleBooking = async () => {
     setIsLoading(true);
 
     try {
+      // Require payment for non-free services before scheduling
+      const needsPayment = selectedService === 'strategy' || selectedService === 'consultation' || selectedService === 'follow-up';
+      if (needsPayment && (!invoiceId || !invoiceUrl)) {
+        setInvoiceError('Please complete payment before booking.');
+        setIsLoading(false);
+        return;
+      }
+
       // 1) Create Calendly single-use link
       const cal = await fetch('/api/calendly/schedule', {
         method: 'POST',
@@ -159,6 +176,40 @@ export default function CalendarBooking() {
     }
     setIsLoading(false);
   };
+
+  async function createWaveInvoiceForSelection() {
+    try {
+      setInvoiceError(null);
+      setIsLoading(true);
+      const priceMap: Record<string, number> = { strategy: 15000, consultation: 25000, 'follow-up': 10000 };
+      const unitPriceCents = priceMap[selectedService] || 0;
+      if (unitPriceCents <= 0) {
+        setIsLoading(false);
+        return;
+      }
+      const res = await fetch('/api/wave/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: name || 'Guest',
+          customerEmail: email,
+          items: [{ name: getSelectedService()?.name || 'Consultation', quantity: 1, unitPriceCents }],
+          serviceId: selectedService,
+          memo: `Calendar booking for ${selectedDate} ${selectedTime}`,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.success || !data?.checkoutUrl) {
+        throw new Error(data?.error || 'Failed to create invoice');
+      }
+      setInvoiceId(data.invoiceId || null);
+      setInvoiceUrl(data.checkoutUrl);
+    } catch (err: any) {
+      setInvoiceError(err?.message || 'Failed to create invoice');
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const getSelectedService = () => serviceTypes.find(s => s.id === selectedService);
 
@@ -325,27 +376,59 @@ export default function CalendarBooking() {
           </div>
         </div>
         
-        <div className="flex gap-4">
-          <button
-            onClick={() => setStep('time')}
-            className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleBooking}
-            disabled={isLoading}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center"
-          >
-            {isLoading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              <>
-                Book Appointment
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </>
-            )}
-          </button>
+        {invoiceError && (
+          <div className="text-red-600 text-sm">{invoiceError}</div>
+        )}
+
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-4">
+            <button
+              onClick={() => setStep('time')}
+              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleBooking}
+              disabled={isLoading || ((service.id === 'strategy' || service.id === 'consultation' || service.id === 'follow-up') && !invoiceUrl)}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center"
+            >
+              {isLoading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  Book Appointment
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </>
+              )}
+            </button>
+          </div>
+
+          {(service.id === 'strategy' || service.id === 'consultation' || service.id === 'follow-up') && (
+            <div className="p-4 rounded-lg border bg-white">
+              {!invoiceUrl ? (
+                <button
+                  onClick={createWaveInvoiceForSelection}
+                  disabled={isLoading || !email}
+                  className="w-full px-6 py-3 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50 disabled:opacity-50"
+                >
+                  Click here to pay invoice
+                </button>
+              ) : (
+                <a
+                  href={invoiceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block w-full text-center px-6 py-3 border-2 border-emerald-600 text-emerald-700 rounded-lg hover:bg-emerald-50"
+                >
+                  Open your Wave invoice to complete payment
+                </a>
+              )}
+              <p className="text-xs text-gray-500 mt-2">
+                After payment, return here to finalize your booking.
+              </p>
+            </div>
+          )}
         </div>
         
         <div className="text-center text-sm text-gray-500">

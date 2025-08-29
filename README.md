@@ -91,36 +91,31 @@ If you see `NOT_FOUND` with a message like `Node '...' could not be found` from 
   - Using a payment processor that supports split payouts at transaction time.
 - Wave alone does not split payouts natively. The above approach mirrors accounting via invoices; funds still settle to the original processor. Consult finance for compliance.
 
-## Stripe Connect Split Payouts
+## Payments — WaveApps (One Business, One Invoice)
 
-This site supports true split payouts via Stripe Connect. Customers pay through Stripe Checkout; funds are split 60%/40% to two connected accounts. After payment, we sync a Wave invoice for bookkeeping and customer records.
+All payments now use Wave invoices from a single business account.
 
 ### Environment variables
-Add to `.env.local`:
+Add to `.env.local` (or Vercel project env):
 
 ```
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-STRIPE_CONNECT_ACCOUNT_PRIMARY=
-STRIPE_CONNECT_ACCOUNT_SECONDARY=
-NEXT_PUBLIC_SITE_URL=
+WAVE_API_KEY=            # Wave Personal Access Token for the business owner account
+WAVE_BUSINESS_ID=        # Wave Business ID to issue invoices from
+WAVE_API_BASE=https://gql.waveapps.com/graphql/public  # optional override
+NEXT_PUBLIC_SITE_URL=    # optional, used by some redirects
 ```
-
-- `STRIPE_CONNECT_ACCOUNT_PRIMARY` and `STRIPE_CONNECT_ACCOUNT_SECONDARY` are connected account IDs (e.g., `acct_...`).
-- `NEXT_PUBLIC_SITE_URL` is used to build success/cancel URLs in serverless environments.
 
 ### Flow
-1. Services page → Buy Now → `/services/checkout?serviceId=...`.
-2. Checkout page calls `POST /api/stripe/create-checkout-session` to get a Stripe Checkout URL and redirects.
-3. Stripe Checkout completes → `POST /api/stripe/webhook` receives `checkout.session.completed`.
-4. Webhook creates two transfers: 60% → primary, 40% → secondary.
-5. We auto-sync a Wave invoice (stub for now) for the payment.
+1. Services checkout (`/services/checkout`) calls `POST /api/wave/create-invoice`.
+2. API creates a Wave customer/products (if needed) and an invoice, returns `checkoutUrl` (Wave `viewUrl`).
+3. Client redirects to the Wave invoice to complete payment.
+4. For calendar bookings, paid sessions generate an invoice on time selection; booking button stays disabled until payment is completed.
 
 ### Files
-- `src/lib/stripe-connect.ts` – helpers for Checkout Session, webhook handling, and transfers.
-- `src/app/api/stripe/create-checkout-session/route.ts` – creates Checkout Session.
-- `src/app/api/stripe/webhook/route.ts` – handles Stripe webhooks and initiates Wave sync.
+- `src/lib/wave.ts` – Wave GraphQL client, create invoice, get status.
+- `src/app/api/wave/create-invoice/route.ts` – creates invoices server-side.
+- `src/components/CalendarBooking.tsx` – gates booking for paid sessions, exposes “Pay invoice” button.
+- `Reference/contract-nikki.html` – reference implementation for one-invoice flow.
 
 ### Notes
-- When Wave API keys are added, replace stubs in `src/lib/wave.ts`, and update webhook to create real Wave invoices against the correct business.
-- Copy on the checkout page clarifies clients can still pay directly from Wave invoices. Avoids confusion by always sending the Wave invoice receipt post-payment.
+- Stripe integration removed. No more 60/40 split.

@@ -23,7 +23,7 @@ function CheckoutContent() {
     setIsSubmitting(true);
     setError(null);
     try {
-      const res = await fetch('/api/stripe/create-checkout-session', {
+      const res = await fetch('/api/wave/create-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -31,15 +31,14 @@ function CheckoutContent() {
           quantity,
           customerEmail,
           customerName,
+          customerCompany,
         }),
       });
       const json = await res.json();
-      if (!json.success) {
-        throw new Error(json.error || 'Failed to create checkout session');
+      if (!json.success || !json.checkoutUrl) {
+        throw new Error(json.error || 'Failed to create invoice');
       }
-      if (json.checkoutUrl) {
-        window.location.href = json.checkoutUrl;
-      }
+      window.location.href = json.checkoutUrl;
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
       setIsSubmitting(false);
@@ -109,7 +108,7 @@ function CheckoutContent() {
             <span>Total</span>
             <span className="text-[#e0ab10]">{formatMoneyFromCents(total)}</span>
           </div>
-          <p className="text-xs text-gray-500 mt-3">Payouts split 60%/40% automatically via Stripe Connect.</p>
+          <p className="text-xs text-gray-500 mt-3">Payment is processed securely via Wave invoice.</p>
         </aside>
       </div>
     </div>

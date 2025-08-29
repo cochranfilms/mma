@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { upsertContact, createDeal } from '@/lib/hubspot';
-import { createWaveInvoice } from '@/lib/wave';
+import { NextResponse as _ } from 'next/server';
 
 // Zapier-compatible endpoint for Wave invoice events
-// Supports simple PAID payloads and optional split mirror invoicing
+// Supports simple PAID payloads; split mirroring removed for one-invoice flow
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
@@ -16,14 +16,16 @@ export async function POST(req: NextRequest) {
     const customerEmail = body.customerEmail || body.data?.customer?.email;
     const customerName = body.customerName || body.data?.customer?.name;
     const memo = body.memo;
-    const split = body.split || body.data?.metadata?.split;
+    // split removed
 
     if (!invoiceId || !status) {
       return NextResponse.json({ ok: false, error: 'invoiceId and status are required' }, { status: 400 });
     }
 
+    const isPaid = String(status).toUpperCase() === 'PAID';
+
     // 1) CRM capture when invoice is paid
-    if (String(status).toUpperCase() === 'PAID' && customerEmail) {
+    if (isPaid && customerEmail) {
       try {
         const contactId = await upsertContact({
           email: String(customerEmail),
@@ -44,34 +46,35 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2) Optional: mirror 60/40 split with a secondary invoice (bookkeeping only)
-    if (split && split?.ratio?.secondary) {
-      const total = Number(amount) || 0;
-      const secondaryRatio = Number(split.ratio.secondary) || 0.4;
-      const secondaryAmount = total * secondaryRatio;
+    // 2) Auto-book paid calendar events when memo includes booking context
+    if (isPaid) {
       try {
-        await createWaveInvoice({
-          account: 'secondary',
-          payload: {
-            customer: { email: customerEmail, name: customerName },
-            currency: currency || 'USD',
-            items: [
-              {
-                description: `Secondary split payment (${Math.round(secondaryRatio * 100)}%) for ${invoiceId}`,
-                quantity: 1,
-                unitPrice: secondaryAmount,
-              },
-            ],
-            memo: 'Auto-generated split invoice',
-            metadata: { source: 'mma-website', originInvoiceId: invoiceId, split },
-          },
-        });
+        const memoText: string = String(memo || '');
+        // Expect memo like: "Calendar booking for YYYY-MM-DD HH:MM"
+        const match = memoText.match(/Calendar booking for (\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})/);
+        const serviceMatch = memoText.match(/\[(discovery|strategy|consultation|follow-up)\]/i);
+        const svc = (serviceMatch?.[1] || '').toLowerCase();
+        const serviceId = svc || 'strategy';
+        if (match && customerEmail) {
+          const date = match[1];
+          const time = match[2];
+          // Create Calendly single-use link for the service
+          const calRes = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/calendly/schedule`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ serviceId, name: customerName, email: customerEmail }),
+          });
+          const calData = await calRes.json().catch(() => ({}));
+          const schedulingUrl: string | undefined = calData?.schedulingUrl;
+          console.log('Auto-book scheduling link:', schedulingUrl);
+          // If needed, send an email with the scheduling link here via Postmark/EmailJS.
+        }
       } catch (err) {
-        console.error('Wave split mirror invoice failed:', err);
+        console.error('Auto-booking flow failed:', err);
       }
     }
 
-    console.log('Wave webhook received:', { invoiceId, status, amount, currency, customerEmail, memo, hasSplit: Boolean(split) });
+    console.log('Wave webhook received:', { invoiceId, status, amount, currency, customerEmail, memo });
     return NextResponse.json({ ok: true });
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: err?.message || 'unknown' }, { status: 500 });

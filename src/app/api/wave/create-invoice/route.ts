@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildInvoiceDraft, toWavePayload } from '@/lib/invoice';
-import { createWaveInvoice, getWaveConfig } from '@/lib/wave';
+import { createWaveInvoice } from '@/lib/wave';
 
 export const runtime = 'nodejs';
 
@@ -20,10 +20,9 @@ export async function POST(req: NextRequest) {
       items,
     } = body || {};
 
-    const envPrimary = process.env.WAVE_INVOICE_PRIMARY_EMAIL || '';
-    const envSecondary = process.env.WAVE_INVOICE_SECONDARY_EMAIL || '';
-    const primaryEmail = primaryWaveEmail || envPrimary;
-    const secondaryEmail = secondaryWaveEmail || envSecondary;
+    // Deprecated split emails; keep for backward compatibility but unused in one-invoice flow
+    const primaryEmail = primaryWaveEmail || '';
+    const secondaryEmail = secondaryWaveEmail || '';
 
     if (!customerName || !customerEmail) {
       return NextResponse.json({ success: false, error: 'customerName and customerEmail are required' }, { status: 400 });
@@ -50,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     const payload = toWavePayload(draft);
 
-    // Attempt live Wave creation; payload already contains items/amounts
+    // One-business, one-invoice
     const created = await createWaveInvoice({ account: 'primary', payload: {
       customer: payload.customer,
       currency: payload.currency || 'USD',

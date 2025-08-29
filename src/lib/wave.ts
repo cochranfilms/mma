@@ -14,10 +14,9 @@ export type WaveAccount = 'primary' | 'secondary';
 export function getWaveConfig() {
   return {
     apiBase: process.env.WAVE_API_BASE || 'https://gql.waveapps.com/graphql/public',
-    primaryApiKey: process.env.WAVE_API_KEY_PRIMARY || '',
-    secondaryApiKey: process.env.WAVE_API_KEY_SECONDARY || '',
-    businessIdPrimary: process.env.WAVE_BUSINESS_ID_PRIMARY || '',
-    businessIdSecondary: process.env.WAVE_BUSINESS_ID_SECONDARY || '',
+    // One-business, one-account configuration
+    apiKey: process.env.WAVE_API_KEY || process.env.WAVE_API_KEY_PRIMARY || '',
+    businessId: process.env.WAVE_BUSINESS_ID || process.env.WAVE_BUSINESS_ID_PRIMARY || '',
   };
 }
 
@@ -103,7 +102,7 @@ async function createProduct(apiKey: string, businessId: string, name: string, u
   return data.productCreate.product.id as string;
 }
 
-async function createInvoice(apiKey: string, businessId: string, customerId: string, items: Array<{ name: string; quantity: number; unitPrice: number }>): Promise<{ id: string; viewUrl?: string }> {
+async function createInvoice(apiKey: string, businessId: string, customerId: string, items: Array<{ name: string; quantity: number; unitPrice: number }>, memo?: string): Promise<{ id: string; viewUrl?: string }> {
   const m = `mutation CreateInvoice($input: InvoiceCreateInput!) {
     invoiceCreate(input: $input) {
       didSucceed
@@ -128,6 +127,7 @@ async function createInvoice(apiKey: string, businessId: string, customerId: str
       invoice: {
         customerId,
         items: invoiceItems,
+        memo,
       },
     },
   });
@@ -152,13 +152,12 @@ export async function createWaveInvoice(params: {
   overrideBusinessId?: string;
 }): Promise<CreateInvoiceResult> {
   const cfg = getWaveConfig();
-  const isPrimary = params.account === 'primary';
-  const apiKey = (isPrimary ? cfg.primaryApiKey : cfg.secondaryApiKey) || cfg.primaryApiKey;
-  const businessId = params.overrideBusinessId || (isPrimary ? cfg.businessIdPrimary : cfg.businessIdSecondary);
+  const apiKey = cfg.apiKey;
+  const businessId = params.overrideBusinessId || cfg.businessId;
 
   // If no API key or business ID, fall back to stub
   if (!apiKey || !businessId) {
-    const fakeId = `${params.account}-inv-${Math.random().toString(36).slice(2, 10)}`;
+    const fakeId = `inv-${Math.random().toString(36).slice(2, 10)}`;
     return { success: true, invoiceId: fakeId, checkoutUrl: `https://example.com/pay/${fakeId}`, mode: 'stub' };
   }
 
@@ -168,12 +167,37 @@ export async function createWaveInvoice(params: {
     if (items.length === 0) {
       throw new Error('No invoice items provided');
     }
-    const inv = await createInvoice(apiKey, businessId, customerId, items);
+    const inv = await createInvoice(apiKey, businessId, customerId, items, params.payload.memo);
     return { success: true, invoiceId: inv.id, checkoutUrl: inv.viewUrl, mode: 'live' };
   } catch (error: any) {
     const hint = error?.details?.errors?.[0]?.extensions?.code === 'NOT_FOUND'
       ? `Invalid or unauthorized businessId (${(businessId || '').slice(0, 6)}…); verify Wave business ID matches the API key.`
       : undefined;
     return { success: false, error: error?.message || 'Wave API error', errorDetails: { ...error?.details, hint }, mode: 'live' };
+  }
+}
+
+export async function getInvoiceStatus(invoiceId: string): Promise<{ success: boolean; status?: string; viewUrl?: string; error?: string; mode?: 'live' | 'stub' }> {
+  const cfg = getWaveConfig();
+  const apiKey = cfg.apiKey;
+  const businessId = cfg.businessId;
+  if (!apiKey || !businessId) {
+    return { success: true, status: 'STUB_UNPAID', viewUrl: `https://example.com/pay/${invoiceId}`, mode: 'stub' };
+  }
+  try {
+    const q = `query InvoiceStatus($businessId: ID!, $invoiceId: ID!) {
+      business(id: $businessId) {
+        id
+        invoice(id: $invoiceId) { id status viewUrl }
+      }
+    }`;
+    const data = await waveFetch(apiKey, q, { businessId, invoiceId });
+    const inv = data?.business?.invoice;
+    if (!inv?.id) {
+      throw new Error('Invoice not found');
+    }
+    return { success: true, status: inv.status, viewUrl: inv.viewUrl, mode: 'live' };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Wave API error', mode: 'live' };
   }
 }
