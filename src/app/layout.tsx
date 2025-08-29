@@ -51,6 +51,25 @@ export default function RootLayout({
             />
           </>
         )}
+        {/* Suppress Chrome extension errors */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('error', function(e) {
+                if (e.message && e.message.includes('message channel closed')) {
+                  e.preventDefault();
+                  return false;
+                }
+              });
+              window.addEventListener('unhandledrejection', function(e) {
+                if (e.reason && e.reason.message && e.reason.message.includes('message channel closed')) {
+                  e.preventDefault();
+                  return false;
+                }
+              });
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} antialiased`}>
         <SiteHeader />
