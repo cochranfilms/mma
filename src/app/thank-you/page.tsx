@@ -151,17 +151,17 @@ export default function ThankYouPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
-                href="tel:+1-555-123-4567"
+                href="tel:+14047077298"
                 className="text-accent-600 hover:text-accent-700 font-medium"
               >
-                +1 (555) 123-4567
+                (404) 707 - 7298
               </a>
               <span className="text-muted-foreground">•</span>
               <a
-                href="mailto:hello@marketingmousetrap.com"
+                href="mailto:sales@marketingmousetrapagency.com"
                 className="text-accent-600 hover:text-accent-700 font-medium"
               >
-                hello@marketingmousetrap.com
+                sales@marketingmousetrapagency.com
               </a>
             </div>
           </div>

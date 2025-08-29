@@ -141,9 +141,9 @@ export const organizationSchema = {
   },
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+1-555-123-4567',
+    telephone: '+1-404-707-7298',
     contactType: 'customer service',
-    email: 'hello@marketingmousetrap.com',
+    email: 'sales@marketingmousetrapagency.com',
   },
   sameAs: [
     'https://linkedin.com/company/marketingmousetrap',

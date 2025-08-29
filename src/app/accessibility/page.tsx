@@ -16,7 +16,7 @@ export default function AccessibilityPage() {
           <p className="text-accent-700">
             We want everyone to be able to use our website. We design and build with
             accessibility in mind and are continually improving. If you have trouble using
-            the site, email us at hello@marketingmousetrap.com and we will help.
+            the site, email us at sales@marketingmousetrapagency.com and we will help.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function AccessibilityPage() {
           <h2>Feedback</h2>
           <p>
             Your feedback helps us get better. Contact us at
-            {' '}<a className="underline" href="mailto:hello@marketingmousetrap.com">hello@marketingmousetrap.com</a>
+            {' '}<a className="underline" href="mailto:sales@marketingmousetrapagency.com">sales@marketingmousetrapagency.com</a>
             {' '}with a description of the issue and the page URL.
           </p>
 

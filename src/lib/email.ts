@@ -39,7 +39,7 @@ class PostmarkService implements EmailService {
 
   constructor() {
     this.apiKey = process.env.POSTMARK_API_KEY || '';
-    this.fromEmail = process.env.POSTMARK_FROM_EMAIL || 'noreply@marketingmousetrap.com';
+    this.fromEmail = process.env.POSTMARK_FROM_EMAIL || 'sales@marketingmousetrapagency.com';
   }
 
   async sendEmail(data: EmailData): Promise<boolean> {
@@ -130,7 +130,7 @@ export async function sendLeadNotification(leadData: LeadData): Promise<boolean>
   `;
 
   const emailData: EmailData = {
-    to: process.env.SALES_EMAIL || 'sales@marketingmousetrap.com',
+    to: process.env.SALES_EMAIL || 'sales@marketingmousetrapagency.com',
     subject: `New Lead: ${leadData.company} - ${leadData.name}`,
     html,
   };

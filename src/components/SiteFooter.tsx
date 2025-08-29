@@ -41,10 +41,10 @@ export default function SiteFooter() {
             </p>
             <div className="space-y-2 text-sm">
               <p className="text-accent-300">
-                <span className="font-medium text-white">Email:</span> hello@marketingmousetrap.com
+                <span className="font-medium text-white">Email:</span> sales@marketingmousetrapagency.com
               </p>
               <p className="text-accent-300">
-                <span className="font-medium text-white">Phone:</span> +1-555-123-4567
+                <span className="font-medium text-white">Phone:</span> (404) 707 - 7298
               </p>
             </div>
           </div>

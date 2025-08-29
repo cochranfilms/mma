@@ -54,7 +54,7 @@ export default function PrivacyPage() {
           <ul>
             <li>Access, correct, or delete your personal information</li>
             <li>Opt out of marketing communications</li>
-            <li>Ask questions about this policy: hello@marketingmousetrap.com</li>
+            <li>Ask questions about this policy: sales@marketingmousetrapagency.com</li>
           </ul>
 
           <h2>6. Security</h2>

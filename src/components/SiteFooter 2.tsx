@@ -60,8 +60,8 @@ export default function SiteFooter() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-[#e0ab10]">Contact</h3>
             <div className="space-y-2 text-gray-300">
-              <p>info@mma.com</p>
-              <p>+1 (555) 123-4567</p>
+              <p>sales@marketingmousetrapagency.com</p>
+              <p>(404) 707 - 7298</p>
               <p>123 Media Street<br />Creative City, CC 12345</p>
             </div>
           </div>
