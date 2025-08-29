@@ -31,20 +31,20 @@ export async function GET(_req: NextRequest) {
 
     // Try different approaches to get businesses
     const queries = [
-      // Approach 1: Direct businesses query
+      // Approach 1: Businesses with Connection pattern
       { 
-        name: 'Direct businesses query',
-        query: `query { businesses { id name isActive } }`
+        name: 'Businesses Connection',
+        query: `query { businesses { edges { node { id name isActive } } } }`
       },
-      // Approach 2: Businesses with pagination
+      // Approach 2: Businesses with pagination and Connection
       { 
-        name: 'Businesses with pagination',
-        query: `query { businesses(page: 1) { id name isActive } }`
+        name: 'Businesses with pagination Connection',
+        query: `query { businesses(page: 1) { edges { node { id name isActive } } } }`
       },
-      // Approach 3: User's businesses
+      // Approach 3: Just try to get any business info
       { 
-        name: 'User businesses',
-        query: `query { user { id businesses { id name isActive } } }`
+        name: 'Simple business query',
+        query: `query { businesses { pageInfo { hasNextPage } } }`
       }
     ];
 
@@ -57,7 +57,7 @@ export async function GET(_req: NextRequest) {
           approach: name, 
           success: true, 
           data,
-          businesses: data?.businesses || data?.user?.businesses || []
+          businesses: data?.businesses?.edges?.map((e: any) => e?.node) || data?.businesses || []
         });
       } catch (err: any) {
         results.push({ 
