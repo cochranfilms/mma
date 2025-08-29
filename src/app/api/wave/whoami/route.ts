@@ -31,7 +31,7 @@ export async function GET(_req: NextRequest) {
 
     // Wave uses PaginationInput with page and pageSize as scalars
     const q = `query ListBusinesses($page: Int!, $pageSize: Int!) {
-      businesses(page: { page: $page, pageSize: $pageSize }) {
+      businesses(page: $page, pageSize: $pageSize) {
         edges { node { id name isActive } }
       }
     }`;

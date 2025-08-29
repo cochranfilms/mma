@@ -45,7 +45,7 @@ async function ensureIncomeAccountId(apiKey: string, businessId: string): Promis
   const q = `query Accounts($businessId: ID!, $page: Int!, $pageSize: Int!) {
     business(id: $businessId) {
       id
-      accounts(types: [INCOME], page: { page: $page, pageSize: $pageSize }) {
+      accounts(types: [INCOME], page: $page, pageSize: $pageSize) {
         edges { node { id name type } }
       }
     }
