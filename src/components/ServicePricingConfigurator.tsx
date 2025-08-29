@@ -96,7 +96,7 @@ export default function ServicePricingConfigurator({
         }
       }
 
-      const res = await fetch('/api/stripe/create-checkout-session', {
+      const res = await fetch('/api/wave/create-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -107,14 +107,19 @@ export default function ServicePricingConfigurator({
           items,
         }),
       });
-      const json = await res.json();
-      if (!json.success) {
-        throw new Error(json.error || 'Failed to create checkout session');
+      const contentType = res.headers.get('content-type') || '';
+      let json: any = null;
+      if (contentType.includes('application/json')) {
+        json = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `HTTP ${res.status}`);
       }
-      if (json.checkoutUrl) {
-        window.location.href = json.checkoutUrl;
-        return;
+      if (!json?.success || !json?.checkoutUrl) {
+        throw new Error(json?.error || 'Failed to create invoice');
       }
+      window.location.href = json.checkoutUrl;
+      return;
     } catch (e: any) {
       setError(e?.message || 'Something went wrong');
       setIsSubmitting(false);
@@ -222,7 +227,7 @@ export default function ServicePricingConfigurator({
             >
               {isSubmitting ? 'Creating Invoice…' : 'Buy Now'}
             </button>
-            <div className="text-xs text-gray-500 mt-2">You will be redirected to Stripe Checkout to complete payment.</div>
+            <div className="text-xs text-gray-500 mt-2">You will be redirected to a secure Wave invoice to complete payment.</div>
           </aside>
         </div>
       </div>
