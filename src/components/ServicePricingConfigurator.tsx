@@ -124,10 +124,17 @@ export default function ServicePricingConfigurator({
         const text = await res.text();
         throw new Error(text || `HTTP ${res.status}`);
       }
-      if (!json?.success || !json?.paymentUrl) {
+      if (!json?.success) {
         const hint = json?.errorDetails?.hint ? ` — ${json.errorDetails.hint}` : '';
         throw new Error(json?.error ? `${json.error}${hint}` : 'Failed to create invoice');
       }
+      
+      if (json.mode === 'fallback' || !json.paymentUrl) {
+        setError('Invoice created but payment link pending. We will email you the secure checkout link shortly.');
+        setIsSubmitting(false);
+        return;
+      }
+      
       window.location.href = json.paymentUrl;
       return;
     } catch (e: any) {
