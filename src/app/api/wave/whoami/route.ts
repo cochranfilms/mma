@@ -30,17 +30,19 @@ export async function GET(_req: NextRequest) {
     }
 
     // Wave uses PaginationInput with page and pageSize as scalars
-    const q = `query ListBusinesses($page: Int!) {
+    const q = `query WhoAmI {
       user {
         id
-        businesses(page: $page) {
-          edges { node { id name isActive } }
-        }
+        defaultEmail
       }
     }`;
-    const data = await fetchWave(apiBase, apiKey, q, { page: 1 });
-    const list = (data?.user?.businesses?.edges || []).map((e: any) => ({ id: e?.node?.id, name: e?.node?.name, isActive: e?.node?.isActive }));
-    return NextResponse.json({ success: true, apiBase, businesses: list });
+    const data = await fetchWave(apiBase, apiKey, q);
+    return NextResponse.json({ 
+      success: true, 
+      apiBase, 
+      user: { id: data?.user?.id, email: data?.user?.defaultEmail },
+      note: "Wave API connected successfully. Set WAVE_BUSINESS_ID to your business ID from Wave dashboard."
+    });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err?.message || 'unknown', details: err?.details }, { status: 500 });
   }
