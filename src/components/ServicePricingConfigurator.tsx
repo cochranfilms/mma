@@ -111,12 +111,17 @@ export default function ServicePricingConfigurator({
       let json: any = null;
       if (contentType.includes('application/json')) {
         json = await res.json();
+        if (!res.ok) {
+          const hint = json?.details?.hint ? ` — ${json.details.hint}` : '';
+          throw new Error(json?.error ? `${json.error}${hint}` : `HTTP ${res.status}`);
+        }
       } else {
         const text = await res.text();
         throw new Error(text || `HTTP ${res.status}`);
       }
       if (!json?.success || !json?.checkoutUrl) {
-        throw new Error(json?.error || 'Failed to create invoice');
+        const hint = json?.details?.hint ? ` — ${json.details.hint}` : '';
+        throw new Error(json?.error ? `${json.error}${hint}` : 'Failed to create invoice');
       }
       window.location.href = json.checkoutUrl;
       return;
@@ -203,16 +208,16 @@ export default function ServicePricingConfigurator({
         <div className="grid md:grid-cols-3 gap-6 items-start">
           <div className="md:col-span-2 grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Full Name</label>
-              <input className="w-full border rounded-lg px-3 py-2" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required />
+              <label htmlFor="customerName" className="block text-sm font-medium mb-2">Full Name</label>
+              <input id="customerName" name="customerName" className="w-full border rounded-lg px-3 py-2" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required autoComplete="name" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
-              <input type="email" className="w-full border rounded-lg px-3 py-2" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} required />
+              <label htmlFor="customerEmail" className="block text-sm font-medium mb-2">Email</label>
+              <input id="customerEmail" name="customerEmail" type="email" className="w-full border rounded-lg px-3 py-2" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} required autoComplete="email" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Company (optional)</label>
-              <input className="w-full border rounded-lg px-3 py-2" value={customerCompany} onChange={(e) => setCustomerCompany(e.target.value)} />
+              <label htmlFor="customerCompany" className="block text-sm font-medium mb-2">Company (optional)</label>
+              <input id="customerCompany" name="customerCompany" className="w-full border rounded-lg px-3 py-2" value={customerCompany} onChange={(e) => setCustomerCompany(e.target.value)} autoComplete="organization" />
             </div>
             {error && <div className="text-sm text-red-600">{error}</div>}
           </div>
