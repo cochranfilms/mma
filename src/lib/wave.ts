@@ -45,12 +45,14 @@ async function ensureIncomeAccountId(apiKey: string, businessId: string): Promis
   const q = `query Accounts($businessId: ID!, $page: Int!) {
     business(id: $businessId) {
       id
-      accounts(types: [INCOME], page: $page) { id name type }
+      accounts(types: [INCOME], page: $page) {
+        edges { node { id name type } }
+      }
     }
   }`;
   const data = await waveFetch(apiKey, q, { businessId, page: 1 });
-  const accounts = data?.business?.accounts || [];
-  const acct = accounts.find((a: any) => a?.name?.toLowerCase().includes('sales')) || accounts[0];
+  const edges = data?.business?.accounts?.edges || [];
+  const acct = edges.find((e: any) => e?.node?.name?.toLowerCase().includes('sales'))?.node || edges[0]?.node;
   if (!acct?.id) {
     throw new Error('No INCOME account found in Wave');
   }
