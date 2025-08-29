@@ -42,15 +42,15 @@ async function waveFetch(apiKey: string, query: string, variables?: Record<strin
 }
 
 async function ensureIncomeAccountId(apiKey: string, businessId: string): Promise<string> {
-  const q = `query Accounts($businessId: ID!, $page: Int!, $pageSize: Int!) {
+  const q = `query Accounts($businessId: ID!, $page: Int!) {
     business(id: $businessId) {
       id
-      accounts(types: [INCOME], page: $page, pageSize: $pageSize) {
+      accounts(types: [INCOME], page: $page) {
         edges { node { id name type } }
       }
     }
   }`;
-  const data = await waveFetch(apiKey, q, { businessId, page: 1, pageSize: 25 });
+  const data = await waveFetch(apiKey, q, { businessId, page: 1 });
   const edges = data?.business?.accounts?.edges || [];
   const acct = edges.find((e: any) => e?.node?.name?.toLowerCase().includes('sales'))?.node || edges[0]?.node;
   if (!acct?.id) {

@@ -30,12 +30,12 @@ export async function GET(_req: NextRequest) {
     }
 
     // Wave uses PaginationInput with page and pageSize as scalars
-    const q = `query ListBusinesses($page: Int!, $pageSize: Int!) {
-      businesses(page: $page, pageSize: $pageSize) {
+    const q = `query ListBusinesses($page: Int!) {
+      businesses(page: $page) {
         edges { node { id name isActive } }
       }
     }`;
-    const data = await fetchWave(apiBase, apiKey, q, { page: 1, pageSize: 25 });
+    const data = await fetchWave(apiBase, apiKey, q, { page: 1 });
     const list = (data?.businesses?.edges || []).map((e: any) => ({ id: e?.node?.id, name: e?.node?.name, isActive: e?.node?.isActive }));
     return NextResponse.json({ success: true, apiBase, businesses: list });
   } catch (err: any) {
