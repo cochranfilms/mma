@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
       // Non-blocking
     }
 
-    // 4) Create Calendly single-use link (optional - for additional scheduling details)
+    // 4) Create Calendly scheduling link (REQUIRED - this is how the actual appointment gets booked)
     let schedulingUrl: string | undefined;
     try {
       const calRes = await fetch('/api/calendly/schedule', {
@@ -114,15 +114,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({ 
           serviceId, 
           name, 
-          email,
-          // Pass additional context
-          prefill: {
-            name,
-            email,
-            phone,
-            company,
-            notes: `Booking for ${selectedDate} at ${selectedTime}. ${notes || ''}`.trim()
-          }
+          email
         }),
       });
       
@@ -130,10 +122,15 @@ export async function POST(req: NextRequest) {
       if (calData?.schedulingUrl) {
         schedulingUrl = calData.schedulingUrl;
         console.log('✅ Calendly link created:', schedulingUrl);
+      } else {
+        throw new Error('Failed to create Calendly scheduling link');
       }
     } catch (err) {
       console.error('❌ Calendly link creation failed:', err);
-      // Non-blocking - booking is still confirmed
+      return NextResponse.json({ 
+        success: false,
+        error: 'Failed to create scheduling link. Please try again or contact support.'
+      }, { status: 500 });
     }
 
     // 5) Send confirmation email (if you have email service set up)
@@ -143,7 +140,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Booking confirmed successfully',
+      message: 'Information saved! Please complete your booking via Calendly.',
+      requiresCalendlyBooking: true,
       contactId,
       schedulingUrl,
       booking: {

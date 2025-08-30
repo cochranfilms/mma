@@ -186,11 +186,18 @@ export default function CalendarBooking() {
         throw new Error(bookingResult.error || 'Booking failed');
       }
 
-      // 3) Show success message and redirect
-      alert(`Booking confirmed! You'll receive a calendar invite shortly. ${bookingResult.schedulingUrl ? 'Opening Calendly to finalize details...' : ''}`);
-      
-      if (bookingResult.schedulingUrl) {
-        window.open(bookingResult.schedulingUrl, '_blank');
+      // 3) Handle the booking result
+      if (bookingResult.requiresCalendlyBooking && bookingResult.schedulingUrl) {
+        // Show clear message about completing booking via Calendly
+        const userConfirmed = confirm(
+          `Your information has been saved! To complete your ${getSelectedService()?.name} booking for ${selectedDate} at ${selectedTime}, you need to confirm your appointment via Calendly.\n\nClick OK to open Calendly and select your preferred time slot.`
+        );
+        
+        if (userConfirmed) {
+          window.open(bookingResult.schedulingUrl, '_blank');
+        }
+      } else {
+        alert('Booking information saved, but there was an issue creating the scheduling link. Please contact support.');
       }
 
     } catch (error: any) {
@@ -511,7 +518,7 @@ export default function CalendarBooking() {
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <>
-                  Book Appointment
+                  Continue to Calendly
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               )}
@@ -572,7 +579,8 @@ export default function CalendarBooking() {
         </div>
         
         <div className="text-center text-sm text-gray-500">
-          <p>You'll be redirected to our secure booking system</p>
+          <p>After clicking "Continue to Calendly", you'll complete your booking on our secure scheduling platform</p>
+          <p className="mt-1">Your information will be pre-filled to save time</p>
           <p className="mt-1">Need help? <button className="text-blue-600 hover:underline">Contact us</button></p>
         </div>
       </div>
