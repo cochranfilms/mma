@@ -44,12 +44,17 @@ export default function ServiceDetailsPage({ params }: Params) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <section className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white py-16">
-        <div className="absolute inset-0 bg-black/20" />
+      <section className="relative text-white py-16 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#010043] via-[#0b0b2a] to-[#010043]" />
+        <div className="absolute -top-32 -left-24 w-[28rem] h-[28rem] rounded-full bg-[#e0ab10]/10 blur-3xl" />
+        <div className="absolute -bottom-32 -right-24 w-[28rem] h-[28rem] rounded-full bg-[#e0ab10]/10 blur-3xl" />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-5xl font-bold mb-3">{service.title}</h1>
-          <p className="text-blue-100 text-lg md:text-xl">{service.subtitle}</p>
-          <div className="mt-4 text-2xl font-semibold">Starting at ${service.startingPrice?.toLocaleString()}</div>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-3">{service.title}</h1>
+          <p className="text-white/85 text-lg md:text-2xl max-w-3xl">{service.subtitle}</p>
+          <div className="mt-6 inline-flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm border border-white/10">
+            <span className="inline-block w-2 h-2 rounded-full bg-[#e0ab10] animate-pulse" />
+            Starting at <span className="font-semibold">${service.startingPrice?.toLocaleString()}</span>
+          </div>
         </div>
       </section>
 
@@ -120,10 +125,10 @@ export default function ServiceDetailsPage({ params }: Params) {
           </div>
 
           <aside className="md:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sticky top-6">
               <div className="text-gray-600 mb-1">Starting at</div>
-              <div className="text-3xl font-bold text-gray-900 mb-4">${service.startingPrice?.toLocaleString()}</div>
-              <a href={`#pricing`} className="w-full block text-center bg-[#010043] text-white py-3 px-6 rounded-lg font-medium hover:opacity-95 transition-colors mb-3">Buy Now</a>
+              <div className="text-3xl font-extrabold text-gray-900 mb-4">${service.startingPrice?.toLocaleString()}</div>
+              <a href={`#pricing`} className="w-full block text-center bg-[#e0ab10] text-[#010043] py-3 px-6 rounded-lg font-bold shadow-[0_10px_24px_rgba(224,171,16,0.35)] hover:shadow-[0_14px_32px_rgba(224,171,16,0.45)] transition-all mb-3">Buy Now</a>
               <a href={`/services`} className="w-full block text-center border border-gray-300 text-gray-800 py-3 px-6 rounded-lg font-medium hover:bg-gray-50 transition-colors">Back to Services</a>
             </div>
           </aside>

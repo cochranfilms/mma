@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
       primaryWaveEmail,
       secondaryWaveEmail,
       items,
+      customerDetails,
     } = body || {};
 
     // Deprecated split emails; keep for backward compatibility but unused in one-invoice flow
@@ -55,7 +56,11 @@ export async function POST(req: NextRequest) {
       customer: payload.customer,
       currency: payload.currency || 'USD',
       items: (payload.items || []).map(i => ({ name: i.description, quantity: i.quantity, unitPrice: i.unitPrice })),
-      memo: payload.memo,
+      memo: [
+        payload.memo,
+        customerDetails?.notes ? `Notes: ${customerDetails.notes}` : '',
+        customerDetails?.startDate ? `Desired start: ${customerDetails.startDate}` : '',
+      ].filter(Boolean).join('\n'),
       metadata: payload.metadata,
     }});
 
@@ -72,6 +77,8 @@ export async function POST(req: NextRequest) {
           lastname: customerName.split(' ').slice(1).join(' ') || undefined,
           company: customerCompany || undefined,
           jobtitle: 'MMA Services Checkout',
+          phone: customerDetails?.phone,
+          website: customerDetails?.website,
         });
         const lineSummary = (payload.items || [])
           .map(i => `• ${i.description} x${i.quantity} @ $${Number(i.unitPrice || 0).toFixed(2)}`)
@@ -81,6 +88,10 @@ export async function POST(req: NextRequest) {
           `Invoice ID: ${created.invoiceId}`,
           `Total: $${Number((draft.totalCents || 0) / 100).toFixed(2)} ${draft.currency}`,
           created.checkoutUrl ? `Pay link: ${created.checkoutUrl}` : '',
+          customerDetails?.industry ? `Industry: ${customerDetails.industry}` : '',
+          customerDetails?.companySize ? `Company size: ${customerDetails.companySize}` : '',
+          customerDetails?.referralSource ? `Referral: ${customerDetails.referralSource}` : '',
+          customerDetails?.startDate ? `Desired start: ${customerDetails.startDate}` : '',
           '',
           'Items:',
           lineSummary,

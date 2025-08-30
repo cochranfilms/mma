@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     console.log('📋 Request body:', JSON.stringify(body, null, 2));
     
-    const { contractData, invoice } = body || {};
+    const { contractData, invoice, customerDetails } = body || {};
     
     if (!contractData) {
       console.error('❌ Missing contractData');
@@ -70,7 +70,9 @@ export async function POST(req: NextRequest) {
         customer: { email: clientEmail, name: clientName },
         currency: 'USD',
         items,
-        memo: `Contract ${contractData.contractId || 'SVC-' + Date.now()}`,
+        memo: `Contract ${contractData.contractId || 'SVC-' + Date.now()}\n` +
+              `${customerDetails?.notes ? `Notes: ${customerDetails.notes}\n` : ''}` +
+              `${customerDetails?.startDate ? `Desired start: ${customerDetails.startDate}\n` : ''}`,
         metadata: {
           source: 'mma-website',
           contractId: contractData.contractId,
@@ -109,6 +111,8 @@ export async function POST(req: NextRequest) {
           lastname: clientName.split(' ').slice(1).join(' ') || undefined,
           jobtitle: 'MMA Services Configurator',
           company: undefined,
+          phone: customerDetails?.phone,
+          website: customerDetails?.website,
         });
         const lineSummary = items
           .map((i: any) => `• ${i.name}${i.description ? ` — ${i.description}` : ''} x${i.quantity} @ $${Number(i.unitPrice || 0).toFixed(2)}`)
@@ -118,6 +122,10 @@ export async function POST(req: NextRequest) {
           `Invoice ID: ${result.invoiceId}`,
           `Total: $${Number(totalAmount || 0).toFixed(2)} USD`,
           result.checkoutUrl ? `Pay link: ${result.checkoutUrl}` : '',
+          customerDetails?.industry ? `Industry: ${customerDetails.industry}` : '',
+          customerDetails?.companySize ? `Company size: ${customerDetails.companySize}` : '',
+          customerDetails?.referralSource ? `Referral: ${customerDetails.referralSource}` : '',
+          customerDetails?.startDate ? `Desired start: ${customerDetails.startDate}` : '',
           '',
           'Items:',
           lineSummary,

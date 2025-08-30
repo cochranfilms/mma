@@ -12,6 +12,13 @@ function CheckoutContent() {
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerCompany, setCustomerCompany] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerWebsite, setCustomerWebsite] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [companySize, setCompanySize] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [notes, setNotes] = useState('');
+  const [referralSource, setReferralSource] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +41,15 @@ function CheckoutContent() {
           customerEmail,
           customerName,
           customerCompany,
+          customerDetails: {
+            phone: customerPhone || undefined,
+            website: customerWebsite || undefined,
+            industry: industry || undefined,
+            companySize: companySize || undefined,
+            startDate: startDate || undefined,
+            notes: notes || undefined,
+            referralSource: referralSource || undefined,
+          },
         }),
       });
       const json = await res.json();
@@ -76,6 +92,46 @@ function CheckoutContent() {
           <div>
             <label className="block text-sm font-medium mb-2">Company (optional)</label>
             <input className="w-full border rounded-lg px-3 py-2" value={customerCompany} onChange={(e) => setCustomerCompany(e.target.value)} />
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Phone (optional)</label>
+              <input className="w-full border rounded-lg px-3 py-2" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Website (optional)</label>
+              <input className="w-full border rounded-lg px-3 py-2" value={customerWebsite} onChange={(e) => setCustomerWebsite(e.target.value)} placeholder="https://" />
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Industry (optional)</label>
+              <input className="w-full border rounded-lg px-3 py-2" value={industry} onChange={(e) => setIndustry(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Company Size (optional)</label>
+              <select className="w-full border rounded-lg px-3 py-2" value={companySize} onChange={(e) => setCompanySize(e.target.value)}>
+                <option value="">Select…</option>
+                <option value="1-10">1-10</option>
+                <option value="11-50">11-50</option>
+                <option value="51-200">51-200</option>
+                <option value="200+">200+</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Desired Start Date (optional)</label>
+              <input type="date" className="w-full border rounded-lg px-3 py-2" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">How did you hear about us? (optional)</label>
+              <input className="w-full border rounded-lg px-3 py-2" value={referralSource} onChange={(e) => setReferralSource(e.target.value)} placeholder="Referral, LinkedIn, Google, etc." />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Project Notes (optional)</label>
+            <textarea className="w-full border rounded-lg px-3 py-2" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Quantity</label>
