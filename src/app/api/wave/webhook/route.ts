@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { upsertContact, createDeal } from '@/lib/hubspot';
+import { upsertContact, createDeal, createNoteForContact } from '@/lib/hubspot';
 import { NextResponse as _ } from 'next/server';
 
 // Zapier-compatible endpoint for Wave invoice events
@@ -40,6 +40,11 @@ export async function POST(req: NextRequest) {
           dealstage: 'closedwon',
           closeDate: new Date().toISOString(),
           contactId,
+        });
+        await createNoteForContact({
+          contactId,
+          title: 'Payment received',
+          body: `Invoice ${invoiceId} marked as PAID for ${amount} ${currency}.`,
         });
       } catch (err) {
         console.error('HubSpot sync failed for Wave webhook:', err);

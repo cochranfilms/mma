@@ -27,12 +27,12 @@ export default function SiteHeader() {
         <div className="container-custom flex items-center justify-center">
           <div className="flex items-center space-x-6">
             <Image
-              src="/Mousetrap.gif"
-              alt="Mousetrap Animation"
-              width={140}
-              height={140}
-              className="rounded-lg"
-              unoptimized
+              src="/Logo.png"
+              alt="MMA Solutions logo"
+              width={180}
+              height={60}
+              className="h-12 w-auto"
+              priority
             />
           </div>
         </div>

@@ -110,7 +110,9 @@ async function createProduct(apiKey: string, businessId: string, name: string, u
   return data.productCreate.product.id as string;
 }
 
-async function createInvoice(apiKey: string, businessId: string, customerId: string, items: Array<{ name: string; quantity: number; unitPrice: number }>, memo?: string): Promise<{ id: string; viewUrl?: string }> {
+type DraftItem = { name: string; description?: string; quantity: number; unitPrice: number };
+
+async function createInvoice(apiKey: string, businessId: string, customerId: string, items: Array<DraftItem>, memo?: string): Promise<{ id: string; viewUrl?: string }> {
   // Wave public API expects InvoiceCreateInput with top-level fields (no nested `invoice`)
   const m = `mutation CreateInvoice($input: InvoiceCreateInput!) {
     invoiceCreate(input: $input) {
@@ -127,25 +129,40 @@ async function createInvoice(apiKey: string, businessId: string, customerId: str
     const pid = await createProduct(apiKey, businessId, it.name, it.unitPrice, incomeAccountId);
     productIds.push(pid);
   }
+  // Try including description on line items; if schema rejects, retry without description
+  const buildItems = (withDescription: boolean) =>
+    items.map((it, idx) => ({
+      productId: productIds[idx],
+      quantity: it.quantity,
+      ...(withDescription && it.description ? { description: it.description } : {}),
+    }));
 
-  // Per current public schema, item uses productId and quantity; price comes from product
-  const invoiceItems = items.map((it, idx) => ({ productId: productIds[idx], quantity: it.quantity }));
+  const attempt = async (withDescription: boolean) => {
+    const payload = {
+      input: {
+        businessId,
+        customerId,
+        items: buildItems(withDescription),
+        memo,
+      },
+    };
+    const data = await waveFetch(apiKey, m, payload);
+    if (!data?.invoiceCreate?.didSucceed) {
+      const errMsg = data?.invoiceCreate?.inputErrors?.[0]?.message || 'Failed to create invoice';
+      const err = new Error(errMsg);
+      (err as any).details = data;
+      throw err;
+    }
+    const inv = data.invoiceCreate.invoice;
+    return { id: inv.id as string, viewUrl: inv.viewUrl as string };
+  };
 
-  const data = await waveFetch(apiKey, m, {
-    input: {
-      businessId,
-      customerId,
-      items: invoiceItems,
-      memo,
-    },
-  });
-
-  if (!data?.invoiceCreate?.didSucceed) {
-    throw new Error(data?.invoiceCreate?.inputErrors?.[0]?.message || 'Failed to create invoice');
+  try {
+    return await attempt(true);
+  } catch (e: any) {
+    // Retry without description if validation fails
+    return await attempt(false);
   }
-
-  const inv = data.invoiceCreate.invoice;
-  return { id: inv.id as string, viewUrl: inv.viewUrl as string };
 }
 
 async function approveInvoice(apiKey: string, businessId: string, invoiceId: string): Promise<void> {
@@ -159,6 +176,21 @@ async function approveInvoice(apiKey: string, businessId: string, invoiceId: str
   const didSucceed = data?.invoiceApprove?.didSucceed;
   if (!didSucceed) {
     const firstErr = data?.invoiceApprove?.inputErrors?.[0]?.message || 'Failed to approve invoice';
+    throw new Error(firstErr);
+  }
+}
+
+async function sendInvoice(apiKey: string, businessId: string, invoiceId: string, toEmails: string[]): Promise<void> {
+  const m = `mutation SendInvoice($input: InvoiceSendInput!) {
+    invoiceSend(input: $input) {
+      didSucceed
+      inputErrors { message code path }
+    }
+  }`;
+  const data = await waveFetch(apiKey, m, { input: { businessId, invoiceId, to: toEmails, attachPDF: false } });
+  const didSucceed = data?.invoiceSend?.didSucceed;
+  if (!didSucceed) {
+    const firstErr = data?.invoiceSend?.inputErrors?.[0]?.message || 'Failed to send invoice';
     throw new Error(firstErr);
   }
 }
@@ -186,16 +218,13 @@ export async function createWaveInvoice(params: {
 
   try {
     const customerId = await createCustomer(apiKey, businessId, params.payload.customer.name, params.payload.customer.email);
-    const items = params.payload.items?.map((i) => ({ name: i.name || i.description || 'Service', quantity: Math.max(1, Number(i.quantity) || 1), unitPrice: Number(i.unitPrice) || 0 })) || [];
+    const items = params.payload.items?.map((i) => ({ name: i.name || i.description || 'Service', description: i.description, quantity: Math.max(1, Number(i.quantity) || 1), unitPrice: Number(i.unitPrice) || 0 })) || [];
     if (items.length === 0) {
       throw new Error('No invoice items provided');
     }
     const inv = await createInvoice(apiKey, businessId, customerId, items, params.payload.memo);
-    try {
-      await approveInvoice(apiKey, businessId, inv.id);
-    } catch (approveErr) {
-      // Non-fatal: approval failure should not block providing a view URL
-    }
+    try { await approveInvoice(apiKey, businessId, inv.id); } catch {}
+    try { await sendInvoice(apiKey, businessId, inv.id, [params.payload.customer.email]); } catch {}
     return { success: true, invoiceId: inv.id, checkoutUrl: inv.viewUrl, mode: 'live' };
   } catch (error: any) {
     const hint = error?.details?.errors?.[0]?.extensions?.code === 'NOT_FOUND'

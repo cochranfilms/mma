@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createWaveInvoice } from '@/lib/wave';
+import { upsertContact, createNoteForContact } from '@/lib/hubspot';
 
 export const runtime = 'nodejs';
 
@@ -98,6 +99,35 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('✅ Wave invoice created successfully');
+
+    // Fire-and-forget: HubSpot contact upsert + creation note
+    (async () => {
+      try {
+        const contactId = await upsertContact({
+          email: clientEmail,
+          firstname: clientName.split(' ')[0] || undefined,
+          lastname: clientName.split(' ').slice(1).join(' ') || undefined,
+          jobtitle: 'MMA Services Configurator',
+          company: undefined,
+        });
+        const lineSummary = items
+          .map((i: any) => `• ${i.name}${i.description ? ` — ${i.description}` : ''} x${i.quantity} @ $${Number(i.unitPrice || 0).toFixed(2)}`)
+          .join('\n');
+        const noteBody = [
+          `Invoice created in Wave`,
+          `Invoice ID: ${result.invoiceId}`,
+          `Total: $${Number(totalAmount || 0).toFixed(2)} USD`,
+          result.checkoutUrl ? `Pay link: ${result.checkoutUrl}` : '',
+          '',
+          'Items:',
+          lineSummary,
+        ].filter(Boolean).join('\n');
+        await createNoteForContact({ contactId, title: 'MMA Invoice Created', body: noteBody });
+      } catch (err) {
+        console.error('HubSpot note on invoice creation failed:', err);
+      }
+    })();
+
     // Return response matching reference format
     return NextResponse.json({
       success: true,

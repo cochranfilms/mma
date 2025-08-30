@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildInvoiceDraft, toWavePayload } from '@/lib/invoice';
 import { createWaveInvoice } from '@/lib/wave';
+import { upsertContact, createNoteForContact } from '@/lib/hubspot';
 
 export const runtime = 'nodejs';
 
@@ -61,6 +62,38 @@ export async function POST(req: NextRequest) {
     if (!created.success) {
       return NextResponse.json({ success: false, error: created.error || 'Wave API error', details: created.errorDetails, mode: created.mode }, { status: 500 });
     }
+
+    // Fire-and-forget: HubSpot contact upsert + creation note
+    (async () => {
+      try {
+        const contactId = await upsertContact({
+          email: customerEmail,
+          firstname: customerName.split(' ')[0] || undefined,
+          lastname: customerName.split(' ').slice(1).join(' ') || undefined,
+          company: customerCompany || undefined,
+          jobtitle: 'MMA Services Checkout',
+        });
+        const lineSummary = (payload.items || [])
+          .map(i => `• ${i.description} x${i.quantity} @ $${Number(i.unitPrice || 0).toFixed(2)}`)
+          .join('\n');
+        const noteBody = [
+          `Invoice created in Wave`,
+          `Invoice ID: ${created.invoiceId}`,
+          `Total: $${Number((draft.totalCents || 0) / 100).toFixed(2)} ${draft.currency}`,
+          created.checkoutUrl ? `Pay link: ${created.checkoutUrl}` : '',
+          '',
+          'Items:',
+          lineSummary,
+        ].filter(Boolean).join('\n');
+        await createNoteForContact({
+          contactId,
+          title: 'MMA Invoice Created',
+          body: noteBody,
+        });
+      } catch (err) {
+        console.error('HubSpot note on invoice creation failed:', err);
+      }
+    })();
 
     // Respond with checkout URL and echo split metadata for client UI
     return NextResponse.json({
