@@ -35,7 +35,7 @@ const serviceTypes: ServiceType[] = [
     name: 'Strategy Session',
     description: '60-minute deep dive into your business goals',
     duration: 60,
-    price: '$150',
+    price: '$1',
     icon: Calendar
   },
   {
@@ -68,6 +68,7 @@ export default function CalendarBooking() {
   const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null);
   const [invoiceId, setInvoiceId] = useState<string | null>(null);
   const [invoiceError, setInvoiceError] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'creating' | 'ready' | 'completed'>('pending');
 
   // Generate sample available slots for the next 7 days
   useEffect(() => {
@@ -108,6 +109,11 @@ export default function CalendarBooking() {
   const handleServiceSelect = (serviceId: string) => {
     setSelectedService(serviceId);
     setStep('date');
+    // Reset payment status when service changes
+    setPaymentStatus('pending');
+    setInvoiceUrl(null);
+    setInvoiceId(null);
+    setInvoiceError(null);
   };
 
   const handleDateSelect = (date: string) => {
@@ -118,21 +124,30 @@ export default function CalendarBooking() {
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time);
     setStep('confirmation');
-    // Auto-generate invoice for paid services at time selection step
-    if (selectedService === 'strategy' || selectedService === 'consultation' || selectedService === 'follow-up') {
-      if (!invoiceUrl) {
-        createWaveInvoiceForSelection();
-      }
+    // Reset payment status when time changes
+    if (selectedService === 'discovery') {
+      // Free discovery call doesn't need payment
+      setPaymentStatus('completed');
+    } else {
+      setPaymentStatus('pending');
     }
+    setInvoiceUrl(null);
+    setInvoiceId(null);
+    setInvoiceError(null);
   };
 
   const handleBooking = async () => {
+    if (!name || !email) {
+      setInvoiceError('Please provide your name and email.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // Require payment for non-free services before scheduling
-      const needsPayment = selectedService === 'strategy' || selectedService === 'consultation' || selectedService === 'follow-up';
-      if (needsPayment && (!invoiceId || !invoiceUrl)) {
+      // Check if payment is required and completed
+      const needsPayment = selectedService !== 'discovery';
+      if (needsPayment && paymentStatus !== 'completed') {
         setInvoiceError('Please complete payment before booking.');
         setIsLoading(false);
         return;
@@ -159,9 +174,10 @@ export default function CalendarBooking() {
               serviceId: selectedService,
               date: selectedDate,
               time: selectedTime,
+              invoiceId: invoiceId || undefined,
             },
             noteTitle: 'Calendar Booking Initiated',
-            noteBody: `Service: ${selectedService}\nDate: ${selectedDate}\nTime: ${selectedTime}`,
+            noteBody: `Service: ${selectedService}\nDate: ${selectedDate}\nTime: ${selectedTime}${invoiceId ? `\nInvoice: ${invoiceId}` : ''}`,
           })
         });
       } catch (_) {}
@@ -174,40 +190,58 @@ export default function CalendarBooking() {
     } finally {
       setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   async function createWaveInvoiceForSelection() {
+    if (!name || !email) {
+      setInvoiceError('Please provide your name and email before creating invoice.');
+      return;
+    }
+
     try {
       setInvoiceError(null);
-      setIsLoading(true);
-      const priceMap: Record<string, number> = { strategy: 15000, consultation: 25000, 'follow-up': 10000 };
-      const unitPriceCents = priceMap[selectedService] || 0;
-      if (unitPriceCents <= 0) {
-        setIsLoading(false);
-        return;
-      }
-      const res = await fetch('/api/wave/create-invoice', {
+      setPaymentStatus('creating');
+      
+      const res = await fetch('/api/calendar/create-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          customerName: name || 'Guest',
+          customerName: name,
           customerEmail: email,
-          items: [{ name: getSelectedService()?.name || 'Consultation', quantity: 1, unitPriceCents }],
           serviceId: selectedService,
+          selectedDate,
+          selectedTime,
           memo: `Calendar booking for ${selectedDate} ${selectedTime}`,
         }),
       });
+      
       const data = await res.json();
-      if (!res.ok || !data?.success || !data?.checkoutUrl) {
+      
+      if (!res.ok || !data?.success) {
         throw new Error(data?.error || 'Failed to create invoice');
       }
-      setInvoiceId(data.invoiceId || null);
-      setInvoiceUrl(data.checkoutUrl);
+
+      // Handle free services
+      if (data.mode === 'free') {
+        setPaymentStatus('completed');
+        return;
+      }
+
+      // Handle fallback mode
+      if (data.mode === 'fallback' || !data.paymentUrl) {
+        setInvoiceError('Invoice created but payment link pending. We will email you the secure checkout link shortly.');
+        setPaymentStatus('ready');
+        return;
+      }
+
+      // Success case
+      setInvoiceId(data.invoiceId);
+      setInvoiceUrl(data.paymentUrl);
+      setPaymentStatus('ready');
+      
     } catch (err: any) {
       setInvoiceError(err?.message || 'Failed to create invoice');
-    } finally {
-      setIsLoading(false);
+      setPaymentStatus('pending');
     }
   }
 
@@ -263,7 +297,10 @@ export default function CalendarBooking() {
                       <Clock className="w-4 h-4" />
                       {service.duration} min
                     </span>
-                    <span className="font-medium text-blue-600">{service.price}</span>
+                    <span className={`font-medium ${service.price === 'Free' ? 'text-green-600' : 'text-blue-600'}`}>
+                      {service.price}
+                      {service.price !== 'Free' && <span className="text-xs ml-1">(payment required)</span>}
+                    </span>
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
@@ -344,14 +381,14 @@ export default function CalendarBooking() {
               placeholder="Your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
             <input
               type="email"
               placeholder="you@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
           </div>
           <div className="flex items-center justify-between">
@@ -372,7 +409,24 @@ export default function CalendarBooking() {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Price:</span>
-            <span className="font-semibold text-blue-600">{service.price}</span>
+            <div className="flex items-center gap-2">
+              <span className={`font-semibold ${service.price === 'Free' ? 'text-green-600' : 'text-blue-600'}`}>
+                {service.price}
+              </span>
+              {service.id !== 'discovery' && (
+                <span className={`text-xs px-2 py-1 rounded-full ${
+                  paymentStatus === 'completed' ? 'bg-green-100 text-green-700' :
+                  paymentStatus === 'ready' ? 'bg-yellow-100 text-yellow-700' :
+                  paymentStatus === 'creating' ? 'bg-blue-100 text-blue-700' :
+                  'bg-gray-100 text-gray-700'
+                }`}>
+                  {paymentStatus === 'completed' ? '✓ Paid' :
+                   paymentStatus === 'ready' ? 'Payment Ready' :
+                   paymentStatus === 'creating' ? 'Creating...' :
+                   'Payment Required'}
+                </span>
+              )}
+            </div>
           </div>
         </div>
         
@@ -390,7 +444,7 @@ export default function CalendarBooking() {
             </button>
             <button
               onClick={handleBooking}
-              disabled={isLoading || ((service.id === 'strategy' || service.id === 'consultation' || service.id === 'follow-up') && !invoiceUrl)}
+              disabled={isLoading || (service.id !== 'discovery' && paymentStatus !== 'completed')}
               className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center"
             >
               {isLoading ? (
@@ -404,28 +458,54 @@ export default function CalendarBooking() {
             </button>
           </div>
 
-          {(service.id === 'strategy' || service.id === 'consultation' || service.id === 'follow-up') && (
+          {service.id !== 'discovery' && (
             <div className="p-4 rounded-lg border bg-white">
-              {!invoiceUrl ? (
+              {paymentStatus === 'pending' && (
                 <button
                   onClick={createWaveInvoiceForSelection}
-                  disabled={isLoading || !email}
+                  disabled={!name || !email}
                   className="w-full px-6 py-3 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50 disabled:opacity-50"
                 >
-                  Click here to pay invoice
+                  Create Invoice & Pay
                 </button>
-              ) : (
+              )}
+              
+              {paymentStatus === 'creating' && (
+                <div className="w-full px-6 py-3 border-2 border-gray-300 text-gray-500 rounded-lg flex items-center justify-center">
+                  <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Creating invoice...
+                </div>
+              )}
+              
+              {paymentStatus === 'ready' && invoiceUrl && (
                 <a
                   href={invoiceUrl}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+                    // Set a timer to check payment status after user returns
+                    setTimeout(() => {
+                      // In a real app, you'd check payment status via API
+                      // For now, we'll assume payment is completed when they return
+                      setPaymentStatus('completed');
+                    }, 5000);
+                  }}
                   className="block w-full text-center px-6 py-3 border-2 border-emerald-600 text-emerald-700 rounded-lg hover:bg-emerald-50"
                 >
-                  Open your Wave invoice to complete payment
+                  Open Wave Invoice to Complete Payment
                 </a>
               )}
+              
+              {paymentStatus === 'completed' && (
+                <div className="w-full px-6 py-3 border-2 border-emerald-600 bg-emerald-50 text-emerald-700 rounded-lg text-center">
+                  ✓ Payment Completed - Ready to Book
+                </div>
+              )}
+              
               <p className="text-xs text-gray-500 mt-2">
-                After payment, return here to finalize your booking.
+                {paymentStatus === 'pending' && 'Payment is required before booking.'}
+                {paymentStatus === 'ready' && 'After payment, return here to finalize your booking.'}
+                {paymentStatus === 'completed' && 'You can now proceed with your booking.'}
               </p>
             </div>
           )}

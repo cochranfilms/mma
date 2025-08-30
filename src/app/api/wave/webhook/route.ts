@@ -51,31 +51,66 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2) Auto-book paid calendar events when memo includes booking context
+    // 2) Handle paid calendar bookings
     if (isPaid) {
       try {
         const memoText: string = String(memo || '');
-        // Expect memo like: "Calendar booking for YYYY-MM-DD HH:MM"
-        const match = memoText.match(/Calendar booking for (\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})/);
-        const serviceMatch = memoText.match(/\[(discovery|strategy|consultation|follow-up)\]/i);
-        const svc = (serviceMatch?.[1] || '').toLowerCase();
-        const serviceId = svc || 'strategy';
-        if (match && customerEmail) {
-          const date = match[1];
-          const time = match[2];
-          // Create Calendly single-use link for the service
-          const calRes = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/calendly/schedule`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ serviceId, name: customerName, email: customerEmail }),
-          });
-          const calData = await calRes.json().catch(() => ({}));
-          const schedulingUrl: string | undefined = calData?.schedulingUrl;
-          console.log('Auto-book scheduling link:', schedulingUrl);
-          // If needed, send an email with the scheduling link here via Postmark/EmailJS.
+        // Check if this is a calendar booking invoice
+        if (memoText.includes('Calendar booking:')) {
+          // Extract service type from memo
+          const serviceMatch = memoText.match(/Calendar booking: (Free Discovery Call|Strategy Session|Full Consultation|Follow-up Meeting)/i);
+          const serviceName = serviceMatch?.[1] || '';
+          
+          // Map service names to IDs
+          const serviceMap: Record<string, string> = {
+            'Free Discovery Call': 'discovery',
+            'Strategy Session': 'strategy', 
+            'Full Consultation': 'consultation',
+            'Follow-up Meeting': 'follow-up'
+          };
+          
+          const serviceId = serviceMap[serviceName] || 'strategy';
+          
+          // Extract date/time if available
+          const dateTimeMatch = memoText.match(/on (\d{4}-\d{2}-\d{2}) at (\d{2}:\d{2})/);
+          
+          if (customerEmail) {
+            // Create HubSpot note about payment completion
+            try {
+              const contactId = await upsertContact({
+                email: String(customerEmail),
+                firstname: String(customerName || '').split(' ')[0] || undefined,
+                lastname: String(customerName || '').split(' ').slice(1).join(' ') || undefined,
+                jobtitle: 'Calendar Booking - Paid',
+              });
+              
+              await createNoteForContact({
+                contactId,
+                title: 'Calendar Booking Payment Completed',
+                body: [
+                  `Payment received for ${serviceName}`,
+                  `Invoice ID: ${invoiceId}`,
+                  `Amount: ${amount} ${currency}`,
+                  dateTimeMatch ? `Scheduled: ${dateTimeMatch[1]} at ${dateTimeMatch[2]}` : '',
+                  'Customer can now proceed with booking confirmation.'
+                ].filter(Boolean).join('\n')
+              });
+            } catch (err) {
+              console.error('HubSpot calendar booking note failed:', err);
+            }
+            
+            console.log('Calendar booking payment completed:', { 
+              invoiceId, 
+              serviceName, 
+              serviceId, 
+              customerEmail,
+              amount,
+              currency 
+            });
+          }
         }
       } catch (err) {
-        console.error('Auto-booking flow failed:', err);
+        console.error('Calendar booking payment processing failed:', err);
       }
     }
 
