@@ -53,6 +53,8 @@ export default function WebsiteDominationAnalyzer() {
   const [url, setUrl] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [jobtitle, setJobtitle] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -132,7 +134,7 @@ export default function WebsiteDominationAnalyzer() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url, email, name }),
+        body: JSON.stringify({ url, email, name, phone, jobtitle }),
       });
 
       const result = await response.json();
@@ -292,6 +294,11 @@ export default function WebsiteDominationAnalyzer() {
         WEBSITE_URL: websiteUrl,
         ANALYSIS_DATE: currentDate,
         ANALYSIS_TIME: currentTime,
+        
+        // CRM Fields
+        USER_NAME: name || '',
+        USER_PHONE: phone || '',
+        USER_JOBTITLE: jobtitle || '',
         
         // Overall Score
         OVERALL_SCORE: analysis.overallScore,
@@ -533,6 +540,34 @@ export default function WebsiteDominationAnalyzer() {
                     placeholder="your-email@company.com"
                     className="w-full px-6 py-4 bg-black/50 border border-red-400/30 rounded-xl text-white placeholder-gray-400 focus:border-red-400 focus:outline-none text-lg"
                   />
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-red-200 font-semibold mb-3">
+                      PHONE NUMBER
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+1 (555) 123-4567"
+                      className="w-full px-6 py-4 bg-black/50 border border-red-400/30 rounded-xl text-white placeholder-gray-400 focus:border-red-400 focus:outline-none text-lg"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-red-200 font-semibold mb-3">
+                      JOB TITLE
+                    </label>
+                    <input
+                      type="text"
+                      value={jobtitle}
+                      onChange={(e) => setJobtitle(e.target.value)}
+                      placeholder="Marketing Director"
+                      className="w-full px-6 py-4 bg-black/50 border border-red-400/30 rounded-xl text-white placeholder-gray-400 focus:border-red-400 focus:outline-none text-lg"
+                    />
+                  </div>
                 </div>
                 
                 <button

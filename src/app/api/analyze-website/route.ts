@@ -13,6 +13,8 @@ interface AnalysisRequest {
   url: string;
   email: string;
   name?: string;
+  phone?: string;
+  jobtitle?: string;
 }
 
 interface Lead {
@@ -28,7 +30,7 @@ interface Lead {
 
 export async function POST(request: NextRequest) {
   try {
-    const { url, email, name }: AnalysisRequest = await request.json();
+    const { url, email, name, phone, jobtitle }: AnalysisRequest = await request.json();
 
     console.log('🔍 Starting analysis for:', { url, email, name });
 
@@ -101,7 +103,8 @@ export async function POST(request: NextRequest) {
         lastname: name?.split(' ')?.slice(1).join(' '),
         company: scraped?.url ? new URL(scraped.url).hostname : undefined,
         website: url,
-        jobtitle: 'Website Domination Analyzer Lead',
+        phone: phone,
+        jobtitle: jobtitle || 'Website Domination Analyzer Lead',
       });
       const noteBody = `Website Analyzer Result\nURL: ${url}\nOverall Score: ${analysis.overallScore}\nCritical Issues: ${analysis.criticalIssues?.join(' | ')}`;
       await createNoteForContact({
