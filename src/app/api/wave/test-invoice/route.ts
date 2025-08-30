@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createWaveInvoice } from '@/lib/wave';
+import { approveWaveInvoice } from '@/lib/wave';
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,9 +30,16 @@ export async function POST(req: NextRequest) {
 
     console.log('🧪 Test result:', result);
 
+    let approveResult: any = null;
+    if (result?.success && result?.invoiceId) {
+      approveResult = await approveWaveInvoice(result.invoiceId);
+      console.log('🧪 Approve result:', approveResult);
+    }
+
     return NextResponse.json({
       success: true,
       testResult: result,
+      approveResult,
       message: result.success 
         ? 'Wave invoice creation is working! ✅' 
         : 'Wave invoice creation failed ❌',

@@ -165,7 +165,7 @@ async function createInvoice(apiKey: string, businessId: string, customerId: str
   }
 }
 
-async function approveInvoice(apiKey: string, businessId: string, invoiceId: string): Promise<{ didSucceed: boolean; status?: string }> {
+async function approveInvoice(apiKey: string, businessId: string, invoiceId: string): Promise<{ didSucceed: boolean; status?: string; errors?: any }> {
   const m = `mutation ApproveInvoice($input: InvoiceApproveInput!) {
     invoiceApprove(input: $input) {
       didSucceed
@@ -186,7 +186,7 @@ async function approveInvoice(apiKey: string, businessId: string, invoiceId: str
       }
       return { didSucceed: true, status: node?.invoice?.status as string | undefined };
     } catch (e: any) {
-      return { didSucceed: false };
+      return { didSucceed: false, errors: e?.details || e?.message };
     }
   };
 
@@ -250,6 +250,21 @@ export async function createWaveInvoice(params: {
       ? `Invalid or unauthorized businessId (${(businessId || '').slice(0, 6)}…); verify Wave business ID matches the API key.`
       : undefined;
     return { success: false, error: error?.message || 'Wave API error', errorDetails: { ...error?.details, hint }, mode: 'live' };
+  }
+}
+
+export async function approveWaveInvoice(invoiceId: string): Promise<{ success: boolean; status?: string; error?: string; details?: any }> {
+  const cfg = getWaveConfig();
+  const apiKey = cfg.apiKey;
+  const businessId = cfg.businessId;
+  try {
+    const res = await approveInvoice(apiKey, businessId, invoiceId);
+    if (!res.didSucceed) {
+      return { success: false, error: 'approve failed', details: res.errors };
+    }
+    return { success: true, status: res.status };
+  } catch (e: any) {
+    return { success: false, error: e?.message || 'approve error' };
   }
 }
 
