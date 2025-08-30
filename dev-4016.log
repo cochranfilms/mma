@@ -1,0 +1,13 @@
+
+> mma-website@0.1.0 dev
+> next dev --port 4016
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:4016
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 151.3s
+ ○ Compiling /api/wave/whoami ...
+ ✓ Compiled /api/wave/whoami in 2.4s (54 modules)
+ GET /api/wave/whoami 400 in 5349ms

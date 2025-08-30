@@ -31,20 +31,58 @@ export async function GET(_req: NextRequest) {
 
     // Try different approaches to get businesses
     const queries = [
-      // Approach 1: Simple businesses query (no pagination)
+      // Approach 1: Simple businesses query with correct pagination structure
       { 
-        name: 'Simple businesses',
-        query: `query { businesses { edges { node { id name isActive } } } }`
+        name: 'Businesses with edges',
+        query: `query { 
+          businesses { 
+            edges { 
+              node { 
+                id 
+                name 
+                isActive 
+                createdAt
+                modifiedAt
+              } 
+            } 
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+          } 
+        }`
       },
-      // Approach 2: Businesses with first parameter
+      // Approach 2: Just businesses without edges (in case Wave uses different structure)
       { 
-        name: 'Businesses with first',
-        query: `query { businesses(first: 10) { edges { node { id name isActive } } } }`
+        name: 'Direct businesses',
+        query: `query { 
+          businesses { 
+            id 
+            name 
+            isActive 
+            createdAt
+            modifiedAt
+          } 
+        }`
       },
-      // Approach 3: Just get pageInfo to test connection
+      // Approach 3: User with businesses (alternative approach)
       { 
-        name: 'Businesses pageInfo only',
-        query: `query { businesses { pageInfo { hasNextPage hasPreviousPage } } }`
+        name: 'User businesses',
+        query: `query { 
+          user { 
+            id 
+            defaultEmail
+            businesses { 
+              edges { 
+                node { 
+                  id 
+                  name 
+                  isActive 
+                } 
+              } 
+            }
+          } 
+        }`
       }
     ];
 

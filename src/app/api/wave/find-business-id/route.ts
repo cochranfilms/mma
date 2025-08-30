@@ -1,89 +1,133 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getWaveConfig } from '@/lib/wave';
 
-async function testBusinessId(apiKey: string, businessId: string) {
-  try {
-    const res = await fetch('https://gql.waveapps.com/graphql/public', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        query: `query TestBusiness($businessId: ID!) {
-          business(id: $businessId) {
-            id
-            name
-            isActive
-          }
-        }`,
-        variables: { businessId }
-      }),
-      cache: 'no-store',
-    });
-    
-    const json = await res.json();
-    
-    if (json.errors) {
-      return { success: false, error: json.errors[0]?.message, details: json.errors };
-    }
-    
-    if (json.data?.business) {
-      return { success: true, business: json.data.business };
-    }
-    
-    return { success: false, error: 'No business found' };
-  } catch (err: any) {
-    return { success: false, error: err.message };
+async function fetchWave(apiBase: string, apiKey: string, query: string, variables?: Record<string, any>) {
+  const res = await fetch(apiBase, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({ query, variables }),
+    cache: 'no-store',
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok || json.errors) {
+    const err = new Error('Wave GraphQL error');
+    (err as any).details = json;
+    throw err;
   }
+  return json.data;
 }
 
 export async function GET(_req: NextRequest) {
   try {
-    const cfg = getWaveConfig();
-    const apiKey = cfg.apiKey;
-    
+    const cfg = getWaveConfig() as any;
+    const apiKey: string = cfg.apiKey;
+    const apiBase: string = cfg.apiBase || 'https://gql.waveapps.com/graphql/public';
     if (!apiKey) {
       return NextResponse.json({ success: false, error: 'WAVE_API_KEY is not set' }, { status: 400 });
     }
 
-    // From your URL: https://my.waveapps.com/cc8b6b65-384c-4bca-b7f0-733333ef0014/businesses/edit/22088572/
-    const numericId = '22088572';
-    
-    const testCases = [
-      { name: 'Numeric ID', id: numericId },
-      { name: 'Base64 Business prefix', id: `QnVzaW5lc3M6${btoa(numericId)}` },
-      { name: 'Simple Base64', id: btoa(numericId) },
-      { name: 'Business: prefix', id: `Business:${numericId}` },
-      { name: 'UUID from URL', id: 'cc8b6b65-384c-4bca-b7f0-733333ef0014' },
-      { name: 'Base64 UUID', id: btoa('cc8b6b65-384c-4bca-b7f0-733333ef0014') },
+    // Try the simplest possible businesses query based on Wave docs
+    const queries = [
+      // Approach 1: Most basic businesses query
+      { 
+        name: 'Basic businesses',
+        query: `query { 
+          businesses { 
+            id 
+            name 
+          } 
+        }`
+      },
+      // Approach 2: Businesses with pagination (offset-based)
+      { 
+        name: 'Businesses with page',
+        query: `query { 
+          businesses(page: 1) { 
+            id 
+            name 
+            isActive
+          } 
+        }`
+      },
+      // Approach 3: Get user's default business through user query
+      { 
+        name: 'User default business',
+        query: `query { 
+          user { 
+            id 
+            defaultEmail
+            defaultBusiness {
+              id
+              name
+              isActive
+            }
+          } 
+        }`
+      },
+      // Approach 4: Try to get business by the ID we have (to validate it)
+      { 
+        name: 'Validate current business ID',
+        query: `query { 
+          business(id: "${cfg.businessId}") { 
+            id 
+            name 
+            isActive
+            createdAt
+            modifiedAt
+          } 
+        }`
+      }
     ];
 
     const results = [];
     
-    for (const testCase of testCases) {
-      console.log(`Testing business ID: ${testCase.name} = ${testCase.id}`);
-      const result = await testBusinessId(apiKey, testCase.id);
-      results.push({
-        format: testCase.name,
-        businessId: testCase.id,
-        ...result
-      });
-      
-      if (result.success) {
-        console.log(`✅ Found working business ID: ${testCase.id}`);
-        break; // Stop on first success
+    for (const { name, query } of queries) {
+      try {
+        const data = await fetchWave(apiBase, apiKey, query);
+        results.push({ 
+          approach: name, 
+          success: true, 
+          data,
+          // Extract business info from different possible structures
+          businesses: data?.businesses || (data?.business ? [data.business] : []),
+          user: data?.user || null
+        });
+      } catch (err: any) {
+        results.push({ 
+          approach: name, 
+          success: false, 
+          error: err?.message,
+          details: err?.details 
+        });
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Tested various business ID formats',
-      results,
-      recommendation: results.find(r => r.success)?.businessId || 'None found - check Wave dashboard'
-    });
+    // Find the first successful result with business data
+    const successfulResult = results.find(r => r.success && (r.businesses?.length > 0 || r.user?.defaultBusiness));
+    
+    let recommendedBusinessId = null;
+    if (successfulResult) {
+      if (successfulResult.businesses?.length > 0) {
+        recommendedBusinessId = successfulResult.businesses[0].id;
+      } else if (successfulResult.user?.defaultBusiness) {
+        recommendedBusinessId = successfulResult.user.defaultBusiness.id;
+      }
+    }
 
+    return NextResponse.json({ 
+      success: true, 
+      apiBase,
+      currentBusinessId: cfg.businessId,
+      recommendedBusinessId,
+      results,
+      note: recommendedBusinessId 
+        ? `Found your business ID: ${recommendedBusinessId}. Update WAVE_BUSINESS_ID in Vercel to this value.`
+        : "Could not find a valid business ID. Check the results above for errors."
+    });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err?.message || 'unknown' }, { status: 500 });
+    return NextResponse.json({ success: false, error: err?.message || 'unknown', details: err?.details }, { status: 500 });
   }
 }
