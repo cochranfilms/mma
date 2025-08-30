@@ -11,3 +11,7 @@
  ○ Compiling /api/wave/whoami ...
  ✓ Compiled /api/wave/whoami in 2.4s (54 modules)
  GET /api/wave/whoami 400 in 5349ms
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/.next/cache/webpack/client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 1062ms (201 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/.next/cache/webpack/client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 130ms (201 modules)
