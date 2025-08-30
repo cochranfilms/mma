@@ -118,22 +118,22 @@ function CheckoutContent() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-[#010043]/10 overflow-hidden">
-            <div className="bg-[#010043] text-white px-6 py-4">
-              <h3 className="text-xl font-bold tracking-tight">You just freed your business from the mousetrap</h3>
-              <p className="text-sm text-white/80 mt-1">It’s time to put an automated, AI-powered system to work and unlock outsized ROI.</p>
+          <div className="w-full max-w-2xl rounded-3xl bg-white shadow-2xl border border-[#010043]/10 overflow-hidden">
+            <div className="bg-gradient-to-r from-[#010043] to-[#0b0b2a] text-white px-8 py-6">
+              <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight">You just freed your business from the mousetrap</h3>
+              <p className="text-base md:text-lg text-white/85 mt-2">It’s time to put an automated, AI‑powered system to work and unlock outsized ROI.</p>
             </div>
-            <div className="p-6">
-              <p className="text-gray-700 leading-relaxed">Your invoice is ready. Click below to review and complete secure payment.</p>
-              <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <a href={checkoutUrl || '#'} target="_blank" rel="noreferrer" className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-lg bg-[#e0ab10] text-[#010043] font-semibold hover:opacity-95">
+            <div className="p-8">
+              <p className="text-lg text-gray-800 leading-relaxed">Your invoice is ready. Review and complete secure payment below.</p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <a href={checkoutUrl || '#'} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-4 rounded-xl bg-[#e0ab10] text-[#010043] font-bold text-lg shadow-[0_6px_20px_rgba(224,171,16,0.35)] hover:opacity-95">
                   Pay Invoice Securely
                 </a>
-                <button onClick={() => setShowModal(false)} className="px-5 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
+                <button onClick={() => setShowModal(false)} className="px-6 py-4 rounded-xl border border-gray-300 text-gray-800 font-medium hover:bg-gray-50">
                   Not now
                 </button>
               </div>
-              <div className="mt-4 text-xs text-gray-500">We’ve also emailed you this link for your records.</div>
+              <div className="mt-6 text-sm text-gray-600">We’ve also emailed you this link for your records.</div>
             </div>
           </div>
         </div>

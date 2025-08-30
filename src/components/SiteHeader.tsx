@@ -23,15 +23,15 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 bg-black border-b border-gray-800">
       {/* Banner with GIF */}
-      <div className="bg-black py-6 border-b border-gray-800">
+      <div className="bg-black py-8 md:py-10 border-b border-gray-800">
         <div className="container-custom flex items-center justify-center">
           <div className="flex items-center space-x-6">
             <Image
               src="/Logo.png"
               alt="MMA Solutions logo"
-              width={180}
-              height={60}
-              className="h-12 w-auto"
+              width={600}
+              height={200}
+              className="h-16 md:h-24 lg:h-28 w-auto"
               priority
             />
           </div>
