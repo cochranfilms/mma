@@ -117,23 +117,35 @@ function CheckoutContent() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-2xl rounded-3xl bg-white shadow-2xl border border-[#010043]/10 overflow-hidden">
-            <div className="bg-gradient-to-r from-[#010043] to-[#0b0b2a] text-white px-8 py-6">
-              <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight">You just freed your business from the mousetrap</h3>
-              <p className="text-base md:text-lg text-white/85 mt-2">It’s time to put an automated, AI‑powered system to work and unlock outsized ROI.</p>
-            </div>
-            <div className="p-8">
-              <p className="text-lg text-gray-800 leading-relaxed">Your invoice is ready. Review and complete secure payment below.</p>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <a href={checkoutUrl || '#'} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-4 rounded-xl bg-[#e0ab10] text-[#010043] font-bold text-lg shadow-[0_6px_20px_rgba(224,171,16,0.35)] hover:opacity-95">
-                  Pay Invoice Securely
-                </a>
-                <button onClick={() => setShowModal(false)} className="px-6 py-4 rounded-xl border border-gray-300 text-gray-800 font-medium hover:bg-gray-50">
-                  Not now
-                </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-[#e0ab10]/20">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0b0b2a] via-[#030316] to-black" />
+            <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-[#e0ab10]/10 blur-3xl" />
+            <div className="absolute -bottom-24 -left-20 w-80 h-80 rounded-full bg-[#e0ab10]/10 blur-3xl" />
+
+            <div className="relative">
+              <div className="px-8 pt-8 pb-6 bg-gradient-to-r from-[#010043] to-[#0b0b2a]">
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-white/90 border border-white/10">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#e0ab10] animate-pulse" />
+                  Momentum secured
+                </div>
+                <h3 className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-white">You just freed your business from the mousetrap</h3>
+                <p className="text-base md:text-lg text-white/85 mt-2">It’s time to put an automated, AI‑powered system to work and unlock outsized ROI.</p>
               </div>
-              <div className="mt-6 text-sm text-gray-600">We’ve also emailed you this link for your records.</div>
+
+              <div className="px-8 py-8 text-white">
+                <p className="text-lg leading-relaxed text-white/90">Your invoice is ready. Review and complete secure payment below.</p>
+                <div className="mt-7 grid gap-4 sm:grid-cols-2">
+                  <a href={checkoutUrl || '#'} target="_blank" rel="noreferrer" className="group inline-flex items-center justify-center px-6 py-4 rounded-xl bg-[#e0ab10] text-[#010043] font-bold text-lg shadow-[0_12px_30px_rgba(224,171,16,0.45)] hover:shadow-[0_18px_40px_rgba(224,171,16,0.55)] transition-shadow">
+                    <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#010043] group-hover:scale-125 transition-transform" />
+                    Pay Invoice Securely
+                  </a>
+                  <button onClick={() => setShowModal(false)} className="px-6 py-4 rounded-xl border border-white/15 text-white/90 font-medium hover:bg-white/5 transition-colors">
+                    Not now
+                  </button>
+                </div>
+                <div className="mt-6 text-sm text-white/70">We’ve also emailed you this link for your records.</div>
+              </div>
             </div>
           </div>
         </div>
