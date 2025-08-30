@@ -17,6 +17,8 @@ export function getWaveConfig() {
     // One-business, one-account configuration
     apiKey: process.env.WAVE_API_KEY || process.env.WAVE_API_KEY_PRIMARY || '',
     businessId: process.env.WAVE_BUSINESS_ID || process.env.WAVE_BUSINESS_ID_PRIMARY || '',
+    // Prefer a preconfigured income account ID if provided to avoid schema divergence issues
+    incomeAccountId: process.env.WAVE_INCOME_ACCOUNT_ID || '',
   };
 }
 
@@ -42,6 +44,12 @@ async function waveFetch(apiKey: string, query: string, variables?: Record<strin
 }
 
 async function ensureIncomeAccountId(apiKey: string, businessId: string): Promise<string> {
+  // If explicitly configured, use it and skip querying Wave (schema can change)
+  const configuredIncomeAccountId = process.env.WAVE_INCOME_ACCOUNT_ID || getWaveConfig().incomeAccountId;
+  if (configuredIncomeAccountId) {
+    return configuredIncomeAccountId;
+  }
+
   const q = `query Accounts($businessId: ID!, $page: Int!) {
     business(id: $businessId) {
       id
@@ -103,10 +111,11 @@ async function createProduct(apiKey: string, businessId: string, name: string, u
 }
 
 async function createInvoice(apiKey: string, businessId: string, customerId: string, items: Array<{ name: string; quantity: number; unitPrice: number }>, memo?: string): Promise<{ id: string; viewUrl?: string }> {
+  // Wave public API expects InvoiceCreateInput with top-level fields (no nested `invoice`)
   const m = `mutation CreateInvoice($input: InvoiceCreateInput!) {
     invoiceCreate(input: $input) {
       didSucceed
-      inputErrors { message }
+      inputErrors { message code path }
       invoice { id viewUrl }
     }
   }`;
@@ -119,16 +128,15 @@ async function createInvoice(apiKey: string, businessId: string, customerId: str
     productIds.push(pid);
   }
 
-  const invoiceItems = items.map((it, idx) => ({ productId: productIds[idx], quantity: it.quantity, unitPrice: it.unitPrice }));
+  // Per current public schema, item uses productId and quantity; price comes from product
+  const invoiceItems = items.map((it, idx) => ({ productId: productIds[idx], quantity: it.quantity }));
 
   const data = await waveFetch(apiKey, m, {
     input: {
       businessId,
-      invoice: {
-        customerId,
-        items: invoiceItems,
-        memo,
-      },
+      customerId,
+      items: invoiceItems,
+      memo,
     },
   });
 
