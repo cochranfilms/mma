@@ -165,19 +165,36 @@ async function createInvoice(apiKey: string, businessId: string, customerId: str
   }
 }
 
-async function approveInvoice(apiKey: string, businessId: string, invoiceId: string): Promise<void> {
+async function approveInvoice(apiKey: string, businessId: string, invoiceId: string): Promise<{ didSucceed: boolean; status?: string }> {
   const m = `mutation ApproveInvoice($input: InvoiceApproveInput!) {
     invoiceApprove(input: $input) {
       didSucceed
       inputErrors { message code path }
+      invoice { id status viewUrl }
     }
   }`;
-  const data = await waveFetch(apiKey, m, { input: { businessId, invoiceId } });
-  const didSucceed = data?.invoiceApprove?.didSucceed;
-  if (!didSucceed) {
-    const firstErr = data?.invoiceApprove?.inputErrors?.[0]?.message || 'Failed to approve invoice';
-    throw new Error(firstErr);
-  }
+
+  const tryApprove = async (vars: Record<string, any>) => {
+    try {
+      const data = await waveFetch(apiKey, m, { input: vars });
+      const node = data?.invoiceApprove;
+      if (!node?.didSucceed) {
+        const firstErr = node?.inputErrors?.[0]?.message || 'Failed to approve invoice';
+        const err = new Error(firstErr);
+        (err as any).details = node?.inputErrors;
+        throw err;
+      }
+      return { didSucceed: true, status: node?.invoice?.status as string | undefined };
+    } catch (e: any) {
+      return { didSucceed: false };
+    }
+  };
+
+  // Try with invoiceId first; if schema expects id, retry
+  const first = await tryApprove({ businessId, invoiceId });
+  if (first.didSucceed) return first;
+  const second = await tryApprove({ businessId, id: invoiceId });
+  return second;
 }
 
 async function sendInvoice(apiKey: string, businessId: string, invoiceId: string, toEmails: string[]): Promise<void> {
@@ -223,8 +240,10 @@ export async function createWaveInvoice(params: {
       throw new Error('No invoice items provided');
     }
     const inv = await createInvoice(apiKey, businessId, customerId, items, params.payload.memo);
-    try { await approveInvoice(apiKey, businessId, inv.id); } catch {}
-    try { await sendInvoice(apiKey, businessId, inv.id, [params.payload.customer.email]); } catch {}
+    const approval = await approveInvoice(apiKey, businessId, inv.id);
+    if (approval.didSucceed) {
+      try { await sendInvoice(apiKey, businessId, inv.id, [params.payload.customer.email]); } catch {}
+    }
     return { success: true, invoiceId: inv.id, checkoutUrl: inv.viewUrl, mode: 'live' };
   } catch (error: any) {
     const hint = error?.details?.errors?.[0]?.extensions?.code === 'NOT_FOUND'
