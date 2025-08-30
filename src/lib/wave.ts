@@ -165,7 +165,7 @@ async function createInvoice(apiKey: string, businessId: string, customerId: str
   }
 }
 
-async function approveInvoice(apiKey: string, businessId: string, invoiceId: string): Promise<{ didSucceed: boolean; status?: string; errors?: any }> {
+async function approveInvoice(apiKey: string, _businessId: string, invoiceId: string): Promise<{ didSucceed: boolean; status?: string; errors?: any }> {
   const m = `mutation ApproveInvoice($input: InvoiceApproveInput!) {
     invoiceApprove(input: $input) {
       didSucceed
@@ -174,27 +174,17 @@ async function approveInvoice(apiKey: string, businessId: string, invoiceId: str
     }
   }`;
 
-  const tryApprove = async (vars: Record<string, any>) => {
-    try {
-      const data = await waveFetch(apiKey, m, { input: vars });
-      const node = data?.invoiceApprove;
-      if (!node?.didSucceed) {
-        const firstErr = node?.inputErrors?.[0]?.message || 'Failed to approve invoice';
-        const err = new Error(firstErr);
-        (err as any).details = node?.inputErrors;
-        throw err;
-      }
-      return { didSucceed: true, status: node?.invoice?.status as string | undefined };
-    } catch (e: any) {
-      return { didSucceed: false, errors: e?.details || e?.message };
+  try {
+    const data = await waveFetch(apiKey, m, { input: { invoiceId } });
+    const node = data?.invoiceApprove;
+    if (!node?.didSucceed) {
+      const firstErr = node?.inputErrors?.[0]?.message || 'Failed to approve invoice';
+      return { didSucceed: false, errors: node?.inputErrors || firstErr };
     }
-  };
-
-  // Try with invoiceId first; if schema expects id, retry
-  const first = await tryApprove({ businessId, invoiceId });
-  if (first.didSucceed) return first;
-  const second = await tryApprove({ businessId, id: invoiceId });
-  return second;
+    return { didSucceed: true, status: node?.invoice?.status as string | undefined };
+  } catch (e: any) {
+    return { didSucceed: false, errors: e?.details || e?.message };
+  }
 }
 
 async function sendInvoice(apiKey: string, businessId: string, invoiceId: string, toEmails: string[]): Promise<void> {
