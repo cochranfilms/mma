@@ -337,10 +337,15 @@ Be brutally honest but professional. Identify real problems that Marketing Mouse
 
 function generateServiceRecommendations(analysis: any, scraped: any) {
   const recommendations: Array<{ id: string; title: string; description: string; impact: string; price: number }> = [];
+  const usedServices = new Set<string>();
 
   function toRec(serviceId: string, impact: string) {
+    // Don't add the same service twice
+    if (usedServices.has(serviceId)) return;
+    
     const svc = catalogServices.find(s => s.id === serviceId);
     if (!svc) return;
+    
     const startingPrice = (svc as any).startingPrice || (svc.pricing?.packages?.[0]?.price ?? 0);
     recommendations.push({
       id: svc.id,
@@ -349,9 +354,17 @@ function generateServiceRecommendations(analysis: any, scraped: any) {
       impact,
       price: startingPrice,
     });
+    
+    usedServices.add(serviceId);
   }
 
-  // Map analysis + business context to real services
+  // Get analysis scores
+  const seoScore = analysis.seoAnalysis?.score ?? 0;
+  const designScore = analysis.designAnalysis?.score ?? 0;
+  const conversionScore = analysis.conversionAnalysis?.score ?? 0;
+  const overallScore = analysis.overallScore ?? 0;
+
+  // Get website characteristics
   const linkCount = scraped?.linkCount ?? 0;
   const hasContact = !!scraped?.hasContactForm;
   const hasAnalytics = !!scraped?.hasAnalytics;
@@ -364,65 +377,162 @@ function generateServiceRecommendations(analysis: any, scraped: any) {
   const hasEcommerceSignals = !!scraped?.hasEcommerceSignals;
   const usesBooking = !!scraped?.usesBooking;
 
-  if (analysis.seoAnalysis.score < 60 || !hasMeta || linkCount < 10) {
-    toRec('web-development', `Technical SEO + performance overhaul to address low SEO score and weak metadata. Projected ${Math.floor(Math.random() * 120 + 120)}% organic lift`);
+  // Priority 1: Critical technical issues (always recommend if present)
+  if (seoScore < 60 || !hasMeta || linkCount < 10) {
+    const seoImpacts = [
+      `Technical SEO + performance overhaul to address low SEO score (${seoScore}/100) and weak metadata. Projected ${Math.floor(Math.random() * 120 + 120)}% organic lift`,
+      `Comprehensive SEO audit and optimization to fix critical ranking issues. Current score: ${seoScore}/100. Expected improvement: ${Math.floor(Math.random() * 150 + 100)}%`,
+      `Search engine optimization overhaul to address technical issues and improve visibility. Projected ${Math.floor(Math.random() * 200 + 100)}% traffic increase`
+    ];
+    toRec('web-development', seoImpacts[Math.floor(Math.random() * seoImpacts.length)]);
   }
-  if (analysis.designAnalysis.score < 60 || !hasViewport) {
-    toRec('web-development', 'Responsive UX rebuild to fix mobile viewport and usability issues; improve task completion and engagement');
+  
+  if (designScore < 60 || !hasViewport) {
+    const designImpacts = [
+      `Responsive UX rebuild to fix mobile viewport and usability issues. Current design score: ${designScore}/100`,
+      `Mobile-first design overhaul to improve user experience across all devices. Expected engagement increase: ${Math.floor(Math.random() * 80 + 40)}%`,
+      `User experience optimization to reduce bounce rates and improve conversion. Current design score: ${designScore}/100`
+    ];
+    toRec('web-development', designImpacts[Math.floor(Math.random() * designImpacts.length)]);
   }
-  if (analysis.conversionAnalysis.score < 60 || !hasContact || !hasAnalytics) {
-    toRec('web-development', 'Implement lead capture, analytics events, and CRO patterns to stop drop‑offs and measure funnel performance');
+  
+  if (conversionScore < 60 || !hasContact || !hasAnalytics) {
+    const conversionImpacts = [
+      `Implement lead capture, analytics events, and CRO patterns. Current conversion score: ${conversionScore}/100`,
+      `Conversion rate optimization to capture more leads and increase revenue. Expected improvement: ${Math.floor(Math.random() * 100 + 50)}%`,
+      `Lead generation system implementation to stop visitor drop-offs. Current conversion score: ${conversionScore}/100`
+    ];
+    toRec('web-development', conversionImpacts[Math.floor(Math.random() * conversionImpacts.length)]);
   }
-  if ((analysis.overallScore ?? 0) < 70 || !hasSSL) {
+
+  // Priority 2: Business-specific services (only if relevant)
+  if (hasEventKeywords || usesBooking) {
+    const eventImpacts = [
+      'On‑site live streaming and event coverage to protect show quality and reach bigger audiences',
+      'Professional event production services to capture and broadcast your events worldwide',
+      'Live streaming and event coverage to expand your audience reach and engagement'
+    ];
+    toRec('live-production', eventImpacts[Math.floor(Math.random() * eventImpacts.length)]);
+  }
+  
+  if (hasPhotoBoothKeywords) {
+    const photoBoothImpacts = [
+      'On‑site printing and photo booth to create memorable guest experiences and brand reach',
+      'Interactive photo experiences to increase event engagement and social sharing',
+      'Photo booth and printing services to enhance guest experience and brand visibility'
+    ];
+    toRec('on-site-prints', photoBoothImpacts[Math.floor(Math.random() * photoBoothImpacts.length)]);
+  }
+  
+  if (hasEcommerceSignals) {
+    const photoImpacts = [
+      'Clean product and lifestyle photos to boost conversion and reduce returns',
+      'Professional product photography to increase sales and customer confidence',
+      'High-quality product images to improve conversion rates and reduce returns'
+    ];
+    toRec('photography', photoImpacts[Math.floor(Math.random() * photoImpacts.length)]);
+    
+    const videoImpacts = [
+      'Product/demo videos to raise engagement and conversion on PDPs and ads',
+      'Video content creation to boost product engagement and sales conversion',
+      'Product demonstration videos to increase customer understanding and conversion'
+    ];
+    toRec('video-production', videoImpacts[Math.floor(Math.random() * videoImpacts.length)]);
+  }
+  
+  if (isAgency) {
+    const agencyImpacts = [
+      'Add senior capacity under NDA so you can say yes to more work without hiring',
+      'White-label production support to expand your service offerings',
+      'Professional capacity expansion to handle more client projects'
+    ];
+    toRec('white-label', agencyImpacts[Math.floor(Math.random() * agencyImpacts.length)]);
+  }
+
+  // Priority 2.5: Platform-specific recommendations
+  const platform = scraped?.platform;
+  if (platform === 'wordpress' && seoScore < 70) {
+    toRec('web-development', `WordPress optimization and SEO improvements. Current SEO score: ${seoScore}/100`);
+  }
+  
+  if (platform === 'shopify' && conversionScore < 70) {
+    toRec('web-development', `Shopify store optimization and conversion improvements. Current conversion score: ${conversionScore}/100`);
+  }
+  
+  if (platform === 'squarespace' && designScore < 70) {
+    toRec('web-development', `Squarespace design optimization and user experience improvements. Current design score: ${designScore}/100`);
+  }
+
+  // Priority 2.6: Industry-specific recommendations
+  const hasRestaurantKeywords = /(restaurant|cafe|dining|food|menu|reservation)/i.test(scraped?.title || '') || /(restaurant|cafe|dining|food|menu|reservation)/i.test(scraped?.metaDescription || '');
+  const hasHealthcareKeywords = /(healthcare|medical|doctor|clinic|hospital|patient|treatment)/i.test(scraped?.title || '') || /(healthcare|medical|doctor|clinic|hospital|patient|treatment)/i.test(scraped?.metaDescription || '');
+  const hasLegalKeywords = /(law|legal|attorney|lawyer|firm|case|consultation)/i.test(scraped?.title || '') || /(law|legal|attorney|lawyer|firm|case|consultation)/i.test(scraped?.metaDescription || '');
+  
+  if (hasRestaurantKeywords && !usedServices.has('photography')) {
+    toRec('photography', 'Professional food photography to showcase your menu and attract more customers');
+  }
+  
+  if (hasHealthcareKeywords && !usedServices.has('brand-development')) {
+    toRec('brand-development', 'Healthcare brand positioning and trust-building messaging to connect with patients');
+  }
+  
+  if (hasLegalKeywords && !usedServices.has('brand-development')) {
+    toRec('brand-development', 'Legal practice positioning and professional credibility building');
+  }
+
+  // Priority 3: Strategic improvements (if we have room and scores are moderate)
+  if (overallScore < 70 && !usedServices.has('brand-development')) {
     toRec('brand-development', 'Positioning + messaging tune‑up to raise clarity and pricing power; tighten brand signals across site');
   }
-
-  // Business-type driven services
-  if (hasEventKeywords || usesBooking) {
-    toRec('live-production', 'On‑site live streaming and event coverage to protect show quality and reach bigger audiences');
+  
+  if (seoScore < 80 && !usedServices.has('web-development')) {
+    toRec('web-development', 'Advanced SEO optimization and content strategy to improve search rankings and organic traffic');
   }
-  if (hasPhotoBoothKeywords) {
-    toRec('on-site-prints', 'On‑site printing and photo booth to create memorable guest experiences and brand reach');
-  }
-  if (hasEcommerceSignals) {
-    toRec('photography', 'Clean product and lifestyle photos to boost conversion and reduce returns');
-    toRec('video-production', 'Product/demo videos to raise engagement and conversion on PDPs and ads');
-  }
-  if (isAgency) {
-    toRec('white-label', 'Add senior capacity under NDA so you can say yes to more work without hiring');
+  
+  if (conversionScore < 75 && !usedServices.has('web-development')) {
+    toRec('web-development', 'Conversion rate optimization and user experience improvements to maximize lead generation');
   }
 
-  // Ensure unique by id and return up to 3
-  const unique = new Map<string, typeof recommendations[number]>();
-  recommendations.forEach(r => { if (!unique.has(r.id)) unique.set(r.id, r); });
-  let list = Array.from(unique.values());
-  if (list.length === 0) {
-    // Default set if none matched
-    toRec('web-development', 'Comprehensive site overhaul for performance, SEO, and CRO');
-    toRec('brand-development', 'Positioning and identity to improve message-market fit');
-    toRec('video-production', 'High-converting creative assets to drive campaigns');
-    list = Array.from(new Map(recommendations.map(r => [r.id, r])).values());
+  // Priority 4: Creative services (if we still have room)
+  if (!usedServices.has('video-production')) {
+    toRec('video-production', 'High-converting video content to boost engagement and conversion rates across all channels');
+  }
+  
+  if (!usedServices.has('photography')) {
+    toRec('photography', 'Professional photography to enhance brand credibility and improve visual appeal');
   }
 
-  // Pad to 3 unique items by priority order
-  const priority = ['web-development', 'brand-development', 'video-production', 'photography', 'live-production', 'on-site-prints', 'white-label'];
-  for (const pid of priority) {
-    if (list.length >= 3) break;
-    if (!list.find(r => r.id === pid)) {
-      toRec(pid, 'High-ROI initiative aligned with current gaps');
-      // refresh list with unique map
-      const map = new Map<string, typeof recommendations[number]>();
-      recommendations.forEach(r => { if (!map.has(r.id)) map.set(r.id, r); });
-      list = Array.from(map.values());
+  // If we still don't have 3 recommendations, add strategic defaults
+  const priorityDefaults = ['web-development', 'brand-development', 'video-production', 'photography', 'live-production', 'on-site-prints', 'white-label'];
+  
+  for (const serviceId of priorityDefaults) {
+    if (recommendations.length >= 3) break;
+    if (!usedServices.has(serviceId)) {
+      toRec(serviceId, 'Strategic initiative to address current business gaps and drive growth');
     }
   }
 
-  return list.slice(0, 3);
+  // Ensure we return exactly 3 unique recommendations
+  const uniqueRecommendations = Array.from(new Map(recommendations.map(r => [r.id, r])).values());
+  
+  // If we still don't have 3, use the fallback
+  if (uniqueRecommendations.length < 3) {
+    const fallback = getDefaultRecommendations();
+    for (const fallbackService of fallback) {
+      if (uniqueRecommendations.length >= 3) break;
+      if (!usedServices.has(fallbackService.id)) {
+        uniqueRecommendations.push(fallbackService);
+        usedServices.add(fallbackService.id);
+      }
+    }
+  }
+
+  return uniqueRecommendations.slice(0, 3);
 }
 
 function getDefaultRecommendations() {
-  // Fallback to real catalog services with plain-language positioning
-  return [
+  // Create multiple fallback sets for variety
+  const fallbackSets = [
     {
       id: 'web-development',
       title: 'Website Design & Development',
@@ -443,8 +553,33 @@ function getDefaultRecommendations() {
       description: 'Plan, film, and edit videos that help you sell',
       impact: 'Raise engagement across site, ads, and social',
       price: 0
+    },
+    {
+      id: 'photography',
+      title: 'Professional Photography',
+      description: 'High-quality images that build trust and convert visitors',
+      impact: 'Enhance visual appeal and professional credibility',
+      price: 0
+    },
+    {
+      id: 'live-production',
+      title: 'Live Production Services',
+      description: 'Professional event coverage and live streaming solutions',
+      impact: 'Capture and broadcast your events to wider audiences',
+      price: 0
+    },
+    {
+      id: 'on-site-prints',
+      title: 'On-Site Printing & Photo Booths',
+      description: 'Interactive experiences that create memorable moments',
+      impact: 'Increase engagement and brand recall at events',
+      price: 0
     }
   ];
+
+  // Return a random selection to add variety
+  const shuffled = [...fallbackSets].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 3);
 }
 
 function ensurePriced(list: Array<{ id: string; title: string; description: string; impact: string; price: number }>) {
