@@ -107,50 +107,26 @@ export async function POST(req: NextRequest) {
 
     // 4) Create Calendly scheduling link (REQUIRED - this is how the actual appointment gets booked)
     let schedulingUrl: string | undefined;
-    try {
-      // Use absolute URL so this works on Vercel edge/node without relying on relative path resolution
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '';
-      const calendlyEndpoint = `${baseUrl}/api/calendly/schedule`;
-      const calRes = await fetch(calendlyEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          serviceId, 
-          name, 
-          email
-        }),
-      });
-      
-      const calData = await calRes.json();
-      if (calData?.schedulingUrl) {
-        schedulingUrl = calData.schedulingUrl;
-        console.log('✅ Calendly link created:', schedulingUrl);
-      } else {
-        throw new Error('Failed to create Calendly scheduling link');
-      }
-    } catch (err: any) {
-      // If the fetch above threw because Calendly returned a non-2xx, try to surface that body
-      try {
-        // Attempt one retry to read body if available
-        const debugRes = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '')}/api/calendly/schedule`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ serviceId, name, email })
-        });
-        const text = await debugRes.text();
-        console.error('❌ Calendly schedule error:', debugRes.status, text);
-        return NextResponse.json({ 
-          success: false,
-          error: `Calendly schedule error: ${debugRes.status} ${text}`
-        }, { status: 500 });
-      } catch (inner) {
-        console.error('❌ Calendly link creation failed:', err);
-        return NextResponse.json({ 
-          success: false,
-          error: 'Failed to create scheduling link. Please ensure Calendly env vars are set.'
-        }, { status: 500 });
-      }
+    // Use the request origin, which is robust on Vercel and local dev
+    const calendlyEndpoint = `${req.nextUrl.origin}/api/calendly/schedule`;
+    const calRes = await fetch(calendlyEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ serviceId, name, email }),
+      cache: 'no-store',
+    });
+    if (!calRes.ok) {
+      const text = await calRes.text();
+      console.error('❌ Calendly schedule error:', calRes.status, text);
+      return NextResponse.json({ success: false, error: `Calendly schedule error: ${calRes.status} ${text}` }, { status: 500 });
     }
+    const calData = await calRes.json().catch(() => ({} as any));
+    schedulingUrl = calData?.schedulingUrl;
+    if (!schedulingUrl) {
+      console.error('❌ Calendly response missing schedulingUrl:', calData);
+      return NextResponse.json({ success: false, error: 'Calendly did not return a schedulingUrl' }, { status: 500 });
+    }
+    console.log('✅ Calendly link created:', schedulingUrl);
 
     // 5) Send confirmation email (if you have email service set up)
     // This would be where you'd send a calendar invite or confirmation email
