@@ -74,6 +74,8 @@ export default function CalendarBooking() {
   const [invoiceId, setInvoiceId] = useState<string | null>(null);
   const [invoiceError, setInvoiceError] = useState<string | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'creating' | 'ready' | 'completed'>('pending');
+  const [calendlyUrl, setCalendlyUrl] = useState<string | null>(null);
+  const [showInlineCalendly, setShowInlineCalendly] = useState(false);
 
   // Generate sample available slots for the next 7 days
   useEffect(() => {
@@ -113,21 +115,23 @@ export default function CalendarBooking() {
 
   const handleServiceSelect = (serviceId: string) => {
     setSelectedService(serviceId);
-    setStep('date');
+    // Skip date/time selection in pay-first flow; collect details then show inline Calendly
+    setStep('confirmation');
     // Reset payment status when service changes
     setPaymentStatus('pending');
     setInvoiceUrl(null);
     setInvoiceId(null);
     setInvoiceError(null);
+    setCalendlyUrl(null);
+    setShowInlineCalendly(false);
   };
 
-  const handleDateSelect = (date: string) => {
-    setSelectedDate(date);
-    setStep('time');
+  const handleDateSelect = (_date: string) => {
+    // Date selection disabled in pay-first flow
   };
 
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(time);
+  const handleTimeSelect = (_time: string) => {
+    // Time selection disabled in pay-first flow
     setStep('confirmation');
     // Reset payment status when time changes
     if (selectedService === 'discovery') {
@@ -141,67 +145,35 @@ export default function CalendarBooking() {
     setInvoiceError(null);
   };
 
+  // In the pay-first flow, this triggers inline Calendly after payment
   const handleBooking = async () => {
     if (!name || !email) {
       setInvoiceError('Please provide your name and email.');
       return;
     }
 
+    // Require payment for paid services before showing Calendly inline
+    const needsPayment = selectedService !== 'discovery';
+    if (needsPayment && paymentStatus !== 'completed') {
+      setInvoiceError('Please complete payment before continuing to the calendar.');
+      return;
+    }
+
     setIsLoading(true);
-
     try {
-      // Check if payment is required and completed
-      const needsPayment = selectedService !== 'discovery';
-      if (needsPayment && paymentStatus !== 'completed') {
-        setInvoiceError('Please complete payment before booking.');
-        setIsLoading(false);
-        return;
-      }
-
-      // 1) Create direct booking with selected date/time
-      const bookingData = {
-        serviceId: selectedService,
-        name,
-        email,
-        phone,
-        company,
-        website,
-        jobtitle,
-        notes,
-        selectedDate,
-        selectedTime,
-        invoiceId: invoiceId || undefined,
-      };
-
-      // 2) Create booking via API (this will handle Calendly + HubSpot)
-      const bookingRes = await fetch('/api/calendar/book', {
+      const res = await fetch('/api/calendly/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bookingData),
+        body: JSON.stringify({ serviceId: selectedService, name, email }),
       });
-
-      const bookingResult = await bookingRes.json();
-
-      if (!bookingRes.ok || !bookingResult.success) {
-        throw new Error(bookingResult.error || 'Booking failed');
+      const data = await res.json();
+      if (!res.ok || !data?.schedulingUrl) {
+        throw new Error(data?.error || 'Could not create scheduling link');
       }
-
-      // 3) Handle the booking result
-      if (bookingResult.requiresCalendlyBooking && bookingResult.schedulingUrl) {
-        // Show clear message about completing booking via Calendly
-        const userConfirmed = confirm(
-          `Your information has been saved! To complete your ${getSelectedService()?.name} booking for ${selectedDate} at ${selectedTime}, you need to confirm your appointment via Calendly.\n\nClick OK to open Calendly and select your preferred time slot.`
-        );
-        
-        if (userConfirmed) {
-          window.open(bookingResult.schedulingUrl, '_blank');
-        }
-      } else {
-        alert('Booking information saved, but there was an issue creating the scheduling link. Please contact support.');
-      }
-
+      setCalendlyUrl(data.schedulingUrl as string);
+      setShowInlineCalendly(true);
     } catch (error: any) {
-      setInvoiceError(error.message || 'Booking failed. Please try again.');
+      setInvoiceError(error?.message || 'Unable to load calendar.');
     } finally {
       setIsLoading(false);
     }
@@ -400,6 +372,8 @@ export default function CalendarBooking() {
         <div className="bg-blue-50 rounded-xl p-6 space-y-4 border border-blue-100">
           <div className="grid md:grid-cols-2 gap-3">
             <input
+              id="fullName"
+              name="fullName"
               type="text"
               placeholder="Full name *"
               value={name}
@@ -408,6 +382,8 @@ export default function CalendarBooking() {
               required
             />
             <input
+              id="email"
+              name="email"
               type="email"
               placeholder="Email address *"
               value={email}
@@ -418,6 +394,8 @@ export default function CalendarBooking() {
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             <input
+              id="phone"
+              name="phone"
               type="tel"
               placeholder="Phone number"
               value={phone}
@@ -425,6 +403,8 @@ export default function CalendarBooking() {
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
             <input
+              id="company"
+              name="company"
               type="text"
               placeholder="Company name"
               value={company}
@@ -434,6 +414,8 @@ export default function CalendarBooking() {
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             <input
+              id="jobtitle"
+              name="jobtitle"
               type="text"
               placeholder="Job title"
               value={jobtitle}
@@ -441,6 +423,8 @@ export default function CalendarBooking() {
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
             <input
+              id="website"
+              name="website"
               type="url"
               placeholder="Website (https://...)"
               value={website}
@@ -450,6 +434,8 @@ export default function CalendarBooking() {
           </div>
           <div>
             <textarea
+              id="notes"
+              name="notes"
               placeholder="Additional notes or questions (optional)"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -462,14 +448,7 @@ export default function CalendarBooking() {
             <span className="text-gray-600">Service:</span>
             <span className="font-semibold text-gray-900">{service.name}</span>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">Date:</span>
-            <span className="font-semibold text-gray-900">{formatDate(selectedDate)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">Time:</span>
-            <span className="font-semibold text-gray-900">{selectedTime}</span>
-          </div>
+          {/* In pay-first flow, date/time are chosen in Calendly */}
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Duration:</span>
             <span className="font-semibold text-gray-900">{service.duration} minutes</span>
@@ -518,7 +497,7 @@ export default function CalendarBooking() {
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <>
-                  Continue to Calendly
+                  Continue to Scheduling
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               )}
@@ -574,6 +553,17 @@ export default function CalendarBooking() {
                 {paymentStatus === 'ready' && 'After payment, return here to finalize your booking.'}
                 {paymentStatus === 'completed' && 'You can now proceed with your booking.'}
               </p>
+            </div>
+          )}
+
+          {showInlineCalendly && calendlyUrl && (
+            <div className="mt-4">
+              <iframe
+                src={calendlyUrl}
+                style={{ minHeight: 740 }}
+                className="w-full rounded-xl border"
+                title="Schedule with MMA"
+              />
             </div>
           )}
         </div>
