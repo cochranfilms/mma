@@ -161,6 +161,21 @@ async function scrapeWebsite(url: string): Promise<string> {
     const headings = html.match(/<h[1-6][^>]*>([^<]+)<\/h[1-6]>/gi) || [];
     const links = html.match(/<a[^>]*href=["\']([^"']+)["\'][^>]*>/gi) || [];
     
+    // Additional business heuristics
+    const textLower = html.toLowerCase();
+    const platform =
+      textLower.includes('wp-content') ? 'wordpress' :
+      textLower.includes('cdn.shopify.com') || textLower.includes('shopify') ? 'shopify' :
+      textLower.includes('static1.squarespace.com') || textLower.includes('squarespace') ? 'squarespace' :
+      textLower.includes('wixstatic.com') || textLower.includes('wix.com') ? 'wix' :
+      textLower.includes('webflow') ? 'webflow' :
+      'unknown';
+    const isAgency = /(agency|our\s+work|case\s+stud(y|ies)|clients)/i.test(html) && /(services|capabilities)/i.test(html);
+    const hasEventKeywords = /(event|conference|wedding|festival|live\s*stream|hybrid\s*event)/i.test(html);
+    const hasPhotoBoothKeywords = /(photo\s*booth|on[-\s]?site\s*print|step\s*&\s*repeat|instant\s*prints)/i.test(textLower);
+    const hasEcommerceSignals = /(add\s*to\s*cart|checkout|cart|product\s+price)/i.test(textLower);
+    const usesBooking = /(book\s*now|appointments?|calendly|acuityscheduling|setmore|squareup|book\s*online)/i.test(textLower);
+    
     return JSON.stringify({
       url,
       title,
@@ -175,6 +190,13 @@ async function scrapeWebsite(url: string): Promise<string> {
       hasAnalytics: html.includes('google-analytics') || html.includes('gtag') || html.includes('ga('),
       hasSSL: url.startsWith('https://'),
       mobileViewport: html.includes('viewport'),
+      // business heuristics
+      platform,
+      isAgency,
+      hasEventKeywords,
+      hasPhotoBoothKeywords,
+      hasEcommerceSignals,
+      usesBooking,
     });
   } catch (error) {
     console.error('Website scraping error:', error);
@@ -209,7 +231,17 @@ Provide analysis in this exact JSON format:
     "score": [number 0-100],
     "issues": [array of conversion problems],
     "recommendations": [array of conversion improvements]
-  }
+  },
+  "businessContext": {
+    "likelyIndustry": [string],
+    "isAgency": [boolean],
+    "hasEcommerce": [boolean],
+    "runsEvents": [boolean],
+    "usesOnlineBooking": [boolean],
+    "locationHint": [string],
+    "notableSignals": [array of short strings]
+  },
+  "serviceNeeds": [array of strings describing concrete service needs in plain language]
 }
 
 Focus on:
@@ -223,6 +255,8 @@ Focus on:
 - Missing trust signals
 - Poor call-to-action placement
 - Lack of social proof
+
+Also reason about business context (e.g., events, ecommerce, agency, local service provider) to identify non-SEO/UI needs such as on-site photo booths/printing, white-label production support, live production for events, product photography, and brand clarity.
 
 Be brutally honest but professional. Identify real problems that Marketing Mousetrap Agency can solve.
 `;
@@ -314,13 +348,18 @@ function generateServiceRecommendations(analysis: any, scraped: any) {
     });
   }
 
-  // Map analysis to real services
+  // Map analysis + business context to real services
   const linkCount = scraped?.linkCount ?? 0;
   const hasContact = !!scraped?.hasContactForm;
   const hasAnalytics = !!scraped?.hasAnalytics;
   const hasSSL = !!scraped?.hasSSL;
   const hasViewport = !!scraped?.mobileViewport;
   const hasMeta = !!scraped?.metaDescription;
+  const isAgency = !!scraped?.isAgency;
+  const hasEventKeywords = !!scraped?.hasEventKeywords;
+  const hasPhotoBoothKeywords = !!scraped?.hasPhotoBoothKeywords;
+  const hasEcommerceSignals = !!scraped?.hasEcommerceSignals;
+  const usesBooking = !!scraped?.usesBooking;
 
   if (analysis.seoAnalysis.score < 60 || !hasMeta || linkCount < 10) {
     toRec('web-development', `Technical SEO + performance overhaul to address low SEO score and weak metadata. Projected ${Math.floor(Math.random() * 120 + 120)}% organic lift`);
@@ -333,6 +372,21 @@ function generateServiceRecommendations(analysis: any, scraped: any) {
   }
   if ((analysis.overallScore ?? 0) < 70 || !hasSSL) {
     toRec('brand-development', 'Positioning + messaging tune‑up to raise clarity and pricing power; tighten brand signals across site');
+  }
+
+  // Business-type driven services
+  if (hasEventKeywords || usesBooking) {
+    toRec('live-production', 'On‑site live streaming and event coverage to protect show quality and reach bigger audiences');
+  }
+  if (hasPhotoBoothKeywords) {
+    toRec('on-site-prints', 'On‑site printing and photo booth to create memorable guest experiences and brand reach');
+  }
+  if (hasEcommerceSignals) {
+    toRec('photography', 'Clean product and lifestyle photos to boost conversion and reduce returns');
+    toRec('video-production', 'Product/demo videos to raise engagement and conversion on PDPs and ads');
+  }
+  if (isAgency) {
+    toRec('white-label', 'Add senior capacity under NDA so you can say yes to more work without hiring');
   }
 
   // Ensure unique by id and return up to 3
@@ -348,7 +402,7 @@ function generateServiceRecommendations(analysis: any, scraped: any) {
   }
 
   // Pad to 3 unique items by priority order
-  const priority = ['web-development', 'brand-development', 'video-production', 'photography', 'live-production', 'white-label'];
+  const priority = ['web-development', 'brand-development', 'video-production', 'photography', 'live-production', 'on-site-prints', 'white-label'];
   for (const pid of priority) {
     if (list.length >= 3) break;
     if (!list.find(r => r.id === pid)) {
@@ -364,27 +418,28 @@ function generateServiceRecommendations(analysis: any, scraped: any) {
 }
 
 function getDefaultRecommendations() {
+  // Fallback to real catalog services with plain-language positioning
   return [
     {
-      id: 'website-redesign',
-      title: 'Website Domination Package',
-      description: 'Complete website transformation with conversion focus',
-      impact: 'Expected 200-300% increase in conversions',
-      price: 15000
+      id: 'web-development',
+      title: 'Website Design & Development',
+      description: 'Fast, clear site that turns visitors into leads',
+      impact: 'Lift conversions and make updates easy for your team',
+      price: 0
     },
     {
-      id: 'seo-audit',
-      title: 'SEO Warfare Implementation',
-      description: 'Technical SEO overhaul and authority building',
-      impact: 'Projected 150-250% increase in organic traffic',
-      price: 5000
+      id: 'brand-development',
+      title: 'Brand Strategy & Identity',
+      description: 'Clear message, logo, and guidelines your team can use',
+      impact: 'Improve clarity, trust, and pricing power',
+      price: 0
     },
     {
-      id: 'marketing-automation',
-      title: 'AI Marketing Automation',
-      description: 'Automated email sequences and lead nurturing system',
-      impact: 'Projected 200% increase in qualified leads',
-      price: 10000
+      id: 'video-production',
+      title: 'Video Production',
+      description: 'Plan, film, and edit videos that help you sell',
+      impact: 'Raise engagement across site, ads, and social',
+      price: 0
     }
   ];
 }

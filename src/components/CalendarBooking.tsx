@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Calendar, Clock, Users, Video, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
 
 interface BookingSlot {
@@ -76,6 +76,7 @@ export default function CalendarBooking() {
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'creating' | 'ready' | 'completed'>('pending');
   const [calendlyUrl, setCalendlyUrl] = useState<string | null>(null);
   const [showInlineCalendly, setShowInlineCalendly] = useState(false);
+  const calendlyContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Generate sample available slots for the next 7 days
   useEffect(() => {
@@ -125,6 +126,34 @@ export default function CalendarBooking() {
     setCalendlyUrl(null);
     setShowInlineCalendly(false);
   };
+
+  // Load Calendly embed and prefill with purchaser info when showing inline widget
+  useEffect(() => {
+    if (!showInlineCalendly || !calendlyUrl || !calendlyContainerRef.current) return;
+    const load = () => {
+      try {
+        (window as any).Calendly?.initInlineWidget?.({
+          url: calendlyUrl,
+          parentElement: calendlyContainerRef.current!,
+          prefill: {
+            name,
+            email,
+          },
+        });
+      } catch {}
+    };
+    const existing = document.querySelector('script[data-calendly="true"]') as HTMLScriptElement | null;
+    if (existing) {
+      load();
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://assets.calendly.com/assets/external/widget.js';
+    s.async = true;
+    s.dataset.calendly = 'true';
+    s.onload = load;
+    document.body.appendChild(s);
+  }, [showInlineCalendly, calendlyUrl, name, email]);
 
   const handleDateSelect = (_date: string) => {
     // Date selection disabled in pay-first flow
@@ -558,12 +587,7 @@ export default function CalendarBooking() {
 
           {showInlineCalendly && calendlyUrl && (
             <div className="mt-4">
-              <iframe
-                src={calendlyUrl}
-                style={{ minHeight: 740 }}
-                className="w-full rounded-xl border"
-                title="Schedule with MMA"
-              />
+              <div ref={calendlyContainerRef} className="w-full rounded-xl border" style={{ minHeight: 740 }} />
             </div>
           )}
         </div>

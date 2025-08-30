@@ -25,3 +25,40 @@
  ✓ Compiled in 108ms (201 modules)
  ✓ Compiled in 438ms (201 modules)
  ✓ Compiled in 153ms (201 modules)
+ ✓ Compiled /api/calendar/book in 449ms (54 modules)
+📅 Calendar booking request received
+📋 Request body: {
+  "serviceId": "discovery",
+  "name": "Test User",
+  "email": "test@example.com",
+  "selectedDate": "2025-01-15",
+  "selectedTime": "10:00"
+}
+📝 Creating HubSpot contact and booking record...
+❌ HubSpot contact creation failed: Error: HUBSPOT_PRIVATE_APP_TOKEN is not set
+    at getAuthHeaders (webpack-internal:///(rsc)/./src/lib/hubspot.ts:19:15)
+    at findContactByEmail (webpack-internal:///(rsc)/./src/lib/hubspot.ts:29:18)
+    at upsertContact (webpack-internal:///(rsc)/./src/lib/hubspot.ts:65:28)
+    at POST (webpack-internal:///(rsc)/./src/app/api/calendar/book/route.ts:40:90)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:55038
+    at async ek.execute (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:45808)
+    at async ek.handle (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:56292)
+    at async doRender (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/base-server.js:1377:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/base-server.js:1599:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/base-server.js:1507:28)
+    at async DevServer.renderPageComponent (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/base-server.js:1931:24)
+    at async DevServer.renderToResponseImpl (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/base-server.js:1969:32)
+    at async DevServer.pipeImpl (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/base-server.js:920:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/base-server.js:816:17)
+    at async /Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/lib/router-server.js:174:21)
+    at async handleRequest (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/lib/router-server.js:353:24)
+    at async requestHandlerImpl (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/lib/router-server.js:377:13)
+    at async Server.requestListener (/Users/codycochran/Library/Mobile Documents/com~apple~CloudDocs/Cochran Films/Systems Division/MMA/mma-website/node_modules/next/dist/server/lib/start-server.js:141:13)
+ POST /api/calendar/book 500 in 620ms
+ ✓ Compiled /api/calendly/schedule in 53ms (53 modules)
+ POST /api/calendly/schedule 400 in 75ms

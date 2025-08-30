@@ -3,9 +3,9 @@ export const services = [
     id: 'video-production',
     icon: 'camera',
     title: 'Video Production',
-    subtitle: 'Cinematic storytelling for premium brands',
+    subtitle: 'Professional videos that tell your story',
     description:
-      'High-end production from concept through delivery: brand films, product spots, social, and event coverage built to convert.',
+      'We plan, film, and edit videos that help you sell and communicate clearly — from brand films and product spots to social videos and events.',
     deliverables: [
       'Concept + creative direction',
       'On-site production crew',
@@ -71,9 +71,9 @@ export const services = [
     id: 'live-production',
     icon: 'camera',
     title: 'Live Production',
-    subtitle: 'Multi-cam live streams and event coverage',
+    subtitle: 'Reliable live streaming and event coverage',
     description:
-      'End-to-end live production including switching, audio, graphics, and streaming to your platforms with professional redundancy.',
+      'We handle your live show from start to finish — cameras, audio, graphics, and streaming — so your event runs smoothly without surprises.',
     deliverables: [
       'Multi-cam switching and capture',
       'Audio mixing + IFB/comm systems',
@@ -119,10 +119,10 @@ export const services = [
   {
     id: 'on-site-prints',
     icon: 'target',
-    title: 'On‑Site Prints',
-    subtitle: 'Instant prints and photo experiences',
+    title: 'On‑Site Printing & Photo Booths',
+    subtitle: 'Instant prints and shareable photo moments',
     description:
-      'Event photo booths and on‑site printing with branded templates, instant sharing, and staff to manage the experience.',
+      'Bring a branded photo booth to your event. Guests get instant prints and a digital gallery. We supply the gear and staff the station.',
     deliverables: [
       'Pro camera + lighting setup',
       'Live gallery + QR sharing',
@@ -168,10 +168,10 @@ export const services = [
   {
     id: 'web-development',
     icon: 'globe',
-    title: 'Web Development',
-    subtitle: 'Modern, conversion-focused websites',
+    title: 'Website Design & Development',
+    subtitle: 'Fast, clear, and easy-to-manage websites',
     description:
-      'Custom Next.js sites with fast performance, SEO best practices, and CMS workflows that empower teams.',
+      'We design and build websites that load fast, rank well, and turn visitors into leads. Your team can update content without hassle.',
     deliverables: [
       'Information architecture',
       'Design system + components',
@@ -235,9 +235,9 @@ export const services = [
     id: 'photography',
     icon: 'camera',
     title: 'Photography',
-    subtitle: 'Editorial-quality imagery for campaigns',
+    subtitle: 'Clean, consistent photos for web and print',
     description:
-      'Brand, product, and event photography with consistent creative direction and professional post-processing.',
+      'Brand, product, and event photos that look good everywhere. We plan the shots, capture on site or in studio, and deliver ready-to-use files.',
     deliverables: [
       'Creative brief + shot list',
       'On-location or studio shoot',
@@ -297,10 +297,10 @@ export const services = [
   {
     id: 'brand-development',
     icon: 'pen-tool',
-    title: 'Brand Development',
-    subtitle: 'Strategy, identity, and standards',
+    title: 'Brand Strategy & Identity',
+    subtitle: 'Clear message and a brand that fits your market',
     description:
-      'Positioning, naming, and identity systems that clarify value and accelerate go-to-market.',
+      'We help you explain what you do, why it matters, and how you look. Name, logo, colors, voice, and guidelines your whole team can use.',
     deliverables: [
       'Positioning + messaging',
       'Logo + visual identity',
@@ -362,10 +362,10 @@ export const services = [
   {
     id: 'white-label',
     icon: 'handshake',
-    title: 'White-Label Services',
-    subtitle: 'Confidential production for agencies',
+    title: 'White‑Label for Agencies',
+    subtitle: 'We do the work under your brand',
     description:
-      'Reliable, senior execution across video, web, and creative payloads under your brand.',
+      'Need extra hands? We plug into your team and deliver video, web, and creative work under NDA. Senior talent, on time, and client-ready.',
     deliverables: [
       'SLA-driven delivery',
       'NDA + private repositories',
