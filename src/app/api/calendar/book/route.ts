@@ -128,12 +128,28 @@ export async function POST(req: NextRequest) {
       } else {
         throw new Error('Failed to create Calendly scheduling link');
       }
-    } catch (err) {
-      console.error('❌ Calendly link creation failed:', err);
-      return NextResponse.json({ 
-        success: false,
-        error: 'Failed to create scheduling link. Please try again or contact support.'
-      }, { status: 500 });
+    } catch (err: any) {
+      // If the fetch above threw because Calendly returned a non-2xx, try to surface that body
+      try {
+        // Attempt one retry to read body if available
+        const debugRes = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '')}/api/calendly/schedule`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ serviceId, name, email })
+        });
+        const text = await debugRes.text();
+        console.error('❌ Calendly schedule error:', debugRes.status, text);
+        return NextResponse.json({ 
+          success: false,
+          error: `Calendly schedule error: ${debugRes.status} ${text}`
+        }, { status: 500 });
+      } catch (inner) {
+        console.error('❌ Calendly link creation failed:', err);
+        return NextResponse.json({ 
+          success: false,
+          error: 'Failed to create scheduling link. Please ensure Calendly env vars are set.'
+        }, { status: 500 });
+      }
     }
 
     // 5) Send confirmation email (if you have email service set up)
