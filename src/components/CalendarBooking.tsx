@@ -65,6 +65,11 @@ export default function CalendarBooking() {
   const [step, setStep] = useState<'service' | 'date' | 'time' | 'confirmation'>('service');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [company, setCompany] = useState('');
+  const [website, setWebsite] = useState('');
+  const [jobtitle, setJobtitle] = useState('');
+  const [notes, setNotes] = useState('');
   const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null);
   const [invoiceId, setInvoiceId] = useState<string | null>(null);
   const [invoiceError, setInvoiceError] = useState<string | null>(null);
@@ -153,40 +158,43 @@ export default function CalendarBooking() {
         return;
       }
 
-      // 1) Create Calendly single-use link
-      const cal = await fetch('/api/calendly/schedule', {
+      // 1) Create direct booking with selected date/time
+      const bookingData = {
+        serviceId: selectedService,
+        name,
+        email,
+        phone,
+        company,
+        website,
+        jobtitle,
+        notes,
+        selectedDate,
+        selectedTime,
+        invoiceId: invoiceId || undefined,
+      };
+
+      // 2) Create booking via API (this will handle Calendly + HubSpot)
+      const bookingRes = await fetch('/api/calendar/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ serviceId: selectedService, name, email }),
-      }).then(r => r.json());
+        body: JSON.stringify(bookingData),
+      });
 
-      // 2) Capture to HubSpot
-      try {
-        await fetch('/api/hubspot/capture', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            name,
-            listName: 'Calendar Bookings',
-            event: 'calendar_booking_started',
-            properties: {
-              serviceId: selectedService,
-              date: selectedDate,
-              time: selectedTime,
-              invoiceId: invoiceId || undefined,
-            },
-            noteTitle: 'Calendar Booking Initiated',
-            noteBody: `Service: ${selectedService}\nDate: ${selectedDate}\nTime: ${selectedTime}${invoiceId ? `\nInvoice: ${invoiceId}` : ''}`,
-          })
-        });
-      } catch (_) {}
+      const bookingResult = await bookingRes.json();
 
-      if (cal?.schedulingUrl) {
-        window.open(cal.schedulingUrl, '_blank');
-      } else {
-        alert(cal?.error || 'Could not create scheduling link.');
+      if (!bookingRes.ok || !bookingResult.success) {
+        throw new Error(bookingResult.error || 'Booking failed');
       }
+
+      // 3) Show success message and redirect
+      alert(`Booking confirmed! You'll receive a calendar invite shortly. ${bookingResult.schedulingUrl ? 'Opening Calendly to finalize details...' : ''}`);
+      
+      if (bookingResult.schedulingUrl) {
+        window.open(bookingResult.schedulingUrl, '_blank');
+      }
+
+    } catch (error: any) {
+      setInvoiceError(error.message || 'Booking failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -208,10 +216,14 @@ export default function CalendarBooking() {
         body: JSON.stringify({
           customerName: name,
           customerEmail: email,
+          customerPhone: phone,
+          customerCompany: company,
+          customerWebsite: website,
+          customerJobtitle: jobtitle,
           serviceId: selectedService,
           selectedDate,
           selectedTime,
-          memo: `Calendar booking for ${selectedDate} ${selectedTime}`,
+          memo: `Calendar booking for ${selectedDate} ${selectedTime}${notes ? `\nNotes: ${notes}` : ''}`,
         }),
       });
       
@@ -371,26 +383,74 @@ export default function CalendarBooking() {
       <div className="space-y-6">
         <div className="text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-2">Confirm Your Booking</h3>
-          <p className="text-gray-600">Review your selection before proceeding</p>
+          <p className="text-gray-600">Please provide your details to complete the booking</p>
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm mt-2">
+            <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+            CRM-integrated booking system
+          </div>
         </div>
         
         <div className="bg-blue-50 rounded-xl p-6 space-y-4 border border-blue-100">
           <div className="grid md:grid-cols-2 gap-3">
             <input
               type="text"
-              placeholder="Your name"
+              placeholder="Full name *"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              required
             />
             <input
               type="email"
-              placeholder="you@company.com"
+              placeholder="Email address *"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              required
             />
           </div>
+          <div className="grid md:grid-cols-2 gap-3">
+            <input
+              type="tel"
+              placeholder="Phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
+            <input
+              type="text"
+              placeholder="Company name"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+          <div className="grid md:grid-cols-2 gap-3">
+            <input
+              type="text"
+              placeholder="Job title"
+              value={jobtitle}
+              onChange={(e) => setJobtitle(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
+            <input
+              type="url"
+              placeholder="Website (https://...)"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+          <div>
+            <textarea
+              placeholder="Additional notes or questions (optional)"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={3}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+          <p className="text-xs text-gray-500 mt-2">* Required fields. Additional information helps us serve you better.</p>
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Service:</span>
             <span className="font-semibold text-gray-900">{service.name}</span>

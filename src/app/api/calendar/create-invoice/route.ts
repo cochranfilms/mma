@@ -27,7 +27,11 @@ export async function POST(req: NextRequest) {
     
     const { 
       customerName, 
-      customerEmail, 
+      customerEmail,
+      customerPhone,
+      customerCompany,
+      customerWebsite,
+      customerJobtitle,
       serviceId, 
       selectedDate, 
       selectedTime, 
@@ -117,11 +121,17 @@ export async function POST(req: NextRequest) {
     // Fire-and-forget: HubSpot contact upsert + creation note
     (async () => {
       try {
+        const [firstname, ...lastnameParts] = customerName.split(' ');
+        const lastname = lastnameParts.join(' ');
+        
         const contactId = await upsertContact({
           email: customerEmail,
-          firstname: customerName.split(' ')[0] || undefined,
-          lastname: customerName.split(' ').slice(1).join(' ') || undefined,
-          jobtitle: 'Calendar Booking',
+          firstname,
+          lastname: lastname || undefined,
+          company: customerCompany || undefined,
+          phone: customerPhone || undefined,
+          website: customerWebsite || undefined,
+          jobtitle: customerJobtitle || 'Calendar Booking',
         });
         
         const noteBody = [
@@ -132,6 +142,10 @@ export async function POST(req: NextRequest) {
           result.checkoutUrl ? `Pay link: ${result.checkoutUrl}` : '',
           selectedDate ? `Date: ${selectedDate}` : '',
           selectedTime ? `Time: ${selectedTime}` : '',
+          customerPhone ? `Phone: ${customerPhone}` : '',
+          customerCompany ? `Company: ${customerCompany}` : '',
+          customerWebsite ? `Website: ${customerWebsite}` : '',
+          customerJobtitle ? `Job Title: ${customerJobtitle}` : '',
         ].filter(Boolean).join('\n');
         
         await createNoteForContact({ 
