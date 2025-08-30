@@ -15,6 +15,8 @@ function CheckoutContent() {
   const [quantity, setQuantity] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
   const total = useMemo(() => (pricing ? pricing.unitPriceCents * quantity : 0), [pricing, quantity]);
 
@@ -38,7 +40,9 @@ function CheckoutContent() {
       if (!json.success || !json.checkoutUrl) {
         throw new Error(json.error || 'Failed to create invoice');
       }
-      window.location.href = json.checkoutUrl;
+      setCheckoutUrl(json.checkoutUrl);
+      setShowModal(true);
+      setIsSubmitting(false);
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
       setIsSubmitting(false);
@@ -111,6 +115,29 @@ function CheckoutContent() {
           <p className="text-xs text-gray-500 mt-3">Payment is processed securely via Wave invoice.</p>
         </aside>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-[#010043]/10 overflow-hidden">
+            <div className="bg-[#010043] text-white px-6 py-4">
+              <h3 className="text-xl font-bold tracking-tight">You just freed your business from the mousetrap</h3>
+              <p className="text-sm text-white/80 mt-1">It’s time to put an automated, AI-powered system to work and unlock outsized ROI.</p>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-700 leading-relaxed">Your invoice is ready. Click below to review and complete secure payment.</p>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <a href={checkoutUrl || '#'} target="_blank" rel="noreferrer" className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-lg bg-[#e0ab10] text-[#010043] font-semibold hover:opacity-95">
+                  Pay Invoice Securely
+                </a>
+                <button onClick={() => setShowModal(false)} className="px-5 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
+                  Not now
+                </button>
+              </div>
+              <div className="mt-4 text-xs text-gray-500">We’ve also emailed you this link for your records.</div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

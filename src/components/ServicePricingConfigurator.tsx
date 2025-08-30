@@ -41,6 +41,8 @@ export default function ServicePricingConfigurator({
   const [customerCompany, setCustomerCompany] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
 
   const selectedPackage = useMemo(
     () => pricing.packages.find((p) => p.id === selectedPackageId),
@@ -134,8 +136,9 @@ export default function ServicePricingConfigurator({
         setIsSubmitting(false);
         return;
       }
-      
-      window.location.href = json.paymentUrl;
+      setPaymentUrl(json.paymentUrl);
+      setShowModal(true);
+      setIsSubmitting(false);
       return;
     } catch (e: any) {
       setError(e?.message || 'Something went wrong');
@@ -248,6 +251,41 @@ export default function ServicePricingConfigurator({
           </aside>
         </div>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-[#010043]/10 overflow-hidden">
+            <div className="bg-[#010043] text-white px-6 py-4">
+              <h3 className="text-xl font-bold tracking-tight">You just freed your business from the mousetrap</h3>
+              <p className="text-sm text-white/80 mt-1">It’s time to put an automated, AI-powered system to work and unlock outsized ROI.</p>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-700 leading-relaxed">
+                Your invoice is ready. Click below to review and complete secure payment. We’ll kick off immediately after.
+              </p>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <a
+                  href={paymentUrl || '#'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-lg bg-[#e0ab10] text-[#010043] font-semibold hover:opacity-95 disabled:opacity-50"
+                >
+                  Pay Invoice Securely
+                </a>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="px-5 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  Not now
+                </button>
+              </div>
+              <div className="mt-4 text-xs text-gray-500">
+                We’ll email you this link as well. Questions? Reply to the invoice email and our team will help.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

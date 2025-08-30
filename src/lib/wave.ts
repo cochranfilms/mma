@@ -148,6 +148,21 @@ async function createInvoice(apiKey: string, businessId: string, customerId: str
   return { id: inv.id as string, viewUrl: inv.viewUrl as string };
 }
 
+async function approveInvoice(apiKey: string, businessId: string, invoiceId: string): Promise<void> {
+  const m = `mutation ApproveInvoice($input: InvoiceApproveInput!) {
+    invoiceApprove(input: $input) {
+      didSucceed
+      inputErrors { message code path }
+    }
+  }`;
+  const data = await waveFetch(apiKey, m, { input: { businessId, invoiceId } });
+  const didSucceed = data?.invoiceApprove?.didSucceed;
+  if (!didSucceed) {
+    const firstErr = data?.invoiceApprove?.inputErrors?.[0]?.message || 'Failed to approve invoice';
+    throw new Error(firstErr);
+  }
+}
+
 export async function createWaveInvoice(params: {
   account: WaveAccount;
   payload: {
@@ -176,6 +191,11 @@ export async function createWaveInvoice(params: {
       throw new Error('No invoice items provided');
     }
     const inv = await createInvoice(apiKey, businessId, customerId, items, params.payload.memo);
+    try {
+      await approveInvoice(apiKey, businessId, inv.id);
+    } catch (approveErr) {
+      // Non-fatal: approval failure should not block providing a view URL
+    }
     return { success: true, invoiceId: inv.id, checkoutUrl: inv.viewUrl, mode: 'live' };
   } catch (error: any) {
     const hint = error?.details?.errors?.[0]?.extensions?.code === 'NOT_FOUND'
