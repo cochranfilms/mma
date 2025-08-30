@@ -29,70 +29,78 @@ export async function GET(_req: NextRequest) {
       return NextResponse.json({ success: false, error: 'WAVE_API_KEY is not set' }, { status: 400 });
     }
 
-    // Try the simplest possible businesses query based on Wave docs
+    // Try the correct GraphQL connection structure for businesses
     const queries = [
-      // Approach 1: Most basic businesses query
+      // Approach 1: Correct businesses query with edges/node structure
       { 
-        name: 'Basic businesses',
+        name: 'Businesses with edges',
         query: `query { 
           businesses { 
-            id 
-            name 
-          } 
-        }`
-      },
-      // Approach 2: Businesses with pagination (offset-based)
-      { 
-        name: 'Businesses with page',
-        query: `query { 
-          businesses(page: 1) { 
-            id 
-            name 
-            isActive
-          } 
-        }`
-      },
-      // Approach 3: Get user's default business through user query
-      { 
-        name: 'User default business',
-        query: `query { 
-          user { 
-            id 
-            defaultEmail
-            defaultBusiness {
-              id
-              name
-              isActive
+            edges {
+              node {
+                id 
+                name 
+                isActive
+              }
             }
           } 
         }`
       },
-      // Approach 4: Try to get business by the ID we have (to validate it)
+      // Approach 2: Businesses with pagination
+      { 
+        name: 'Businesses with page',
+        query: `query { 
+          businesses(page: 1) { 
+            edges {
+              node {
+                id 
+                name 
+                isActive
+              }
+            }
+          } 
+        }`
+      },
+      // Approach 3: Try to get business by the ID we have (to validate it)
       { 
         name: 'Validate current business ID',
-        query: `query { 
-          business(id: "${cfg.businessId}") { 
+        query: `query GetBusiness($businessId: ID!) { 
+          business(id: $businessId) { 
             id 
             name 
             isActive
             createdAt
             modifiedAt
           } 
-        }`
+        }`,
+        variables: { businessId: cfg.businessId }
+      },
+      // Approach 4: Try different business ID formats
+      { 
+        name: 'Try base64 encoded business ID',
+        query: `query GetBusiness($businessId: ID!) { 
+          business(id: $businessId) { 
+            id 
+            name 
+            isActive
+          } 
+        }`,
+        variables: { businessId: Buffer.from(cfg.businessId).toString('base64') }
       }
     ];
 
     const results = [];
     
-    for (const { name, query } of queries) {
+    for (const queryObj of queries) {
+      const { name, query, variables } = queryObj;
       try {
-        const data = await fetchWave(apiBase, apiKey, query);
+        const data = await fetchWave(apiBase, apiKey, query, variables);
         results.push({ 
           approach: name, 
           success: true, 
           data,
           // Extract business info from different possible structures
-          businesses: data?.businesses || (data?.business ? [data.business] : []),
+          businesses: data?.businesses?.edges?.map((e: any) => e?.node) || (data?.business ? [data.business] : []),
           user: data?.user || null
         });
       } catch (err: any) {
