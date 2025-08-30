@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
     console.log('🔍 Debugging Wave authentication...');
     
     // Check all possible Wave environment variables
-    const envVars = {
+    const envVars: Record<string, string | undefined> = {
       WAVE_API_KEY: process.env.WAVE_API_KEY,
       WAVE_API_KEY_PRIMARY: process.env.WAVE_API_KEY_PRIMARY,
       WAVE_BUSINESS_ID: process.env.WAVE_BUSINESS_ID,
@@ -66,11 +66,11 @@ export async function GET(req: NextRequest) {
           errors: result.errors || null
         });
 
-      } catch (error) {
+      } catch (error: any) {
         results.push({
           endpoint,
           success: false,
-          error: error.message
+          error: error?.message || 'Unknown error'
         });
       }
     }
