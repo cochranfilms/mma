@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Discovery Call Booking - Marketing Mousetrap Agency</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: white;
+            padding: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 16px;
+            color: white;
+        }
+        .content {
+            padding: 30px;
+            color: #333;
+        }
+        .lead-info {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .lead-info h3 {
+            color: #059669;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+        .info-item strong {
+            color: #059669;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .appointment-details {
+            background: #f8fafc;
+            border: 2px solid #3b82f6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .appointment-details h3 {
+            color: #1e40af;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .priority {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .priority.high {
+            background: #fecaca;
+            color: #dc2626;
+        }
+        .priority.medium {
+            background: #fed7aa;
+            color: #ea580c;
+        }
+        .priority.low {
+            background: #bbf7d0;
+            color: #16a34a;
+        }
+        .action-items {
+            background: #fffbeb;
+            border: 2px solid #f59e0b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .action-items h3 {
+            color: #d97706;
+            margin-top: 0;
+        }
+        .action-items p {
+            color: #333;
+            margin: 10px 0;
+        }
+        .action-button {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        .action-button:hover {
+            background: #059669;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .notes-section {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .notes-section h4 {
+            color: #0ea5e9;
+            margin-top: 0;
+        }
+        .notes-section p {
+            color: #333;
+            margin: 8px 0;
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+        }
+        .footer p {
+            color: #6b7280;
+            margin: 8px 0;
+        }
+        
+        /* Mobile Responsiveness */
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                border-radius: 5px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .header p {
+                font-size: 14px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .action-button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 5px 0;
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+        
+        /* Ensure all text is visible with proper contrast */
+        * {
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://app.marketingmousetrapagency.com/Logo.png" alt="Marketing Mousetrap Agency" style="max-width: 200px; height: auto; display:block; margin: 0 auto 10px auto;" />
+            <h1>🎯 NEW DISCOVERY CALL BOOKING</h1>
+            <p>High-Quality Lead Ready for Follow-up</p>
+        </div>
+        
+        <div class="content">
+            <div class="lead-info">
+                <h3>📊 Lead Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Contact Name:</strong>
+                        {{CLIENT_NAME}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Email Address:</strong>
+                        {{CLIENT_EMAIL}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Phone Number:</strong>
+                        {{CLIENT_PHONE}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Job Title:</strong>
+                        {{CLIENT_JOBTITLE}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Company:</strong>
+                        {{CLIENT_COMPANY}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Website:</strong>
+                        {{CLIENT_WEBSITE}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Lead Priority:</strong>
+                        <span class="priority high">HIGH PRIORITY</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="appointment-details">
+                <h3>📅 Appointment Details</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Date:</strong>
+                        {{APPOINTMENT_DATE}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Time:</strong>
+                        {{APPOINTMENT_TIME}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Duration:</strong>
+                        {{APPOINTMENT_DURATION}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Service Type:</strong>
+                        {{SERVICE_TYPE}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Booking Date:</strong>
+                        {{CONFIRMATION_DATE}} at {{CONFIRMATION_TIME}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="notes-section">
+                <h4>📝 Client Notes & Context</h4>
+                <p><strong>Notes:</strong> {{CLIENT_NOTES}}</p>
+                <p><strong>Lead Source:</strong> Discovery Call Booking</p>
+                <p><strong>Booking ID:</strong> DC-{{CONFIRMATION_DATE}}-{{CONFIRMATION_TIME}}</p>
+            </div>
+
+            <div class="action-items">
+                <h3>⚡ Immediate Action Items</h3>
+                <p><strong>Follow-up Priority:</strong> HIGH - This is a qualified lead ready for discovery call.</p>
+                <p><strong>Recommended Response Time:</strong> Within 2 hours for maximum engagement</p>
+                <p><strong>Best Approach:</strong> Send welcome email and prepare for discovery call</p>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <a href="mailto:{{CLIENT_EMAIL}}" class="action-button">📧 Email Lead</a>
+                    <a href="tel:{{CLIENT_PHONE}}" class="action-button">📞 Call Lead</a>
+                    <a href="https://app.marketingmousetrapagency.com/lead-dashboard" class="action-button">👥 View in CRM</a>
+                </div>
+            </div>
+
+            <div class="action-items">
+                <h3>📈 Discovery Call Strategy</h3>
+                <ul style="color: #333;">
+                    <li><strong>Opening:</strong> Welcome and thank them for booking</li>
+                    <li><strong>Discovery:</strong> Understand their business goals and challenges</li>
+                    <li><strong>Analysis:</strong> Assess their current marketing situation</li>
+                    <li><strong>Opportunities:</strong> Identify key growth areas</li>
+                    <li><strong>Next Steps:</strong> Propose follow-up strategy session or proposal</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Marketing Mousetrap Agency - Lead Management System</strong><br>
+            Generated by Discovery Call Booking System<br>
+            📧 Admin Email: {{ADMIN_EMAIL}}<br>
+            🕐 Generated: {{CONFIRMATION_DATE}} at {{CONFIRMATION_TIME}}</p>
+        </div>
+    </div>
+</body>
+</html>

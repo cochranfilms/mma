@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Calendar, Clock, Users, Video, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 interface BookingSlot {
   id: string;
@@ -77,6 +78,7 @@ export default function CalendarBooking() {
   const [calendlyUrl, setCalendlyUrl] = useState<string | null>(null);
   const [showInlineCalendly, setShowInlineCalendly] = useState(false);
   const calendlyContainerRef = useRef<HTMLDivElement | null>(null);
+  const [emailjsInitialized, setEmailjsInitialized] = useState(false);
 
   // Generate sample available slots for the next 7 days
   useEffect(() => {
@@ -114,17 +116,108 @@ export default function CalendarBooking() {
     generateSlots();
   }, []);
 
+  // Initialize EmailJS once when component mounts
+  useEffect(() => {
+    const initEmailJS = () => {
+      try {
+        const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'p4pF3OWvh-DXtae4c';
+        emailjs.init(publicKey);
+        setEmailjsInitialized(true);
+        console.log('EmailJS initialized successfully with key:', publicKey.substring(0, 8) + '...');
+      } catch (error) {
+        console.error('Failed to initialize EmailJS:', error);
+      }
+    };
+
+    initEmailJS();
+  }, []);
+
   const handleServiceSelect = (serviceId: string) => {
     setSelectedService(serviceId);
     // Skip date/time selection in pay-first flow; collect details then show inline Calendly
-    setStep('confirmation');
-    // Reset payment status when service changes
-    setPaymentStatus('pending');
-    setInvoiceUrl(null);
-    setInvoiceId(null);
-    setInvoiceError(null);
-    setCalendlyUrl(null);
-    setShowInlineCalendly(false);
+    if (serviceId === 'discovery') {
+      setStep('confirmation');
+    } else {
+      setStep('date');
+    }
+  };
+
+  const sendDiscoveryCallEmails = async (appointmentData: any) => {
+    try {
+      // Check if EmailJS is initialized
+      if (!emailjsInitialized) {
+        console.error('EmailJS not initialized. Please check your environment variables.');
+        return;
+      }
+
+      const currentDate = new Date().toLocaleDateString();
+      const currentTime = new Date().toLocaleTimeString();
+      const service = getSelectedService();
+
+      // Prepare template parameters
+      const templateParams = {
+        // Client Information
+        CLIENT_NAME: name || 'Prospect',
+        CLIENT_EMAIL: email,
+        CLIENT_PHONE: phone || 'Not provided',
+        CLIENT_COMPANY: company || 'Not provided',
+        CLIENT_JOBTITLE: jobtitle || 'Not provided',
+        CLIENT_WEBSITE: website || 'Not provided',
+        CLIENT_NOTES: notes || 'No additional notes provided',
+        
+        // Appointment Details
+        APPOINTMENT_DATE: appointmentData.date || 'To be scheduled',
+        APPOINTMENT_TIME: appointmentData.time || 'To be scheduled',
+        APPOINTMENT_DURATION: service?.duration + ' minutes' || '30 minutes',
+        SERVICE_TYPE: service?.name || 'Discovery Call',
+        
+        // System Information
+        CONFIRMATION_DATE: currentDate,
+        CONFIRMATION_TIME: currentTime,
+        ADMIN_EMAIL: 'admin@marketingmousetrap.com',
+        
+        // EmailJS Recipients
+        to_email: email,
+        to_name: name || email,
+        from_name: 'Marketing Mousetrap Agency',
+        reply_to: 'admin@marketingmousetrap.com',
+      };
+
+      // Send client confirmation email
+      console.log('Sending client discovery call confirmation email...');
+      const clientResponse = await emailjs.send(
+        'service_hers22k', // Your service ID
+        'template_discovery_call_client', // Client template ID - you'll need to create this in EmailJS
+        templateParams
+      );
+      console.log('Client email sent successfully:', clientResponse);
+
+      // Send admin notification email
+      console.log('Sending admin discovery call notification email...');
+      const adminResponse = await emailjs.send(
+        'service_hers22k', // Your service ID
+        'template_ewbrj9d', // Admin template ID - you'll need to create this in EmailJS
+        {
+          ...templateParams,
+          // Override recipient for admin email
+          to_email: 'sales@marketingmousetrapagency.com',
+          to_name: 'Admin',
+        }
+      );
+      console.log('Admin email sent successfully:', adminResponse);
+
+      console.log('All discovery call emails sent successfully');
+    } catch (error: any) {
+      console.error('Error sending discovery call emails:', error);
+      console.error('Error details:', {
+        message: error?.message || 'Unknown error',
+        status: error?.status || 'No status',
+        text: error?.text || 'No text'
+      });
+      
+      // Show user-friendly error message
+      alert('There was an issue sending the confirmation emails. Please check your email configuration or try again later.');
+    }
   };
 
   // Load Calendly embed and prefill with purchaser info when showing inline widget
@@ -510,28 +603,86 @@ export default function CalendarBooking() {
         )}
 
         <div className="flex flex-col gap-3">
-          <div className="flex gap-4">
-            <button
-              onClick={() => setStep('time')}
-              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Back
-            </button>
-            <button
-              onClick={handleBooking}
-              disabled={isLoading || (service.id !== 'discovery' && paymentStatus !== 'completed')}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center"
-            >
-              {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <>
-                  Continue to Scheduling
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </>
-              )}
-            </button>
-          </div>
+          {service.id === 'discovery' ? (
+            // Discovery call flow - send emails and show success
+            <div className="space-y-4">
+              <button
+                onClick={() => setStep('service')}
+                className="w-full px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                ← Back to Services
+              </button>
+              <button
+                onClick={async () => {
+                  if (!name || !email) {
+                    alert('Please fill in your name and email to continue.');
+                    return;
+                  }
+                  setIsLoading(true);
+                  try {
+                    await sendDiscoveryCallEmails({
+                      date: 'To be scheduled via follow-up',
+                      time: 'To be scheduled via follow-up'
+                    });
+                    // Show success message
+                    alert('Discovery call request submitted successfully! We\'ll contact you within 24 hours to schedule your call.');
+                    // Reset form
+                    setName('');
+                    setEmail('');
+                    setPhone('');
+                    setCompany('');
+                    setWebsite('');
+                    setJobtitle('');
+                    setNotes('');
+                    setStep('service');
+                  } catch (error) {
+                    console.error('Error submitting discovery call:', error);
+                    alert('There was an error submitting your request. Please try again.');
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+                disabled={isLoading || !name || !email}
+                className="w-full px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-500 hover:to-emerald-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center"
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    🚀 Submit Discovery Call Request
+                    <CheckCircle className="w-4 h-4 ml-2" />
+                  </>
+                )}
+              </button>
+              <p className="text-sm text-gray-600 text-center">
+                After submitting, we'll contact you within 24 hours to schedule your free discovery call.
+              </p>
+            </div>
+          ) : (
+            // Regular service flow - continue to scheduling
+            <div className="flex gap-4">
+              <button
+                onClick={() => setStep('time')}
+                className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Back
+              </button>
+              <button
+                onClick={handleBooking}
+                disabled={isLoading || (service.id !== 'discovery' && paymentStatus !== 'completed')}
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center"
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    Continue to Scheduling
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </>
+                )}
+              </button>
+            </div>
+          )}
 
           {service.id !== 'discovery' && (
             <div className="p-4 rounded-lg border bg-white">
