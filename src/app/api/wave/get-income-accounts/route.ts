@@ -16,27 +16,19 @@ export async function GET(req: NextRequest) {
     // Use the correct Marketing Mousetrap Agency business ID
     const marketingMousetrapBusinessId = 'QnVzaW5lc3M6Y2M4YjZiNjUtMzg0Yy00YmNhLWI3ZjAtNzMzMzMzZWYwMDE0';
     
-    // Query to get income accounts for the business
+    // Query to get income accounts for the business (using working format from wave.ts)
     const query = `
       query GetIncomeAccounts($businessId: ID!, $page: Int!) {
         business(id: $businessId) {
           id
           name
-          accounts(types: [INCOME], page: $page, pageSize: 50) {
+          accounts(types: [INCOME], page: $page) {
             edges {
               node {
                 id
                 name
                 type
-                subtype
-                normalBalanceType
-                isArchived
-                description
               }
-            }
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
             }
           }
         }
@@ -105,10 +97,7 @@ export async function GET(req: NextRequest) {
       allAccountDetails: accounts.map((acc: any) => ({
         id: acc.id,
         name: acc.name,
-        type: acc.type,
-        subtype: acc.subtype,
-        isArchived: acc.isArchived,
-        description: acc.description
+        type: acc.type
       }))
     });
 
