@@ -108,7 +108,10 @@ export async function POST(req: NextRequest) {
     // 4) Create Calendly scheduling link (REQUIRED - this is how the actual appointment gets booked)
     let schedulingUrl: string | undefined;
     try {
-      const calRes = await fetch('/api/calendly/schedule', {
+      // Use absolute URL so this works on Vercel edge/node without relying on relative path resolution
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '';
+      const calendlyEndpoint = `${baseUrl}/api/calendly/schedule`;
+      const calRes = await fetch(calendlyEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
